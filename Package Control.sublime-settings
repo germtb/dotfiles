@@ -1,0 +1,29 @@
+{
+	"bootstrapped": true,
+	"in_process_packages":
+	[
+	],
+	"installed_packages":
+	[
+		"All Autocomplete",
+		"AltUp",
+		"Anaconda",
+		"BracketHighlighter",
+		"ChannelRepositoryTools",
+		"ExpandRegion",
+		"FileDiffs",
+		"GitGutter",
+		"Go To Definition",
+		"Highlight",
+		"JsFormat",
+		"Markdown Preview",
+		"MoveTab",
+		"Package Control",
+		"SelectUntil",
+		"SideBarEnhancements",
+		"Surround",
+		"SyncedSideBar",
+		"Theme - Spacegray",
+		"TrailingSpaces"
+	]
+}
