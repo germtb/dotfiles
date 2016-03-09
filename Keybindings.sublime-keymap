@@ -1,5 +1,4 @@
 [
-
 	// Select until
 	{ "keys": ["alt+e"], "command": "select_until", "args": { "extend": true } },
 
@@ -24,56 +23,12 @@
 	},
 
 	// Better navigation
-	{ "keys": ["ctrl+,"], "command": "move_to", "args": {"to": "bol", "extend": false} },
-	{ "keys": ["ctrl+."], "command": "move_to", "args": {"to": "eol", "extend": false} },
-	{ "keys": ["ctrl+shift+,"], "command": "move_to", "args": {"to": "bol", "extend": true} },
-	{ "keys": ["ctrl+shift+."], "command": "move_to", "args": {"to": "eol", "extend": true} },
-
-	// Al navigation
-	{ "keys": ["alt+j"], "command": "prev_view" },
-	{ "keys": ["alt+k"], "command": "next_view" },
-	{ "keys": ["alt+f"], "command": "show_panel", "args": {"panel": "find", "reverse": false} },
-	{ "keys": ["alt+s"], "command": "save" },
-	{ "keys": ["alt+x"], "command": "cut" },
-	{ "keys": ["alt+c"], "command": "copy" },
-	{ "keys": ["alt+v"], "command": "paste" },
-	{ "keys": ["alt+z"], "command": "undo" },
-	{ "keys": ["alt+shift+z"], "command": "redo" },
-	{ "keys": ["alt+d"], "command": "find_under_expand" },
+	{ "keys": ["ctrl+alt+left"], "command": "move_to", "args": {"to": "bol"} },
+	{ "keys": ["ctrl+alt+right"], "command": "move_to", "args": {"to": "eol"} },
+	{ "keys": ["ctrl+shift+alt+left"], "command": "move_to", "args": {"to": "bol", "extend": true} },
+	{ "keys": ["ctrl+shift+alt+right"], "command": "move_to", "args": {"to": "eol", "extend": true} },
 
 	// Alt keys
-	{"keys": ["alt+enter"], "command": "run_multiple_commands",
-		"args": {
-			"commands":
-			[
-				{ "command": "move_to", "args": {"to": "eol", "extend": false} },
-				{ "command": "move", "args": {"by": "lines", "forward": true} },
-				{ "command": "insert", "args": {"characters": "\n"} },
-				{ "command": "insert", "args": {"characters": "\n"} },
-			],
-		}
-	},
-
-	{"keys": ["alt+;"], "command": "run_multiple_commands",
-		"args": {
-			"commands":
-			[
-				{ "command": "move_to", "args": {"to": "eol", "extend": false} },
-				{ "command": "insert", "args": {"characters": ";"} },
-			],
-		}
-	},
-
-	{"keys": ["alt+,"], "command": "run_multiple_commands",
-		"args": {
-			"commands":
-			[
-				{ "command": "move_to", "args": {"to": "eol", "extend": false} },
-				{ "command": "insert", "args": {"characters": ","} },
-			],
-		}
-	},
-
 	{"keys": ["alt+o"], "command": "run_multiple_commands",
 		"args": {
 			"commands":
