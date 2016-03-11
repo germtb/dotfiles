@@ -17,7 +17,6 @@
 		"Go To Definition",
 		"Highlight",
 		"JSX",
-		"JsFormat",
 		"Markdown Preview",
 		"Package Control",
 		"SelectUntil",
@@ -27,7 +26,6 @@
 		"Surround",
 		"SyncedSideBar",
 		"textract",
-		"Theme - Spacegray",
 		"TrailingSpaces"
 	]
 }
