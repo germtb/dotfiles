@@ -15,7 +15,8 @@
 		"*.jar",
 		"*.zip",
 		"node_modules/*",
-		"dist/*"
+		"dist/*",
+		"build/*"
 	],
 	"default_line_ending": "unix",
 	"draw_white_space": "all",
