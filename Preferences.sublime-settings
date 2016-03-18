@@ -17,7 +17,6 @@
 		"node_modules/*",
 		"dist/*"
 	],
-	"color_scheme": "Packages/User/SublimeLinter/Material-Theme-Darker-OceanicNext (SL).tmTheme",
 	"default_line_ending": "unix",
 	"draw_white_space": "all",
 	"file_exclude_patterns":
@@ -45,5 +44,4 @@
 	"reveal-on-activate": false,
 	"show_encoding": true,
 	"tab_size": 4,
-	"theme": "Material-Theme-Darker.sublime-theme"
 }
