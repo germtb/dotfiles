@@ -92,34 +92,6 @@ inoremap <C-u>      <ESC>ui
 inoremap <C-d>      <ESC>ddi
 inoremap <C-f>      <ESC> /
 
-" Sublime style parnthesis mappings
-inoremap {          {}<Left>
-inoremap {<CR>      {<CR>}<ESC>O<TAB>
-inoremap <expr> }   strpart(getline('.'), col('.')-1, 1) == "}" ? "\<Right>" : "}"
-inoremap {<BS>      <nop>
-inoremap {{         {
-
-inoremap [          []<Left>
-inoremap [<CR>      [<CR>]<ESC>O<TAB>
-inoremap <expr> ]   strpart(getline('.'), col('.')-1, 1) == "]" ? "\<Right>" : "]"
-inoremap [<BS>      <nop>
-inoremap [[         [
-
-inoremap (          ()<Left>
-inoremap (<CR>      (<CR>)<ESC>O<TAB>
-inoremap <expr> )   strpart(getline('.'), col('.')-1, 1) == ")" ? "\<Right>" : ")"
-inoremap ((         (
-
-inoremap "          ""<Left>
-inoremap <expr>"    strpart(getline('.'), col('.')-1, 1) == "\"" ? "<Right>" : "\"\"<Left>"
-inoremap ""         "
-
-inoremap '          ''<Left>
-inoremap <expr>'    strpart(getline('.'), col('.')-1, 1) == "\'" ? "<Right>" : "\'\'<Left>"
-inoremap ''         '
-
-inoremap <expr> >   strpart(getline('.'), col('.')-1, 1) == ">" ? "\<Right>" : ">"
-
 " Reorder lines
 nnoremap <A-j>      :m .+1<CR>==
 nnoremap <A-k>      :m .-2<CR>==
