@@ -27,7 +27,6 @@ noremap <silent> +  :vertical resize +5<CR>
 noremap <silent> -  :vertical resize -5<CR>
 noremap <silent> <leader>+ :resize +5<CR>
 noremap <silent> <leader>- :resize -5<CR>
-noremap <A-b>       :! node %<CR>
 noremap ]           <Up>{<Down>^
 noremap [           }<Down>^
 noremap gu          vgU
