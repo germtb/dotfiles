@@ -64,15 +64,18 @@ set listchars=eol:¬,tab:——,trail:·,extends:>,precedes:<
 set list
 
 " NERDTree
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
-map <A-a>           :NERDTreeFind<CR>
-let NERDTreeShowHidden = 1
 let g:NERDTreeAutoDeleteBuffer = 1
 let g:NERDTreeMouseMode = 3
 let NERDTreeIgnore = [ '\.o$', '\.meta$' ]
-nnoremap <leader>n :NERDTreeToggle<CR>
-autocmd BufEnter * lcd %:p:h
+autocmd vimenter * if argc() == 0 ! NERDTRee endif
+nnoremap <leader>r        :NERDTreeFind<CR>
+nnoremap <leader>n        :NerdTreeToggle<CR>
+
+" Split navigation
+nnoremap <C-J> <C-W><C-J>
+nnoremap <C-K> <C-W><C-K>
+nnoremap <C-L> <C-W><C-L>
+nnoremap <C-H> <C-W><C-H>
 
 " CTRLP
 let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)'
