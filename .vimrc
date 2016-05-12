@@ -27,16 +27,14 @@ noremap <silent> +  :vertical resize +5<CR>
 noremap <silent> -  :vertical resize -5<CR>
 noremap <silent> <leader>+ :resize +5<CR>
 noremap <silent> <leader>- :resize -5<CR>
-noremap ]           <Up>{<Down>^
-noremap [           }<Down>^
+noremap <S-J>       :call AltDown()<CR>
+noremap <S-K>       :call AltUp()<CR>
 noremap gu          vgU
 noremap gl          vgu
 noremap w           :w<CR>
 noremap q           :q<CR>
 noremap #           :call Comment()<CR>
 noremap ~           :call Uncomment()<CR>
-noremap ]           <Up>{<Down>^
-noremap [           }<Down>^
 
 " Insert mode
 imap jj <ESC>
@@ -110,3 +108,12 @@ endfunction
 function! CommentChar()
   return "#"
 endfunction
+
+function! AltUp()
+  execute "normal! k{j^"
+endfunction
+
+function! AltDown()
+  execute "normal! }j^"
+endfunction
+
