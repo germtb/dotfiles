@@ -110,10 +110,32 @@ function! CommentChar()
 endfunction
 
 function! AltUp()
+  if line(".") == 1
+    return 1
+  endif
+
+  if line(".") == 2
+    execute "normal! k"
+    return 1
+  endif
+
   execute "normal! k{j^"
+
+  if getline(".") == ""
+    call AltUp()
+  endif
+
 endfunction
 
 function! AltDown()
-  execute "normal! }j^"
-endfunction
+  if line(".") == line("$")
+    return 1
+  endif
 
+  execute "normal! }j^"
+
+  if getline(".") == ""
+    call AltDown()
+  endif
+
+endfunction
