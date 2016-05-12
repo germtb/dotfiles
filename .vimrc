@@ -33,8 +33,8 @@ noremap gu          vgU
 noremap gl          vgu
 noremap w           :w<CR>
 noremap q           :q<CR>
-noremap #           ^i#<Space><ESC>j
-noremap ~           ^xxk
+noremap #           :call Comment()<CR>
+noremap ~           :call Uncomment()<CR>
 noremap ]           <Up>{<Down>^
 noremap [           }<Down>^
 
@@ -80,3 +80,33 @@ nnoremap <C-H> <C-W><C-H>
 " CTRLP
 let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)'
 let g:ctrlp_show_hidden = 1
+
+" Functions
+function! Comment()
+  set paste
+  execute "normal! ^"
+  let line=getline(".")
+  let char=line[col(".")-1]
+
+  if char != "#" && line != ""
+    execute "normal! i# "
+  endif
+
+  execute "normal! j"
+  set nopaste
+endfunction
+
+function! Uncomment()
+  execute "normal! ^"
+  let char=getline(".")[col(".")-1]
+
+  if char == "#"
+    execute "normal! xx"
+  endif
+
+  execute "normal! k"
+endfunction
+
+function! CommentChar()
+  return "#"
+endfunction
