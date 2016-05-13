@@ -16,6 +16,8 @@ Bundle 'mxw/vim-jsx'
 Bundle 'airblade/vim-gitgutter'
 Bundle 'Yggdroot/indentLine'
 Bundle 'easymotion/vim-easymotion'
+Bundle 'tpope/vim-surround'
+Bundle 'vim-expand-region'
 
 filetype on
 
@@ -36,25 +38,31 @@ set smarttab
 nnoremap ;           :
 nnoremap o           o<ESC>
 nnoremap O           O<ESC>
-nnoremap <silent> +  :vertical resize +5<CR>
-nnoremap <silent> -  :vertical resize -5<CR>
-nnoremap <silent> <leader>+ :resize +5<CR>
-nnoremap <silent> <leader>- :resize -5<CR>
 nnoremap gu          vgU
 nnoremap gl          vgu
 nnoremap w           :w<CR>
 nnoremap q           :q<CR>
 nnoremap #           :call Comment()<CR>
 nnoremap ~           :call Uncomment()<CR>
-nnoremap <S-j>       :call AltDown()<CR>
-nnoremap <S-k>       :call AltUp()<CR>
+nnoremap J           :call AltDown()<CR>
+nnoremap K           :call AltUp()<CR>
 nnoremap ev          :vsplit ~/.vimrc<CR>
 nnoremap sv          :source ~/.vimrc<CR>
 nnoremap z           zz
 
 " Insert mode
-inoremap jj <ESC>
-inoremap jk <ESC>
+inoremap jj          <ESC>
+inoremap jk          <ESC>
+
+" Resizing splits
+nnoremap <silent> + :vertical resize +5<CR>
+nnoremap <silent> - :vertical resize -5<CR>
+nnoremap <silent> <leader>+ :resize +5<CR>
+nnoremap <silent> <leader>- :resize -5<CR>
+
+" Expand region
+map L               <Plug>(expand_region_expand)
+map H               <Plug>(expand_region_shrink)
 
 " General
 set mouse=a
