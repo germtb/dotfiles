@@ -70,11 +70,12 @@ set list
 " NERDTree
 autocmd VimEnter * NERDTree
 autocmd VimEnter * wincmd p
+let NERDTreeShowHidden=1
 let g:NERDTreeAutoDeleteBuffer = 1
 let g:NERDTreeMouseMode = 3
 let NERDTreeShowLineNumbers=1
 nnoremap <leader>r        :NERDTreeFind<CR>
-nnoremap <leader>n        :NerdTreeToggle<CR>
+nnoremap <leader>n        :NERDTreeToggle<CR>
 
 " Split navigation
 nnoremap <C-J> <C-W><C-J>

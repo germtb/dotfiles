@@ -11,18 +11,16 @@ RED="\[$(tput setaf 1)\]"
 BLUE="\[$(tput setaf 4)\]"
 RESET="\[$(tput sgr0)\]"
 
-PS1="${BLUE}{ \`pwd\` }${RESET} ${RED}»${RESET} "
-
 # Aliases
 alias a='git add'
 alias b='git branch'
 alias bb='git branch --all'
 alias c='clear'
-alias cl='. ~/cl'
-alias cll='. ~/cll'
+alias cl='. ~/dotfiles/shell/cl'
 alias d='cd ~/dev'
 alias l='ls -la'
 alias ll='ls -lad'
 alias less='less -S -N'
 alias s='git status'
 alias o='cd ..'
+
