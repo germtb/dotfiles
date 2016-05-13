@@ -15,6 +15,7 @@ Bundle 'pangloss/vim-javascript'
 Bundle 'mxw/vim-jsx'
 Bundle 'airblade/vim-gitgutter'
 Bundle 'Yggdroot/indentLine'
+Bundle 'easymotion/vim-easymotion'
 
 filetype on
 
@@ -45,12 +46,11 @@ nnoremap w           :w<CR>
 nnoremap q           :q<CR>
 nnoremap #           :call Comment()<CR>
 nnoremap ~           :call Uncomment()<CR>
-nnoremap ]           ]]
-nnoremap [           [[
 nnoremap <S-j>       :call AltDown()<CR>
 nnoremap <S-k>       :call AltUp()<CR>
 nnoremap ev          :vsplit ~/.vimrc<CR>
 nnoremap sv          :source ~/.vimrc<CR>
+nnoremap z           zz
 
 " Insert mode
 inoremap jj <ESC>
