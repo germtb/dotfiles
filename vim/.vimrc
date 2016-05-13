@@ -68,10 +68,11 @@ set listchars=eol:¬,tab:——,trail:·,extends:>,precedes:<
 set list
 
 " NERDTree
+autocmd VimEnter * NERDTree
+autocmd VimEnter * wincmd p
 let g:NERDTreeAutoDeleteBuffer = 1
 let g:NERDTreeMouseMode = 3
 let NERDTreeShowLineNumbers=1
-let NERDTreeIgnore = [ '\.o$', '\.meta$' ]
 autocmd vimenter * if argc() == 0 ! NERDTRee endif
 nnoremap <leader>r        :NERDTreeFind<CR>
 nnoremap <leader>n        :NerdTreeToggle<CR>
