@@ -1,11 +1,22 @@
 set nocompatible
-
 set hidden
 filetype on
 
-" Pathogen
-execute pathogen#infect()
-filetype plugin indent on
+" Vundle
+set rtp+=~/.vim/bundle/vundle/
+call vundle#rc()
+
+Bundle 'gmarik/Vundle.vim'
+Bundle 'bling/vim-airline'
+Bundle 'scrooloose/nerdtree'
+Bundle 'kien/ctrlp.vim'
+Bundle 'terryma/vim-multiple-cursors'
+Bundle 'pangloss/vim-javascript'
+Bundle 'mxw/vim-jsx'
+Bundle 'airblade/vim-gitgutter'
+Bundle 'Yggdroot/indentLine'
+
+filetype on
 
 " Cursor
 let &t_ti.="\e[1 q"
