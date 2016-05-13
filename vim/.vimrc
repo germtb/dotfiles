@@ -73,7 +73,6 @@ autocmd VimEnter * wincmd p
 let g:NERDTreeAutoDeleteBuffer = 1
 let g:NERDTreeMouseMode = 3
 let NERDTreeShowLineNumbers=1
-autocmd vimenter * if argc() == 0 ! NERDTRee endif
 nnoremap <leader>r        :NERDTreeFind<CR>
 nnoremap <leader>n        :NerdTreeToggle<CR>
 
