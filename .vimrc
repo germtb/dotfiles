@@ -1,6 +1,7 @@
 set nocompatible
+
 set hidden
-filetype off
+filetype on
 
 " Pathogen
 execute pathogen#infect()
@@ -20,24 +21,29 @@ set expandtab
 set smarttab
 
 " Normal mode
-noremap ;           :
-noremap o           o<ESC>
-noremap O           O<ESC>
-noremap <silent> +  :vertical resize +5<CR>
-noremap <silent> -  :vertical resize -5<CR>
-noremap <silent> <leader>+ :resize +5<CR>
-noremap <silent> <leader>- :resize -5<CR>
-noremap <S-J>       :call AltDown()<CR>
-noremap <S-K>       :call AltUp()<CR>
-noremap gu          vgU
-noremap gl          vgu
-noremap w           :w<CR>
-noremap q           :q<CR>
-noremap #           :call Comment()<CR>
-noremap ~           :call Uncomment()<CR>
+nnoremap ;           :
+nnoremap o           o<ESC>
+nnoremap O           O<ESC>
+nnoremap <silent> +  :vertical resize +5<CR>
+nnoremap <silent> -  :vertical resize -5<CR>
+nnoremap <silent> <leader>+ :resize +5<CR>
+nnoremap <silent> <leader>- :resize -5<CR>
+nnoremap gu          vgU
+nnoremap gl          vgu
+nnoremap w           :w<CR>
+nnoremap q           :q<CR>
+nnoremap #           :call Comment()<CR>
+nnoremap ~           :call Uncomment()<CR>
+nnoremap ]           ]]
+nnoremap [           [[
+nnoremap <S-j>       :call AltDown()<CR>
+nnoremap <S-k>       :call AltUp()<CR>
+nnoremap ev          :vsplit ~/.vimrc<CR>
+nnoremap sv          :source ~/.vimrc<CR>
 
 " Insert mode
-imap jj <ESC>
+inoremap jj <ESC>
+inoremap jk <ESC>
 
 " General
 set mouse=a
@@ -64,6 +70,7 @@ set list
 " NERDTree
 let g:NERDTreeAutoDeleteBuffer = 1
 let g:NERDTreeMouseMode = 3
+let NERDTreeShowLineNumbers=1
 let NERDTreeIgnore = [ '\.o$', '\.meta$' ]
 autocmd vimenter * if argc() == 0 ! NERDTRee endif
 nnoremap <leader>r        :NERDTreeFind<CR>
