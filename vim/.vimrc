@@ -54,6 +54,7 @@ set number
 syntax enable
 set scrolloff=4
 set noswapfile
+set noundofile
 set colorcolumn=81
 set history=1000
 set undolevels=1000
