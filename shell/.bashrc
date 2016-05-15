@@ -1,9 +1,8 @@
-export ZSH=/home/gerardb/.oh-my-zsh
+export ZSH=~/.oh-my-zsh
 ZSH_THEME="robbyrussell"
 plugins=(git)
-export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/jvm/java-8-oracle:~/dev/brjs/brjs-sdk/sdk"
+export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/lib/jvm/java-8-oracle:/opt/local/bin:/opt/local.sbin"
 source $ZSH/oh-my-zsh.sh
-
 # PS1
 GREEN="\[$(tput setaf 2)\]"
 CYAN="\[$(tput setaf 6)\]"
