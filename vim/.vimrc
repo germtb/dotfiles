@@ -1,25 +1,29 @@
 set nocompatible
-set hidden
-filetype on
+filetype off
 
 " Vundle
-set rtp+=~/.vim/bundle/vundle/
-call vundle#rc()
 
-Bundle 'gmarik/Vundle.vim'
-Bundle 'bling/vim-airline'
-Bundle 'scrooloose/nerdtree'
-Bundle 'kien/ctrlp.vim'
-Bundle 'terryma/vim-multiple-cursors'
-Bundle 'pangloss/vim-javascript'
-Bundle 'mxw/vim-jsx'
-Bundle 'airblade/vim-gitgutter'
-Bundle 'Yggdroot/indentLine'
-Bundle 'easymotion/vim-easymotion'
-Bundle 'tpope/vim-surround'
-Bundle 'vim-expand-region'
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+
+Plugin 'gmarik/Vundle.vim'
+Plugin 'bling/vim-airline'
+Plugin 'scrooloose/nerdtree'
+Plugin 'kien/ctrlp.vim'
+Plugin 'terryma/vim-multiple-cursors'
+Plugin 'pangloss/vim-javascript'
+Plugin 'mxw/vim-jsx'
+Plugin 'airblade/vim-gitgutter'
+Plugin 'Yggdroot/indentLine'
+Plugin 'easymotion/vim-easymotion'
+Plugin 'tpope/vim-surround'
+Plugin 'vim-expand-region'
+
+call vundle#end()
+filetype plugin indent on
 
 filetype on
+set hidden
 
 " Cursor
 let &t_ti.="\e[1 q"
