@@ -1,16 +1,16 @@
 #!/bin/bash
-mv -f ~/.vimrc ~/.old_vimrc
+rm -f ~/.vimrc
 ln -s ~/dotfiles/vim/.vimrc ~/.vimrc
 
-mv -f ~/.zshrc ~/.old_zshrc
+rm -f ~/.zshrc
 ln -s ~/dotfiles/shell/.bashrc ~/.zshrc
 
-mv -f ~/.bashrc ~/.old_bashrc
+rm -f ~/.bashrc
 ln -s ~/dotfiles/shell/.bashrc ~/.bashrc
 
-mv -f ~/.bash_profile ~/.old_bash_profile
+rm -f ~/.bash_profile
 ln -s ~/dotfiles/shell/.bashrc ~/.bash_profile
 
-mv -f ~/.babunrc ~/.old_babunrc
+rm -f ~/.babunrc
 ln -s ~/dotfiles/shell/.bashrc ~/.babunrc
 
