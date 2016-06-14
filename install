@@ -9,6 +9,7 @@ ln -s ~/dotfiles/shell/.bashrc ~/.bash_profile
 ln -s /Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl /usr/local/bin/subl
 
 # Install vundle
+rm -rf .vim
 git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 # Still need a way to call vundle from this script and then compile
 # YouCompleteMe
