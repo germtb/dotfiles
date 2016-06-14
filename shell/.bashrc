@@ -9,6 +9,8 @@ CYAN="\[$(tput setaf 6)\]"
 RED="\[$(tput setaf 1)\]"
 BLUE="\[$(tput setaf 4)\]"
 RESET="\[$(tput sgr0)\]"
+export VISUAL=vim
+export EDITOR="$VISUAL"
 
 # Aliases
 alias a='git add'
