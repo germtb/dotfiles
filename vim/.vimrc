@@ -93,7 +93,6 @@ set listchars=eol:¬,tab:——,trail:·,extends:>,precedes:<
 set list
 
 " NERDTree
-autocmd VimEnter * NERDTree
 autocmd VimEnter * wincmd p
 let NERDTreeShowHidden=1
 let g:NERDTreeAutoDeleteBuffer = 1

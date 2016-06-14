@@ -22,4 +22,6 @@ alias ll='ls -lad'
 alias less='less -S -N'
 alias s='git status'
 alias o='cd ..'
+alias vim='/usr/local/Cellar/vim/7.4.1910/bin/vim'
+alias vi='/usr/local/Cellar/vim/7.4.1910/bin/vim'
 
