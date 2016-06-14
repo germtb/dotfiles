@@ -49,8 +49,6 @@ nnoremap w           :w<CR>
 nnoremap q           :q<CR>
 nnoremap #           :call Comment()<CR>
 nnoremap ~           :call Uncomment()<CR>
-nnoremap J           :call AltDown()<CR>
-nnoremap K           :call AltUp()<CR>
 nnoremap ev          :vsplit ~/.vimrc<CR>
 nnoremap sv          :source ~/.vimrc<CR>
 nnoremap z           zz
@@ -108,8 +106,11 @@ nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
 
 " CTRLP
-let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)'
 let g:ctrlp_show_hidden = 1
+let g:ctrlp_custom_ignore = {
+  \ 'dir':  '\.git$\|\.yardoc\|public$|log\|tmp$',
+  \ 'file': '\.so$\|\.dat$|\.DS_Store$'
+  \ }
 
 " Javascript
 " let g:javascript_conceal_function       = "ƒ"
@@ -152,33 +153,3 @@ function! CommentChar()
   return "#"
 endfunction
 
-function! AltUp()
-  if line(".") == 1
-    return 1
-  endif
-
-  if line(".") == 2
-    execute "normal! k"
-    return 1
-  endif
-
-  execute "normal! k{j^"
-
-  if getline(".") == ""
-    call AltUp()
-  endif
-
-endfunction
-
-function! AltDown()
-  if line(".") == line("$")
-    return 1
-  endif
-
-  execute "normal! }j^"
-
-  if getline(".") == ""
-    call AltDown()
-  endif
-
-endfunction
