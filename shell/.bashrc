@@ -24,7 +24,6 @@ alias ll='ls -lad'
 alias less='less -S -N'
 alias s='git status'
 alias o='cd ..'
-alias vi='nvim -u ~/.vimrc'
-alias vim='nvim -u ~/.vimrc'
+alias vim='/usr/local/Cellar/vim/7.4.1910/bin/vim'
 alias nvim='nvim -u ~/.vimrc'
 
