@@ -7,7 +7,7 @@
 	{ "keys": ["ctrl+tab"], "command": "next_view" },
 
 	// Fix for closing all tabs
-	{ "keys": ["ctrl+shift+w"], "command": "close_all" },
+	{ "keys": ["super+shift+w"], "command": "close_all" },
 
 	// Vim like surround
 	{ "keys": ["alt+s"], "command": "surround_change" },
@@ -20,6 +20,8 @@
 		"args": {"undo": true},
 		"context": [{ "key": "expand_region_soft_undo" }]
 	},
+
+	{ "keys": ["super+0"], "command": "focus_side_bar" },
 
 	// Alt keys
 	{"keys": ["alt+o"], "command": "run_multiple_commands",
@@ -68,6 +70,58 @@
 		}
 	},
 
+	{"keys": ["alt+d"], "command": "run_multiple_commands",
+		"args": {
+			"commands":
+			[
+				{ "command": "move_to", "args": {"to": "eol", "extend": false} },
+				{ "command": "insert", "args": {"characters": "\n"} },
+				{ "command": "insert", "args": {"characters": "debugger;"} },
+			],
+		}
+	},
+
+	{"keys": ["alt+shift+d"], "command": "run_multiple_commands",
+		"args": {
+			"commands":
+			[
+				{ "command": "move_to", "args": {"to": "eol", "extend": false} },
+				{ "command": "move_to", "args": {"to": "bol", "extend": false} },
+				{ "command": "insert", "args": {"characters": "\n"} },
+				{ "command": "move", "args": {"by": "lines", "forward": false} },
+				{ "command": "insert", "args": {"characters": "debugger;"} },
+			],
+		}
+	},
+
+	{"keys": ["alt+c"], "command": "run_multiple_commands",
+		"args": {
+			"commands":
+			[
+				{ "command": "move_to", "args": {"to": "eol", "extend": false} },
+				{ "command": "insert", "args": {"characters": "\n"} },
+				{ "command": "insert", "args": {"characters": "console.log();"} },
+				{ "command": "move", "args": {"by": "characters", "forward": false} },
+				{ "command": "move", "args": {"by": "characters", "forward": false} },
+			],
+		}
+	},
+
+	{"keys": ["alt+shift+c"], "command": "run_multiple_commands",
+		"args": {
+			"commands":
+			[
+				{ "command": "move_to", "args": {"to": "eol", "extend": false} },
+				{ "command": "move_to", "args": {"to": "bol", "extend": false} },
+				{ "command": "insert", "args": {"characters": "\n"} },
+				{ "command": "move", "args": {"by": "lines", "forward": false} },
+				{ "command": "insert", "args": {"characters": "console.log();"} },
+				{ "command": "move", "args": {"by": "characters", "forward": false} },
+				{ "command": "move", "args": {"by": "characters", "forward": false} },
+			],
+		}
+	},
+
 	{"keys": ["alt+;"], "command": "run_multiple_commands",
 		"args": {
 			"commands":
@@ -77,5 +131,4 @@
 			],
 		}
 	},
-
 ]
