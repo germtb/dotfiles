@@ -18,6 +18,7 @@
 		"dist/*",
 		"build/*"
 	],
+	"color_scheme": "Packages/User/SublimeLinter/Monokai (SL).tmTheme",
 	"default_line_ending": "unix",
 	"draw_white_space": "all",
 	"file_exclude_patterns":
@@ -25,6 +26,7 @@
 		"*.gitkeep",
 		"*.exe"
 	],
+	"find_selected_text": true,
 	"folder_exclude_patterns":
 	[
 		".svn",
@@ -34,7 +36,7 @@
 		".gradle",
 		".idea"
 	],
-	"font_size": 15,
+	"font_size": 16,
 	"highlight_line": true,
 	"highlight_modified_tabs": true,
 	"ignored_packages":
@@ -45,5 +47,5 @@
 	"reveal-on-activate": false,
 	"show_encoding": true,
 	"tab_size": 2,
-	"find_selected_text": true
+	"translate_tabs_to_spaces": true
 }
