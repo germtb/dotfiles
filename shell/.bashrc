@@ -5,16 +5,7 @@ export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/l
 source $ZSH/oh-my-zsh.sh
 
 # Prompt
-#export PROMPT="${ret_status} %{$fg[cyan]%}%c%{$reset_color%} $(git_prompt_info)"
-#export PROMPT="[%n@%m:%~]%#"
-#export PROMPT="${ret_status} %{$fg[cyan]%}%c%{$reset_color%} $(git_prompt_info)"
-
-# PS1
-GREEN="\[$(tput setaf 2)\]"
-CYAN="\[$(tput setaf 6)\]"
-RED="\[$(tput setaf 1)\]"
-BLUE="\[$(tput setaf 4)\]"
-RESET="\[$(tput sgr0)\]"
+export PROMPT="${ret_status} %{$fg[cyan]%}%~%{$reset_color%} $(git_prompt_info)"
 
 # Set default editor
 export VISUAL=vim
