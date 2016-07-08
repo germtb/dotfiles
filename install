@@ -1,19 +1,16 @@
 #!/bin/bash
-rm -f ~/.vimrc
-ln -s ~/dotfiles/vim/.vimrc ~/.vimrc
 
-rm -f ~/.bash_profile
-ln -s ~/dotfiles/shell/.bashrc ~/.bash_profile
+# Install bashrc
+ln -nsf ~/dotfiles/shell/.bashrc ~/.bash_profile
 
-# Add sublime to /usr/local/bin
-ln -s /Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl /usr/local/bin/subl
-
-# Install vundle
-rm -rf .vim
-git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+# Install vim
+ln -nsf ~/dotfiles/vim/.vimrc ~/.vimrc
+#rm -rf .vim
+#git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 # Still need a way to call vundle from this script and then compile
 # YouCompleteMe
 
 # Install sublime
+ln -nsf /Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl /usr/local/bin/subl
 ln -nsf ~/dotfiles/sublime/* ~/Library/Application\ Support/Sublime\ Text\ 3/Packages/User
 
