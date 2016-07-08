@@ -70,17 +70,6 @@
 		}
 	},
 
-	{"keys": ["alt+d"], "command": "run_multiple_commands",
-		"args": {
-			"commands":
-			[
-				{ "command": "move_to", "args": {"to": "eol", "extend": false} },
-				{ "command": "insert", "args": {"characters": "\n"} },
-				{ "command": "insert", "args": {"characters": "debugger;"} },
-			],
-		}
-	},
-
 	{"keys": ["alt+shift+d"], "command": "run_multiple_commands",
 		"args": {
 			"commands":
@@ -98,11 +87,13 @@
 		"args": {
 			"commands":
 			[
+				{ "command": "copy" },
 				{ "command": "move_to", "args": {"to": "eol", "extend": false} },
 				{ "command": "insert", "args": {"characters": "\n"} },
 				{ "command": "insert", "args": {"characters": "console.log();"} },
 				{ "command": "move", "args": {"by": "characters", "forward": false} },
 				{ "command": "move", "args": {"by": "characters", "forward": false} },
+				{ "command": "paste" },
 			],
 		}
 	},
@@ -111,6 +102,7 @@
 		"args": {
 			"commands":
 			[
+				{ "command": "copy" },
 				{ "command": "move_to", "args": {"to": "eol", "extend": false} },
 				{ "command": "move_to", "args": {"to": "bol", "extend": false} },
 				{ "command": "insert", "args": {"characters": "\n"} },
@@ -118,6 +110,7 @@
 				{ "command": "insert", "args": {"characters": "console.log();"} },
 				{ "command": "move", "args": {"by": "characters", "forward": false} },
 				{ "command": "move", "args": {"by": "characters", "forward": false} },
+				{ "command": "paste" },
 			],
 		}
 	},
