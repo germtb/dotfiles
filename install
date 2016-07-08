@@ -14,3 +14,6 @@ git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 # Still need a way to call vundle from this script and then compile
 # YouCompleteMe
 
+# Install sublime
+ln -nsf ~/dotfiles/sublime/* ~/Library/Application\ Support/Sublime\ Text\ 3/Packages/User
+
