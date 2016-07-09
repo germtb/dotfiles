@@ -21,6 +21,7 @@
 		"context": [{ "key": "expand_region_soft_undo" }]
 	},
 
+	// Go to side bar
 	{ "keys": ["super+0"], "command": "focus_side_bar" },
 
 	// Alt keys
