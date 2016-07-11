@@ -12,6 +12,7 @@
 		"BracketHighlighter",
 		"ChannelRepositoryTools",
 		"ExpandRegion",
+		"Git",
 		"GitGutter",
 		"Markdown Preview",
 		"Package Control",
