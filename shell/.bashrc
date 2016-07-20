@@ -1,10 +1,11 @@
-# Set ZSH
-export ZSH=~/.oh-my-zsh
-plugins=(git)
-ZSH_THEME='robbyrussell'
-
 # Set path
 export PATH='/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
+
+# Set ZSH
+export ZSH=~/.oh-my-zsh
+ZSH_THEME="robbyrussell"
+plugins=(git)
+source $ZSH/oh-my-zsh.sh
 
 # Prompt
 # export PROMPT='${ret_status} %{$fg[cyan]%}%~%{$reset_color%} $(git_prompt_info)'
@@ -14,8 +15,8 @@ export VISUAL=vim
 export EDITOR='$VISUAL'
 
 # Set java home
-export JAVA7_HOME='/Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk'
-export JAVA8_HOME='/Library/Java/JavaVirtualMachines/jdk1.8.0_101.jdk'
+export JAVA7_HOME='/Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home'
+export JAVA8_HOME='/Library/Java/JavaVirtualMachines/jdk1.8.0_101.jdk/Contents/Home'
 export JAVA_HOME=$JAVA8_HOME
 
 # Aliases
