@@ -22,4 +22,5 @@ alias ll='ls -lad'
 alias less='less -S -N'
 alias s='git status'
 alias o='cd ..'
+alias vim='/opt/local/bin/vim'
 
