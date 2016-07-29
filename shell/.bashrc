@@ -30,6 +30,7 @@ alias nvim='nvim -u ~/.vimrc'
 alias vim='/opt/local/bin/vim'
 alias m='. ~/dotfiles/shell/mark'
 alias c='. ~/dotfiles/shell/change'
+alias ss='subl .'
 
 # Git aliases
 alias b='git branch'
