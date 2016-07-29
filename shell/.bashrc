@@ -8,7 +8,7 @@ plugins=(git)
 source $ZSH/oh-my-zsh.sh
 
 # Prompt
-# export PROMPT='${ret_status} %{$fg[cyan]%}%~%{$reset_color%} $(git_prompt_info)'
+export PROMPT='${ret_status} %{$fg[cyan]%}%~%{$reset_color%} $(git_prompt_info)'
 
 # Set default editor
 export VISUAL=vim
