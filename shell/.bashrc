@@ -24,10 +24,8 @@ export PATH=$JAVA_HOME/bin:$PATH
 alias c='clear'
 alias cl='. ~/dotfiles/shell/cl'
 alias l='ls -la'
-alias ll='ls -la'
 alias less='less -S -N'
 alias o='cd ..'
-# alias vim='/usr/local/Cellar/vim/7.4.1910/bin/vim'
 alias nvim='nvim -u ~/.vimrc'
 alias vim='/opt/local/bin/vim'
 
