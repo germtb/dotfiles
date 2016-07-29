@@ -1,0 +1,3 @@
+#!/bin/bash
+_path=mark$1
+cd ${(P)_path}

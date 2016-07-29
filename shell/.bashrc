@@ -28,6 +28,8 @@ alias less='less -S -N'
 alias o='cd ..'
 alias nvim='nvim -u ~/.vimrc'
 alias vim='/opt/local/bin/vim'
+alias m='. ~/dotfiles/shell/mark'
+alias c='. ~/dotfiles/shell/change'
 
 # Git aliases
 alias b='git branch'
