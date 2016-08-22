@@ -1,10 +1,21 @@
 #!/bin/bash
 
+# Install zsh
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+
+echo "zsh installed"
+
 # Install bashrc
 ln -nsf ~/dotfiles/shell/.bashrc ~/.bash_profile
+ln -nsf ~/dotfiles/shell/.bashrc ~/.zshrc
+
+echo "bashrc installed"
 
 # Install vim
 ln -nsf ~/dotfiles/vim/.vimrc ~/.vimrc
+
+echo "vimrc installed"
+
 #rm -rf .vim
 #git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 # Still need a way to call vundle from this script and then compile
@@ -14,4 +25,8 @@ ln -nsf ~/dotfiles/vim/.vimrc ~/.vimrc
 ln -nsf /Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl /usr/local/bin/subl
 ln -nsf ~/dotfiles/sublime/* ~/Library/Application\ Support/Sublime\ Text\ 3/Packages/User
 
+echo "sublime installed"
+
 chsh -s /bin/zsh
+
+echo "zsh set as default shell"
