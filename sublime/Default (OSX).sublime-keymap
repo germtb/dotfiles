@@ -21,6 +21,9 @@
 		"context": [{ "key": "expand_region_soft_undo" }]
 	},
 
+	// Go to line
+	{ "keys": ["super+g"], "command": "show_overlay", "args": {"overlay": "goto", "text": ":"} },
+
 	// Go to side bar
 	{ "keys": ["super+0"], "command": "focus_side_bar" },
 
