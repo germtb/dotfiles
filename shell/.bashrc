@@ -27,10 +27,11 @@ alias l='ls -la'
 alias less='less -S -N'
 alias o='cd ..'
 alias nvim='nvim -u ~/.vimrc'
-alias vim='/opt/local/bin/vim'
+alias vim='/usr/local/bin/vim'
 alias m='. ~/dotfiles/shell/mark'
 alias c='. ~/dotfiles/shell/change'
 alias ss='subl .'
+alias gpg='gpg2'
 
 # Git aliases
 alias b='git branch'
