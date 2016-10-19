@@ -21,7 +21,6 @@ export JAVA_HOME=$JAVA8_HOME
 export PATH=$JAVA_HOME/bin:$PATH
 
 # Aliases
-alias c='clear'
 alias cl='. ~/dotfiles/shell/cl'
 alias l='ls -la'
 alias less='less -S -N'
@@ -40,3 +39,5 @@ alias d='git diff'
 alias s='git status'
 alias gl='git log'
 alias p='pwd'
+alias c='git checkout'
+
