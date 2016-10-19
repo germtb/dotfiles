@@ -18,6 +18,7 @@
 		"dist/*",
 		"build/*"
 	],
+	"color_scheme": "Packages/Material Theme/schemes/Material-Theme.tmTheme",
 	"default_line_ending": "unix",
 	"draw_white_space": "all",
 	"file_exclude_patterns":
@@ -29,6 +30,7 @@
 	"find_selected_text": true,
 	"folder_exclude_patterns":
 	[
+		"node_modules",
 		".svn",
 		".git",
 		".hg",
@@ -36,7 +38,7 @@
 		".gradle",
 		".idea"
 	],
-	"font_size": 16,
+	"font_size": 19,
 	"highlight_line": true,
 	"highlight_modified_tabs": true,
 	"ignored_packages":
@@ -47,5 +49,6 @@
 	"reveal-on-activate": false,
 	"show_encoding": true,
 	"tab_size": 2,
+	"theme": "Material-Theme.sublime-theme",
 	"translate_tabs_to_spaces": true
 }
