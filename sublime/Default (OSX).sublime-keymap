@@ -97,6 +97,9 @@
 				{ "command": "insert", "args": {"characters": "console.log();"} },
 				{ "command": "move", "args": {"by": "characters", "forward": false} },
 				{ "command": "move", "args": {"by": "characters", "forward": false} },
+				{ "command": "insert", "args": {"characters": "'"} },
+				{ "command": "paste" },
+				{ "command": "insert", "args": {"characters": ":', "} },
 				{ "command": "paste" },
 			],
 		}
@@ -114,6 +117,9 @@
 				{ "command": "insert", "args": {"characters": "console.log();"} },
 				{ "command": "move", "args": {"by": "characters", "forward": false} },
 				{ "command": "move", "args": {"by": "characters", "forward": false} },
+				{ "command": "insert", "args": {"characters": "'"} },
+				{ "command": "paste" },
+				{ "command": "insert", "args": {"characters": ":', "} },
 				{ "command": "paste" },
 			],
 		}
