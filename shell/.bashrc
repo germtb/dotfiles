@@ -4,7 +4,7 @@ export PATH='/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
 # Set ZSH
 export ZSH=~/.oh-my-zsh
 ZSH_THEME="robbyrussell"
-plugins=(git)
+plugins=(git sublime npm osx sudo brew)
 source $ZSH/oh-my-zsh.sh
 
 # Prompt
