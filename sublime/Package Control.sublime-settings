@@ -29,5 +29,9 @@
 		"SyncedSideBar",
 		"textract",
 		"TrailingSpaces"
+	],
+	"repositories":
+	[
+		"https://github.com/titoBouzout/SideBarEnhancements/tree/st3"
 	]
 }
