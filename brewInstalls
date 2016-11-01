@@ -1,4 +1,8 @@
 brew install zsh-syntax-highlighting
-brew tap caskroom/fonts && brew cask install font-fira-code
+
 # Needs to manually set iterm font to firacode
+brew tap caskroom/fonts && brew cask install font-fira-code
+
+brew install yarn
+brew install vim
 
