@@ -6,6 +6,7 @@ export ZSH=~/.oh-my-zsh
 ZSH_THEME="robbyrussell"
 plugins=(git sublime npm osx sudo brew)
 source $ZSH/oh-my-zsh.sh
+source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 # Prompt
 export PROMPT='${ret_status} %{$fg[cyan]%}%~%{$reset_color%} $(git_prompt_info)'
