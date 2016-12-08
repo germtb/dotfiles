@@ -1,0 +1,2 @@
+ln -nsf ~/dotfiles/atom/init.js ~/.atom/init.js
+
