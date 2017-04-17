@@ -34,6 +34,7 @@ alias m='. ~/dotfiles/shell/mark'
 alias c='. ~/dotfiles/shell/change'
 alias ss='subl .'
 alias gpg='gpg2'
+alias y='yarn'
 
 # Git aliases
 alias b='git branch'
@@ -43,5 +44,7 @@ alias s='git status'
 alias gl='git log --name-status'
 alias gll= log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
 alias p='pwd'
-alias c='git checkout'
+alias c='git cherry-pick'
 
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

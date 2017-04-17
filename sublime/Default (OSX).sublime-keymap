@@ -87,44 +87,6 @@
 		}
 	},
 
-	{"keys": ["alt+c"], "command": "run_multiple_commands",
-		"args": {
-			"commands":
-			[
-				{ "command": "copy" },
-				{ "command": "move_to", "args": {"to": "eol", "extend": false} },
-				{ "command": "insert", "args": {"characters": "\n"} },
-				{ "command": "insert", "args": {"characters": "console.log();"} },
-				{ "command": "move", "args": {"by": "characters", "forward": false} },
-				{ "command": "move", "args": {"by": "characters", "forward": false} },
-				{ "command": "insert", "args": {"characters": "'"} },
-				{ "command": "paste" },
-				{ "command": "insert", "args": {"characters": ":', "} },
-				{ "command": "paste" },
-			],
-		}
-	},
-
-	{"keys": ["alt+shift+c"], "command": "run_multiple_commands",
-		"args": {
-			"commands":
-			[
-				{ "command": "copy" },
-				{ "command": "move_to", "args": {"to": "eol", "extend": false} },
-				{ "command": "move_to", "args": {"to": "bol", "extend": false} },
-				{ "command": "insert", "args": {"characters": "\n"} },
-				{ "command": "move", "args": {"by": "lines", "forward": false} },
-				{ "command": "insert", "args": {"characters": "console.log();"} },
-				{ "command": "move", "args": {"by": "characters", "forward": false} },
-				{ "command": "move", "args": {"by": "characters", "forward": false} },
-				{ "command": "insert", "args": {"characters": "'"} },
-				{ "command": "paste" },
-				{ "command": "insert", "args": {"characters": ":', "} },
-				{ "command": "paste" },
-			],
-		}
-	},
-
 	{"keys": ["alt+;"], "command": "run_multiple_commands",
 		"args": {
 			"commands":

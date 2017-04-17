@@ -18,7 +18,7 @@
 		"dist/*",
 		"build/*"
 	],
-	"color_scheme": "Packages/Material Theme/schemes/Material-Theme.tmTheme",
+	"color_scheme": "Packages/User/SublimeLinter/Monokai (SL).tmTheme",
 	"default_line_ending": "unix",
 	"draw_white_space": "all",
 	"file_exclude_patterns":
@@ -49,6 +49,6 @@
 	"reveal-on-activate": false,
 	"show_encoding": true,
 	"tab_size": 2,
-	"theme": "Material-Theme.sublime-theme",
+	"theme": "Default.sublime-theme",
 	"translate_tabs_to_spaces": true
 }

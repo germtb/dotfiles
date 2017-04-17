@@ -1,0 +1,18 @@
+{
+	"atom-text-editor:not(.find-and-replace)": {
+		"ctrl-h": "pane:show-previous-item",
+		"ctrl-l": "pane:show-next-item",
+
+		"cmd-shift-w": "pane:close",
+		"cmd-t": "application:new-file",
+
+		"alt-enter": "hyperclick:confirm-cursor"
+	},
+	"atom-text-editor.vim-mode-plus.insert-mode": {
+		"j j": "vim-mode-plus:activate-normal-mode"
+	},
+	"atom-text-editor.vim-mode-plus.normal-mode": {
+		"O": "editor:newline-above",
+		"o": "editor:newline-below"
+	}
+}
