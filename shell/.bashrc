@@ -30,9 +30,6 @@ alias less='less -S -N'
 alias o='cd ..'
 alias nvim='nvim -u ~/.vimrc'
 alias vim='/usr/local/bin/vim'
-alias m='. ~/dotfiles/shell/mark'
-alias c='. ~/dotfiles/shell/change'
-alias ss='subl .'
 alias gpg='gpg2'
 alias y='yarn'
 
@@ -43,8 +40,10 @@ alias d='git diff'
 alias s='git status'
 alias gl='git log --name-status'
 alias gll= log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
-alias p='pwd'
 alias c='git cherry-pick'
-
+alias a='git add --all'
+alias gg='git commit --amend --no-edit'
+alias p='git push origin HEAD'
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+source ~/.secretrc
