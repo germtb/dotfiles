@@ -21,8 +21,7 @@
 	"atom-text-editor": {
 		"alt-cmd-enter": "hyperclick:confirm-cursor",
 		"ctrl-d": "find-and-replace:select-next",
-		"ctrl-f": "find-and-replace:show",
-		"cmd-;": "trailing-semicolon:semicolon-newline"
+		"ctrl-f": "find-and-replace:show"
 	},
 	"atom-text-editor.vim-mode-plus": {
 		"ctrl-t": "application:new-file"

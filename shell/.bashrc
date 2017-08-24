@@ -1,7 +1,11 @@
 # Set path
 export PATH='/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
-export ANDROID_HOME=~/Library/Android/sdk
-export PATH=${PATH}:${ANDROID_HOME}/tools
+
+if which ruby >/dev/null && which gem >/dev/null; then
+  PATH="$(ruby -rubygems -e 'puts Gem.user_dir')/bin:$PATH"
+fi
+
+export PATH=${PATH}:'/.gem/ruby/2.4.0/gems/rouge-2.2.1/bin'
 
 # Set ZSH
 export ZSH=~/.oh-my-zsh
@@ -24,26 +28,113 @@ export JAVA_HOME=$JAVA8_HOME
 export PATH=$JAVA_HOME/bin:$PATH
 
 # Aliases
-alias cl='. ~/dotfiles/shell/cl'
+alias cat='rougify'
+alias reload='. ~/.bash_profile'
 alias l='ls -la'
 alias less='less -S -N'
 alias o='cd ..'
-alias nvim='nvim -u ~/.vimrc'
 alias vim='/usr/local/bin/vim'
-alias gpg='gpg2'
-alias y='yarn'
 
 # Git aliases
 alias b='git branch'
 alias bb='git branch --all'
 alias d='git diff'
 alias s='git status'
-alias gl='git log --name-status'
+alias ll='git log --name-status'
 alias gll= log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
 alias c='git cherry-pick'
-alias a='git add --all'
+alias aa='git add --all && git status'
 alias gg='git commit --amend --no-edit'
-alias p='git push origin HEAD'
+alias pp='git push origin HEAD'
+alias rr='git reset --hard'
 
+# fzf
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+export FZF_PREVIEW='[[ $(file --mime {}) =~ binary ]] &&
+  echo {} is a binary file ||
+  (highlight -O ansi -l {} || rougify {} || cat {}) 2> /dev/null | head -500'
+export FZF_COMPLETION_TRIGGER='*'
+export FZF_DEFAULT_COMMAND='ag -g ""'
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+export FZF_COMPLETION_OPTS='--extended --preview "[[ $(file --mime {}) =~ binary ]] &&
+  echo {} is a binary file ||
+  (highlight -O ansi -l {} || rougify {} || cat {}) 2> /dev/null | head -500"'
+
+fzf-git-branch() {
+  local branches branch
+  branches=$(git branch) &&
+  branch=$(echo "$branches" | fzf +m --height 40%) &&
+  git checkout $(echo "$branch" | awk '{print $1}' | sed "s/.* //")
+}
+zle -N  fzf-git-branch
+bindkey '^B' fzf-git-branch
+
+fzf-git-remote-branch() {
+  local branches branch
+  branches=$(git branch --all | grep -v HEAD) &&
+  branch=$(echo "$branches" | fzf +m --height 40%) &&
+  git checkout --track $(echo "$branch" | sed "s/.* //" | sed "s#remotes/[^/]*/##")
+}
+zle -N  fzf-git-remote-branch
+bindkey '^V' fzf-git-remote-branch
+
+fzf-file() {
+  local file=$(ag -g "" | fzf --height 40% --extended --preview $FZF_PREVIEW)
+  if [[ -z "$file" ]]; then
+    zle redisplay
+    return 0
+  fi
+  atom "$file"
+}
+zle -N  fzf-file
+bindkey '^P' fzf-file
+bindkey '^F' fzf-js
+
+fzf-js() {
+  local file=$(ag -g .js | fzf --height 40% --extended --preview $FZF_PREVIEW)
+  if [[ -z "$file" ]]; then
+    zle redisplay
+    return 0
+  fi
+  atom "$file"
+}
+zle -N  fzf-js
+bindkey '^J' fzf-js
+
+fzf-dir() {
+  local dir
+  dir=$(find ${1:-.} -path '*/\.*' -prune \
+                  -o -type d -print 2> /dev/null | fzf --height 40% --extended --preview "ls -la {}")
+  if [[ -z "$dir" ]]; then
+    zle redisplay
+    return 0
+  fi
+  cd "$dir"
+}
+zle -N  fzf-dir
+bindkey '^O' fzf-dir
+
+fzf-chrome() {
+  local cols sep google_history open
+  cols=$(( COLUMNS / 3 ))
+  sep='{::}'
+
+  if [ "$(uname)" = "Darwin" ]; then
+    google_history="$HOME/Library/Application Support/Google/Chrome/Default/History"
+    open=open
+  else
+    google_history="$HOME/.config/google-chrome/Default/History"
+    open=xdg-open
+  fi
+  cp -f "$google_history" /tmp/h
+  sqlite3 -separator $sep /tmp/h \
+    "select substr(title, 1, $cols), url
+     from urls order by last_visit_time desc" |
+  awk -F $sep '{printf "%-'$cols's  \x1b[36m%s\x1b[m\n", $1, $2}' |
+  fzf --ansi --multi | sed 's#.*\(https*://\)#\1#' | xargs $open > /dev/null 2> /dev/null
+}
+zle -N  fzf-chrome
+bindkey '^G' fzf-chrome
+
 source ~/.secretrc
