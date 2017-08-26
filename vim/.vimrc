@@ -44,6 +44,8 @@ set mouse=a
 set nowrap
 syntax enable
 set pastetoggle=<F2>
+set swapfile
+set dir=~/temp
 
 set list
 set listchars=tab:·\ ,eol:¬,trail:·,nbsp:⎵
@@ -71,16 +73,15 @@ let &t_EI = "\<Esc>]50;CursorShape=0\x7"
 nnoremap o  o<ESC>
 nnoremap O  O<ESC>
 
-nnoremap ∆  }j
-nnoremap ˚  {k
+noremap ∆  }j
+noremap ˚  {k
+
 nnoremap ¬  viw
 nnoremap ˙  viw
 nnoremap q  :q<CR>
 
-vnoremap ∆  <ESC>}j
-vnoremap ˚  <ESC>{k
-vnoremap ¬  <ESC>wviw
-vnoremap ˙  <ESC>bbviw
+xnoremap ¬  <ESC>wviw
+xnoremap ˙  <ESC>bbviw
 
 inoremap jj <ESC>
 
@@ -92,13 +93,6 @@ nnoremap <C-k> :bprev<CR>
 autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
 
 " NerdTree
-" autocmd vimenter * NERDTree
-" autocmd StdinReadPre * let s:std_in=1
-" autocmd VimEnter *f argc() == 0 && !exists("s:std_in") | NERDTree | endif
-" autocmd StdinReadPre * let s:std_in=1
-" autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | endif
-" autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-
 noremap <C-n> :NERDTreeToggle<CR>
 noremap <C-m> :NERDTreeFind<CR>
 
@@ -112,7 +106,6 @@ noremap <C-l> :Lines<CR>
 let g:multi_cursor_use_default_mapping=0
 
 let g:multi_cursor_next_key='<C-d>'
-let g:multi_cursor_prev_key='<C-S-d>'
 let g:multi_cursor_skip_key='<C-k>'
 let g:multi_cursor_quit_key='<Esc>'
 
@@ -127,7 +120,7 @@ let g:prettier#config#semi = 'false'
 let g:prettier#config#single_quote = 'true' 
 let g:prettier#config#bracket_spacing = 'true' 
 let g:prettier#config#jsx_bracket_same_line = 'false' 
-let g:prettier#config#trailing_comma = 'all'
+let g:prettier#config#trailing_comma = 'none'
 let g:prettier#config#parser = 'flow'
 
 " syntastic
