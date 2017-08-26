@@ -1,10 +1,11 @@
-# Set path
+  # Set path
 export PATH='/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
 
 if which ruby >/dev/null && which gem >/dev/null; then
-  PATH="$(ruby -rubygems -e 'puts Gem.user_dir')/bin:$PATH"
+  export PATH="$(ruby -rubygems -e 'puts Gem.user_dir')/bin:$PATH"
 fi
 
+# Add rouge manually to path
 export PATH=${PATH}:'/.gem/ruby/2.4.0/gems/rouge-2.2.1/bin'
 
 # Set ZSH
@@ -34,6 +35,14 @@ alias l='ls -la'
 alias less='less -S -N'
 alias o='cd ..'
 alias vim='/usr/local/bin/vim'
+alias ag='ag --ignore "node_modules/" --ignore "Blizzard/" --ignore "Applications/" --ignore "Desktop/" --ignore "Dropbox/" --ignore "Downloads/" --ignore "Documents/"'
+
+cd-ls() {
+  cd $1
+  ls -la
+}
+zle -N  cd-ls
+alias cd='cd-ls'
 
 # Git aliases
 alias b='git branch'
@@ -74,7 +83,7 @@ fzf-git-remote-branch() {
   local branches branch
   branches=$(git branch --all | grep -v HEAD) &&
   branch=$(echo "$branches" | fzf +m --height 40%) &&
-  git checkout --track $(echo "$branch" | sed "s/.* //" | sed "s#remotes/[^/]*/##")
+  git checkout $(echo "$branch" | sed "s/.* //" | sed "s#remotes/[^/]*/##")
 }
 zle -N  fzf-git-remote-branch
 bindkey '^V' fzf-git-remote-branch
@@ -89,7 +98,6 @@ fzf-file() {
 }
 zle -N  fzf-file
 bindkey '^P' fzf-file
-bindkey '^F' fzf-js
 
 fzf-js() {
   local file=$(ag -g .js | fzf --height 40% --extended --preview $FZF_PREVIEW)
@@ -104,7 +112,7 @@ bindkey '^J' fzf-js
 
 fzf-dir() {
   local dir
-  dir=$(find ${1:-.} -path '*/\.*' -prune \
+  dir=$(find ${1:-.} -path '*\.*' -prune \
                   -o -type d -print 2> /dev/null | fzf --height 40% --extended --preview "ls -la {}")
   if [[ -z "$dir" ]]; then
     zle redisplay
@@ -114,27 +122,5 @@ fzf-dir() {
 }
 zle -N  fzf-dir
 bindkey '^O' fzf-dir
-
-fzf-chrome() {
-  local cols sep google_history open
-  cols=$(( COLUMNS / 3 ))
-  sep='{::}'
-
-  if [ "$(uname)" = "Darwin" ]; then
-    google_history="$HOME/Library/Application Support/Google/Chrome/Default/History"
-    open=open
-  else
-    google_history="$HOME/.config/google-chrome/Default/History"
-    open=xdg-open
-  fi
-  cp -f "$google_history" /tmp/h
-  sqlite3 -separator $sep /tmp/h \
-    "select substr(title, 1, $cols), url
-     from urls order by last_visit_time desc" |
-  awk -F $sep '{printf "%-'$cols's  \x1b[36m%s\x1b[m\n", $1, $2}' |
-  fzf --ansi --multi | sed 's#.*\(https*://\)#\1#' | xargs $open > /dev/null 2> /dev/null
-}
-zle -N  fzf-chrome
-bindkey '^G' fzf-chrome
 
 source ~/.secretrc
