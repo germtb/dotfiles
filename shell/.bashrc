@@ -1,4 +1,4 @@
-  # Set path
+# Set path
 export PATH='/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
 
 if which ruby >/dev/null && which gem >/dev/null; then
@@ -35,38 +35,38 @@ alias l='ls -la'
 alias less='less -S -N'
 alias o='cd ..'
 alias vim='/usr/local/bin/vim'
-alias ag='ag --ignore "node_modules/" --ignore "Blizzard/" --ignore "Applications/" --ignore "Desktop/" --ignore "Dropbox/" --ignore "Downloads/" --ignore "Documents/"'
 
 cd-ls() {
   cd $1
   ls -la
 }
 zle -N  cd-ls
-alias cd='cd-ls'
+alias cl='cd-ls'
 
 # Git aliases
-alias b='git branch'
-alias bb='git branch --all'
 alias d='git diff'
 alias s='git status'
 alias ll='git log --name-status'
-alias gll= log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
-alias c='git cherry-pick'
+alias g-='git checkout -'
+alias r-='git rebase -'
+alias cc='git commit -m'
 alias aa='git add --all && git status'
 alias gg='git commit --amend --no-edit'
 alias pp='git push origin HEAD'
+alias pl='git pull'
 alias rr='git reset --hard'
 
 # fzf
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
+export FZF_IGNORES='--ignore ".git/" --ignore "node_modules/" --ignore "Blizzard/" --ignore "Applications/" --ignore "Desktop/" --ignore "Dropbox/" --ignore "Downloads/" --ignore "Documents/" --ignore ".npm/" --ignore ".gem/"'
 export FZF_PREVIEW='[[ $(file --mime {}) =~ binary ]] &&
   echo {} is a binary file ||
   (highlight -O ansi -l {} || rougify {} || cat {}) 2> /dev/null | head -500'
 export FZF_COMPLETION_TRIGGER='*'
 export FZF_DEFAULT_COMMAND='ag -g ""'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-export FZF_COMPLETION_OPTS='--extended --preview "[[ $(file --mime {}) =~ binary ]] &&
+export FZF_COMPLETION_OPTS=' --extended --preview "[[ $(file --mime {}) =~ binary ]] &&
   echo {} is a binary file ||
   (highlight -O ansi -l {} || rougify {} || cat {}) 2> /dev/null | head -500"'
 
@@ -75,6 +75,7 @@ fzf-git-branch() {
   branches=$(git branch) &&
   branch=$(echo "$branches" | fzf +m --height 40%) &&
   git checkout $(echo "$branch" | awk '{print $1}' | sed "s/.* //")
+  zle reset-prompt
 }
 zle -N  fzf-git-branch
 bindkey '^B' fzf-git-branch
@@ -84,43 +85,32 @@ fzf-git-remote-branch() {
   branches=$(git branch --all | grep -v HEAD) &&
   branch=$(echo "$branches" | fzf +m --height 40%) &&
   git checkout $(echo "$branch" | sed "s/.* //" | sed "s#remotes/[^/]*/##")
+  zle reset-prompt
 }
 zle -N  fzf-git-remote-branch
 bindkey '^V' fzf-git-remote-branch
 
 fzf-file() {
-  local file=$(ag -g "" | fzf --height 40% --extended --preview $FZF_PREVIEW)
+  local file=$(ag --hidden --follow $FZF_IGNORE -g "" | fzf --height 40% --extended --preview $FZF_PREVIEW)
   if [[ -z "$file" ]]; then
     zle redisplay
     return 0
   fi
-  atom "$file"
+  </dev/tty vim "$file"
+  zle reset-prompt
 }
 zle -N  fzf-file
 bindkey '^P' fzf-file
 
-fzf-js() {
-  local file=$(ag -g .js | fzf --height 40% --extended --preview $FZF_PREVIEW)
-  if [[ -z "$file" ]]; then
-    zle redisplay
-    return 0
-  fi
-  atom "$file"
-}
-zle -N  fzf-js
-bindkey '^J' fzf-js
-
 fzf-dir() {
   local dir
-  dir=$(find ${1:-.} -path '*\.*' -prune \
-                  -o -type d -print 2> /dev/null | fzf --height 40% --extended --preview "ls -la {}")
-  if [[ -z "$dir" ]]; then
-    zle redisplay
-    return 0
-  fi
+  dir=$(find ${1:-~} -path '*/\.*' -prune \
+                  -o -type d -print 2> /dev/null | fzf +m --height 40% --preview "ls -la {}") &&
   cd "$dir"
+  zle reset-prompt
 }
 zle -N  fzf-dir
 bindkey '^O' fzf-dir
 
 source ~/.secretrc
+

@@ -1,3 +1,4 @@
+syntax enable
 
 call plug#begin('~/.vim/plugged')
 
@@ -22,6 +23,13 @@ Plug 'othree/jspc.vim'
 Plug 'moll/vim-node'
 Plug 'vim-syntastic/syntastic'
 Plug 'ap/vim-buftabline'
+Plug 'wojtekmach/vim-rename'
+Plug 'junegunn/goyo.vim'
+Plug 'junegunn/vim-slash'
+Plug 'jdkanani/vim-material-theme'
+Plug 'ryanoasis/vim-devicons'
+Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
+Plug 'scrooloose/nerdcommenter'
 
 function! BuildYCM(info)
   if a:info.status == 'installed' || a:info.force
@@ -32,7 +40,24 @@ Plug 'Valloric/YouCompleteMe', { 'for': ['js'], 'do': function('BuildYCM') }
 
 call plug#end()
 
+" basic settings
+let mapleader      = ' '
+let maplocalleader = ' '
+
+augroup vimrc
+  au!
+  autocmd bufwritepost .vimrc source ~/.vimrc
+augroup END
+
+set nu
 set nocompatible
+set hidden
+set autoindent
+set smartindent
+set lazyredraw
+set laststatus=2
+set showcmd
+set visualbell
 filetype off
 syntax on
 filetype plugin indent on
@@ -40,13 +65,11 @@ set modelines=0
 set number
 set ruler
 set visualbell
-set mouse=a
 set nowrap
 syntax enable
 set pastetoggle=<F2>
 set swapfile
-set dir=~/temp
-
+set cursorline
 set list
 set listchars=tab:·\ ,eol:¬,trail:·,nbsp:⎵
 
@@ -56,11 +79,31 @@ set softtabstop=2
 set expandtab
 set noshiftround
 
+if has('termguicolors')
+  let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+  let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+  set termguicolors
+endif
+
+" temporary files
+set dir=~/temp
+set backupdir=~/temp
+set directory=~/temp
+if v:version >= 703
+  set undodir=~/temp
+endif
+
+" mouse
+silent! set ttymouse=xterm2
+set mouse=a
+
 " theme
 syntax enable
 set background=dark
+colorscheme material-theme
 
 " js
+let g:jsx_ext_required = 0
 let g:javascript_plugin_flow = 1
 let g:javascript_plugin_jsdoc = 1
 let g:javascript_plugin_ngdoc = 1
@@ -70,6 +113,10 @@ let &t_SI = "\<Esc>]50;CursorShape=1\x7"
 let &t_SR = "\<Esc>]50;CursorShape=2\x7"
 let &t_EI = "\<Esc>]50;CursorShape=0\x7"
 
+" remaps
+nnoremap <leader>q :q<CR>
+nnoremap <leader>w :update<CR>
+
 nnoremap o  o<ESC>
 nnoremap O  O<ESC>
 
@@ -78,7 +125,6 @@ noremap ˚  {k
 
 nnoremap ¬  viw
 nnoremap ˙  viw
-nnoremap q  :q<CR>
 
 xnoremap ¬  <ESC>wviw
 xnoremap ˙  <ESC>bbviw
@@ -86,21 +132,28 @@ xnoremap ˙  <ESC>bbviw
 inoremap jj <ESC>
 
 " buffers
-nnoremap <C-j> :bnext<CR>
-nnoremap <C-k> :bprev<CR>
+nnoremap <leader>j :bnext<CR>
+nnoremap <leader>k :bprev<CR>
 
 " autocompletion
 autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
 
 " NerdTree
-noremap <C-n> :NERDTreeToggle<CR>
-noremap <C-m> :NERDTreeFind<CR>
+noremap <leader>n :NERDTreeToggle<CR>
+noremap <leader>m :NERDTreeFind<CR>
+let NERDTreeShowHidden=1
+
+let g:NERDTreeFileExtensionHighlightFullName = 1
+let g:NERDTreeExactMatchHighlightFullName = 1
+let g:NERDTreePatternMatchHighlightFullName = 1
 
 " fzf
-noremap <C-p> :Files<CR>
-noremap <C-c> :Commands<CR>
-noremap <C-b> :Buffers<CR>
-noremap <C-l> :Lines<CR>
+let $FZF_DEFAULT_COMMAND = 'ag --hidden --ignore .git --ignore node_modules -l -g ""'
+
+noremap <leader>p :Files<CR>
+noremap <leader>c :Commands<CR>
+noremap <leader>b :Buffers<CR>
+noremap <leader>l :Lines<CR>
 
 " multiple-cursors
 let g:multi_cursor_use_default_mapping=0
@@ -134,5 +187,13 @@ let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 
 " commands
-command Remove execute "call delete(expand('%')) | bdelete!"
+command! Remove execute "call delete(expand('%')) | bdelete!"
+
+" functions
+nnoremap <leader>f :call NormalNextToken()<CR>
+functio! NormalNextToken()
+  :echom  "hello"
+  :echom  "hello"
+  :echom  "hello"
+endfunction
 
