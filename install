@@ -16,11 +16,6 @@ ln -nsf ~/dotfiles/vim/.vimrc ~/.vimrc
 
 echo "vimrc installed"
 
-#rm -rf .vim
-#git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
-# Still need a way to call vundle from this script and then compile
-# YouCompleteMe
-
 # Install sublime
 sh ./installSublime
 
@@ -32,3 +27,5 @@ echo "sublime installed"
 chsh -s /bin/zsh
 
 echo "zsh set as default shell"
+
+ln -nsf ~/dotfiles/.hyper.js ~/.hyper.js
