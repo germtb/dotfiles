@@ -8,6 +8,7 @@ echo "zsh installed"
 # Install bashrc
 ln -nsf ~/dotfiles/shell/.bashrc ~/.bash_profile
 ln -nsf ~/dotfiles/shell/.bashrc ~/.zshrc
+ln -nsf ~/dotfiles/shell/.bashrc ~/.bashrc
 
 echo "bashrc installed"
 
@@ -16,13 +17,14 @@ ln -nsf ~/dotfiles/vim/.vimrc ~/.vimrc
 
 echo "vimrc installed"
 
-# Install sublime
-sh ./installSublime
-
 # Install atom
 sh ./installAtom
 
-echo "sublime installed"
+echo "atom installed"
+
+# Install sublime
+# sh ./installSublime
+# echo "sublime installed"
 
 chsh -s /bin/zsh
 

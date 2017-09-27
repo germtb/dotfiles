@@ -1,2 +1,3 @@
 ln -nsf ~/dotfiles/atom/init.js ~/.atom/init.js
+ln -nsf ~/dotfiles/atom/styles.less ~/.atom/styles.less
 

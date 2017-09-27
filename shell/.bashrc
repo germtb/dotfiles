@@ -11,7 +11,7 @@ export PATH=${PATH}:'/.gem/ruby/2.4.0/gems/rouge-2.2.1/bin'
 # Set ZSH
 export ZSH=~/.oh-my-zsh
 ZSH_THEME="robbyrussell"
-plugins=(git sublime npm osx sudo brew)
+plugins=(git sublime npm osx sudo brew vi-mode)
 source $ZSH/oh-my-zsh.sh
 source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
@@ -52,7 +52,7 @@ alias r-='git rebase -'
 alias cc='git commit -m'
 alias aa='git add --all && git status'
 alias gg='git commit --amend --no-edit'
-alias pp='git push origin HEAD'
+alias pp='git push -u origin HEAD'
 alias pl='git pull'
 alias rr='git reset --hard'
 
@@ -113,4 +113,18 @@ zle -N  fzf-dir
 bindkey '^O' fzf-dir
 
 source ~/.secretrc
+
+# Set edditing mode to vi
+bindkey -v
+KEYTIMEOUT=1
+function zle-line-init zle-keymap-select {
+    export RPS1="${${KEYMAP/vicmd/-- NORMAL --}/(main|viins)/-- INSERT --}"
+    export RPS2=$RPS1
+    zle reset-prompt
+}
+zle -N zle-line-init
+zle -N zle-keymap-select
+
+bindkey -a u undo
+bindkey -a U redo
 
