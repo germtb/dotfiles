@@ -4,54 +4,47 @@ call plug#begin('~/.vim/plugged')
 
 Plug 'tpope/vim-surround'
 Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
 Plug 'junegunn/fzf.vim'
-Plug 'terryma/vim-multiple-cursors'
 Plug 'airblade/vim-gitgutter'
 Plug 'mxw/vim-jsx'
 Plug 'pangloss/vim-javascript'
 Plug 'scrooloose/nerdtree'
 Plug 'rking/ag.vim'
-Plug 'tpope/vim-fugitive'
 Plug 'prettier/vim-prettier', {
 	\ 'do': 'yarn install',
 	\ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql'] }
 Plug 'chriskempson/base16-vim'
 Plug 'othree/jspc.vim'
 Plug 'moll/vim-node'
-" Plug 'vim-syntastic/syntastic'
-Plug 'ap/vim-buftabline'
 Plug 'wojtekmach/vim-rename'
-Plug 'junegunn/goyo.vim'
-Plug 'junegunn/vim-slash'
-Plug 'jdkanani/vim-material-theme'
+Plug 'kristijanhusak/vim-hybrid-material'
 Plug 'ryanoasis/vim-devicons'
 Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plug 'scrooloose/nerdcommenter'
-Plug 'tpope/vim-sleuth'
+Plug 'terryma/vim-multiple-cursors'
+Plug 'maralla/completor.vim'
+Plug 'osyo-manga/vim-over'
 Plug 'romgrk/replace.vim'
-Plug 'wellle/targets.vim'
-
-function! BuildYCM(info)
-	if a:info.status == 'installed' || a:info.force
-  !./install.py --tern-completer
-  endif
-endfunction
-Plug 'Valloric/YouCompleteMe', { 'for': ['js'], 'do': function('BuildYCM') }
-Plug 'ternjs/tern_for_vim', { 'do': 'yarn' }
+Plug 'b4winckler/vim-angry'
 
 call plug#end()
 
-" basic settings
+" CompleteJS
+let g:completor_node_binary = '/usr/local/bin/node'
+inoremap <expr> <C-j> pumvisible() ? "\<C-n>" : "\<C-j>"
+inoremap <expr> <C-k> pumvisible() ? "\<C-p>" : "\<C-k>"
+inoremap <expr> <cr> pumvisible() ? "\<C-n>" : "\<cr>"
+
+" set leader
 let mapleader      = ' '
 let maplocalleader = ' '
 
-augroup vimrc
-  au!
-  autocmd bufwritepost .vimrc source ~/.vimrc
-augroup END
+" Replace Operator
+nmap R <Plug>ReplaceOperator
+vmap R <Plug>ReplaceOperator
 
+" basic settings
 set nu
 set nocompatible
 set hidden
@@ -77,7 +70,12 @@ set tabstop=2
 set shiftwidth=2
 set list
 set listchars=tab:·\ ,eol:¬,trail:·
-" set listchars=tab:·\ ,eol:¬,trail:·,nbsp:⎵
+
+" autoload vimrc
+augroup vimrc
+  au!
+  autocmd bufwritepost .vimrc source ~/.vimrc
+augroup END
 
 if has('termguicolors')
   let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
@@ -106,14 +104,16 @@ set mouse=a
 " theme
 syntax enable
 set background=dark
-colorscheme material-theme
+colorscheme hybrid_material
+" colorscheme material-theme
 
 " js
 let g:jsx_ext_required = 0
 let g:javascript_plugin_flow = 1
 let g:javascript_plugin_jsdoc = 1
 let g:javascript_plugin_ngdoc = 1
-" nnoremp <leader>r :!babel-node %
+
+" nnoremp <leader>j :! babel-node %
 
 " Cursor shape
 let &t_SI = "\<Esc>]50;CursorShape=1\x7"
@@ -121,7 +121,7 @@ let &t_SR = "\<Esc>]50;CursorShape=2\x7"
 let &t_EI = "\<Esc>]50;CursorShape=0\x7"
 
 " remaps
-nnoremap _ R
+nnoremap cc ciw
 
 nnoremap <leader>q :q<CR>
 nnoremap <leader>w :update<CR>
@@ -144,18 +144,8 @@ inoremap jj <ESC>
 nnoremap <leader>j :bnext<CR>
 nnoremap <leader>k :bprev<CR>
 
-" autocompletion
-" autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-" let g:ycm_seed_identifiers_with_syntax = 1
-" let g:ycm_collect_identifiers_from_tags_files = 1
-" 
-" let g:ycm_key_list_select_completion = ['<TAB>', '<C-N>', '<Down>']
-" let g:ycm_key_list_previous_completion = ['<S-TAB>', '<C-P>', '<Up>']
-" let g:ycm_key_invoke_completion = '<C-F>'
-
-" let g:ycm_add_preview_to_completeopt=0
-" let g:ycm_confirm_extra_conf=0
-" set completeopt-=preview
+" vim-over
+nnoremap <leader>f :OverCommandLine<CR>
 
 " NerdTree
 noremap <leader>n :NERDTreeToggle<CR>
@@ -195,25 +185,11 @@ let g:prettier#config#jsx_bracket_same_line = 'false'
 let g:prettier#config#trailing_comma = 'none'
 let g:prettier#config#parser = 'flow'
 
-" syntastic
-" set statusline+=%#warningmsg#
-" set statusline+=%{SyntasticStatuslineFlag()}
-" set statusline+=%*
-
-" let g:syntastic_always_populate_loc_list = 1
-" let g:syntastic_auto_loc_list = 1
-" let g:syntastic_check_on_open = 1
-" let g:syntastic_check_on_wq = 0
-
-" autocmd
-" autocmd BufWritePre * %s/\s\+$//e
-set completeopt=longest,menuone
-
 " commands
 command! Remove execute "call delete(expand('%')) | bdelete!"
 
 " functions
-noremap <leader>f :call NormalNextToken()<CR>
+" noremap <leader>f :call NormalNextToken()<CR>
 
 functio! NormalNextToken()
   :let tokens=system('~/dev/vim-tokens/index.js')
