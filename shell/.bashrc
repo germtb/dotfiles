@@ -22,15 +22,9 @@ export PROMPT='${ret_status} %{$fg[cyan]%}%~%{$reset_color%} $(git_prompt_info)'
 export VISUAL=vim
 export EDITOR=vim
 
-# Set java home
-export JAVA7_HOME='/Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home'
-export JAVA8_HOME='/Library/Java/JavaVirtualMachines/jdk1.8.0_111.jdk/Contents/Home'
-export JAVA_HOME=$JAVA8_HOME
-export PATH=$JAVA_HOME/bin:$PATH
-
 # Aliases
+alias atom='atom .'
 alias cat='rougify'
-alias reload='. ~/.bash_profile'
 alias l='ls -la'
 alias less='less -S -N'
 alias o='cd ..'
@@ -55,6 +49,7 @@ alias gg='git commit --amend --no-edit'
 alias pp='git push -u origin HEAD'
 alias pl='git pull'
 alias rr='git reset --hard'
+alias bb='git branch'
 
 # fzf
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
