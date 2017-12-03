@@ -3,7 +3,7 @@ syntax enable
 call plug#begin('~/.vim/plugged')
 
 Plug 'tpope/vim-surround'
-Plug 'vim-airline/vim-airline'
+Plug 'itchyny/lightline.vim'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
 Plug 'junegunn/fzf.vim'
 Plug 'airblade/vim-gitgutter'
@@ -14,7 +14,6 @@ Plug 'rking/ag.vim'
 Plug 'prettier/vim-prettier', {
 	\ 'do': 'yarn install',
 	\ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql'] }
-Plug 'chriskempson/base16-vim'
 Plug 'othree/jspc.vim'
 Plug 'moll/vim-node'
 Plug 'wojtekmach/vim-rename'
@@ -27,6 +26,13 @@ Plug 'maralla/completor.vim'
 Plug 'osyo-manga/vim-over'
 Plug 'romgrk/replace.vim'
 Plug 'b4winckler/vim-angry'
+Plug 'wellle/targets.vim'
+Plug 'ap/vim-buftabline'
+Plug 'jiangmiao/auto-pairs'
+Plug 'tpope/vim-fugitive'
+Plug 'haya14busa/incsearch.vim'
+Plug 'kana/vim-operator-user'
+Plug 'haya14busa/vim-operator-flashy'
 
 call plug#end()
 
@@ -37,7 +43,7 @@ inoremap <expr> <C-k> pumvisible() ? "\<C-p>" : "\<C-k>"
 inoremap <expr> <cr> pumvisible() ? "\<C-n>" : "\<cr>"
 
 " set leader
-let mapleader      = ' '
+let mapleader = ' '
 let maplocalleader = ' '
 
 " Replace Operator
@@ -45,49 +51,79 @@ nmap R <Plug>ReplaceOperator
 vmap R <Plug>ReplaceOperator
 
 " basic settings
-set nu
 set nocompatible
+set showcmd
+set noshowmode
 set hidden
-set autoindent
-set smartindent
 set lazyredraw
 set laststatus=2
-set showcmd
 set visualbell
-filetype off
 syntax on
 filetype plugin indent on
-set modelines=0
 set number
-set ruler
 set visualbell
 set nowrap
 syntax enable
 set pastetoggle=<F2>
 set swapfile
 set cursorline
-set tabstop=2
-set shiftwidth=2
 set list
 set listchars=tab:·\ ,eol:¬,trail:·
+set encoding=utf-8
+
+" Paste
+map y <Plug>(operator-flashy)
+nmap Y <Plug>(operator-flashy)$
+
+" Statusline
+let g:lightline = {
+	\ 'colorscheme': 'wombat',
+	\ 'active': {
+	\ 	'left': [ [ 'mode', 'paste' ],
+	\ 		[ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
+	\ },
+	\ 'component_function': {
+	\   'gitbranch': 'fugitive#head'
+	\ },
+	\ }
+
+" indentation
+set autoindent
+set smartindent
+set shiftwidth=2
+set tabstop=2
 
 " autoload vimrc
 augroup vimrc
-  au!
-  autocmd bufwritepost .vimrc source ~/.vimrc
+	au!
+	autocmd bufwritepost .vimrc source ~/.vimrc
 augroup END
 
 if has('termguicolors')
-  let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-  let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
-  set termguicolors
+	let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+	let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+	set termguicolors
 endif
 
-set encoding=utf-8
+if !has('gui_running')
+	set t_Co=256
+endif
 
 " search
+map /  <Plug>(incsearch-forward)
+map ?  <Plug>(incsearch-backward)
+map g/ <Plug>(incsearch-stay)
+let g:incsearch#auto_nohlsearch = 1
+map n  <Plug>(incsearch-nohl-n)
+map N  <Plug>(incsearch-nohl-N)
+map *  <Plug>(incsearch-nohl-*)
+map #  <Plug>(incsearch-nohl-#)
+map g* <Plug>(incsearch-nohl-g*)
+map g# <Plug>(incsearch-nohl-g#)
 set ignorecase
 set smartcase
+set incsearch
+set hlsearch
 
 " temporary files
 set dir=~/temp
@@ -105,15 +141,12 @@ set mouse=a
 syntax enable
 set background=dark
 colorscheme hybrid_material
-" colorscheme material-theme
 
 " js
 let g:jsx_ext_required = 0
 let g:javascript_plugin_flow = 1
 let g:javascript_plugin_jsdoc = 1
 let g:javascript_plugin_ngdoc = 1
-
-" nnoremp <leader>j :! babel-node %
 
 " Cursor shape
 let &t_SI = "\<Esc>]50;CursorShape=1\x7"
@@ -145,12 +178,12 @@ nnoremap <leader>j :bnext<CR>
 nnoremap <leader>k :bprev<CR>
 
 " vim-over
-nnoremap <leader>f :OverCommandLine<CR>
+nnoremap <leader>f :OverCommandLine<CR>%s/
 
 " NerdTree
 noremap <leader>n :NERDTreeToggle<CR>
 noremap <leader>m :NERDTreeFind<CR>
-let NERDTreeShowHidden=1
+let NERDTreeShowHidden=0
 
 let g:NERDTreeFileExtensionHighlightFullName = 1
 let g:NERDTreeExactMatchHighlightFullName = 1
@@ -173,7 +206,7 @@ let g:multi_cursor_quit_key='<Esc>'
 
 " prettier
 let g:prettier#autoformat = 0
-autocmd BufWritePre *.js,*.json,*.css,*.scss,*.less,*.graphql PrettierAsync
+autocmd BufWritePre *.js,*.json,*.html,*.css,*.scss,*.less,*.graphql PrettierAsync
 
 let g:prettier#config#print_width = 80
 let g:prettier#config#tab_width = 2
@@ -191,24 +224,11 @@ command! Remove execute "call delete(expand('%')) | bdelete!"
 " functions
 " noremap <leader>f :call NormalNextToken()<CR>
 
-functio! NormalNextToken()
-  :let tokens=system('~/dev/vim-tokens/index.js')
-  :echom tokens
-  :echom tokens
-  :echom tokens
-  :echom tokens
-endfunction
-
-function! s:goog(pat, lucky)
-  let q = '"'.substitute(a:pat, '["\n]', ' ', 'g').'"'
-  let q = substitute(q, '[[:punct:] ]',
-       \ '\=printf("%%%02X", char2nr(submatch(0)))', 'g')
-  call system(printf('open "https://www.google.com/search?%sq=%s"',
-                   \ a:lucky ? 'btnI&' : '', q))
-endfunction
-
-nnoremap <leader>? :call <SID>goog(expand("<cWORD>"), 0)<cr>
-nnoremap <leader>! :call <SID>goog(expand("<cWORD>"), 1)<cr>
-xnoremap <leader>? "gy:call <SID>goog(@g, 0)<cr>gv
-xnoremap <leader>! "gy:call <SID>goog(@g, 1)<cr>gv
+" functio! NormalNextToken()
+  " :let tokens=system('~/dev/vim-tokens/index.js')
+  " :echom tokens
+  " :echom tokens
+  " :echom tokens
+  " :echom tokens
+" endfunction
 
