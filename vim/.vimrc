@@ -10,18 +10,15 @@ Plug 'airblade/vim-gitgutter'
 Plug 'mxw/vim-jsx'
 Plug 'pangloss/vim-javascript'
 Plug 'scrooloose/nerdtree'
-Plug 'rking/ag.vim'
 Plug 'prettier/vim-prettier', {
 	\ 'do': 'yarn install',
 	\ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql'] }
 Plug 'othree/jspc.vim'
-Plug 'moll/vim-node'
 Plug 'wojtekmach/vim-rename'
 Plug 'kristijanhusak/vim-hybrid-material'
 Plug 'ryanoasis/vim-devicons'
 Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plug 'scrooloose/nerdcommenter'
-Plug 'terryma/vim-multiple-cursors'
 Plug 'maralla/completor.vim'
 Plug 'osyo-manga/vim-over'
 Plug 'romgrk/replace.vim'
@@ -30,10 +27,14 @@ Plug 'wellle/targets.vim'
 Plug 'ap/vim-buftabline'
 Plug 'jiangmiao/auto-pairs'
 Plug 'tpope/vim-fugitive'
-Plug 'haya14busa/incsearch.vim'
+Plug 'haya14busa/is.vim'
 Plug 'kana/vim-operator-user'
 Plug 'haya14busa/vim-operator-flashy'
-
+Plug 'vim-syntastic/syntastic'
+Plug 'moll/vim-node'
+Plug 'ynkdir/vim-vimlparser'
+Plug 'syngan/vim-vimlint'
+ 
 call plug#end()
 
 " CompleteJS
@@ -43,8 +44,9 @@ inoremap <expr> <C-k> pumvisible() ? "\<C-p>" : "\<C-k>"
 inoremap <expr> <cr> pumvisible() ? "\<C-n>" : "\<cr>"
 
 " set leader
-let mapleader = ' '
-let maplocalleader = ' '
+"
+let g:mapleader = ' '
+let g:maplocalleader = ' '
 
 " Replace Operator
 nmap R <Plug>ReplaceOperator
@@ -68,16 +70,30 @@ set pastetoggle=<F2>
 set swapfile
 set cursorline
 set list
-set listchars=tab:·\ ,eol:¬,trail:·
 set encoding=utf-8
+scriptencoding utf-8
+set listchars=tab:‣\ ,eol:♫,trail:·,space:·
+
+" syntastic
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+
+let g:syntastic_javascript_checkers = ['eslint']
 
 " Paste
 map y <Plug>(operator-flashy)
 nmap Y <Plug>(operator-flashy)$
+" set clipboard=unnamedplus
 
 " Statusline
 let g:lightline = {
-	\ 'colorscheme': 'wombat',
+	\ 'colorscheme': 'seoul256',
 	\ 'active': {
 	\ 	'left': [ [ 'mode', 'paste' ],
 	\ 		[ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
@@ -85,6 +101,7 @@ let g:lightline = {
 	\ 'component_function': {
 	\   'gitbranch': 'fugitive#head'
 	\ },
+	\ 'subseparator': { 'left': '⮁', 'right': '⮃' }
 	\ }
 
 " indentation
@@ -110,20 +127,11 @@ if !has('gui_running')
 endif
 
 " search
-map /  <Plug>(incsearch-forward)
-map ?  <Plug>(incsearch-backward)
-map g/ <Plug>(incsearch-stay)
-let g:incsearch#auto_nohlsearch = 1
-map n  <Plug>(incsearch-nohl-n)
-map N  <Plug>(incsearch-nohl-N)
-map *  <Plug>(incsearch-nohl-*)
-map #  <Plug>(incsearch-nohl-#)
-map g* <Plug>(incsearch-nohl-g*)
-map g# <Plug>(incsearch-nohl-g#)
+set hlsearch
 set ignorecase
 set smartcase
 set incsearch
-set hlsearch
+autocmd BufReadPre,FileReadPre * :highlight IncSearch guibg=green ctermbg=green term=underline
 
 " temporary files
 set dir=~/temp
@@ -153,14 +161,14 @@ let &t_SI = "\<Esc>]50;CursorShape=1\x7"
 let &t_SR = "\<Esc>]50;CursorShape=2\x7"
 let &t_EI = "\<Esc>]50;CursorShape=0\x7"
 
-" remaps
+" maps
 nnoremap cc ciw
 
 nnoremap <leader>q :q<CR>
 nnoremap <leader>w :update<CR>
 
 nnoremap o  o<ESC>
-nnoremap O  O<ESC>
+noremap O  O<ESC>
 
 noremap ∆  }j
 noremap ˚  {k
@@ -168,14 +176,21 @@ noremap ˚  {k
 nnoremap ¬  viw
 nnoremap ˙  viw
 
+nnoremap <leader>d "dyiwoconsole.log('<ESC>"dpa: ', <ESC>"dpa)<ESC>
+nnoremap <leader><S-d> "dyiwOconsole.log('<ESC>"dpa: ', <ESC>"dpa)<ESC>
+
+nnoremap <C-J> <C-W><C-J>
+nnoremap <C-K> <C-W><C-K>
+nnoremap <C-L> <C-W><C-L>
+nnoremap <C-H> <C-W><C-H>
+
 xnoremap ¬  <ESC>wviw
 xnoremap ˙  <ESC>bbviw
 
-inoremap jj <ESC>
+xnoremap <leader>d "dyoconsole.log('<ESC>"dpa: ', <ESC>"dpa)<ESC>
+xnoremap <leader><S-d> "dyOconsole.log('<ESC>"dpa: ', <ESC>"dpa)<ESC>
 
-" buffers
-nnoremap <leader>j :bnext<CR>
-nnoremap <leader>k :bprev<CR>
+inoremap jj <ESC>
 
 " vim-over
 nnoremap <leader>f :OverCommandLine<CR>%s/
@@ -183,7 +198,7 @@ nnoremap <leader>f :OverCommandLine<CR>%s/
 " NerdTree
 noremap <leader>n :NERDTreeToggle<CR>
 noremap <leader>m :NERDTreeFind<CR>
-let NERDTreeShowHidden=0
+let g:NERDTreeShowHidden=0
 
 let g:NERDTreeFileExtensionHighlightFullName = 1
 let g:NERDTreeExactMatchHighlightFullName = 1
@@ -192,17 +207,12 @@ let g:NERDTreePatternMatchHighlightFullName = 1
 " fzf
 let $FZF_DEFAULT_COMMAND = 'ag --hidden --ignore .git --ignore node_modules -l -g ""'
 
-noremap <leader>p :Files<CR>
-noremap <leader>c :Commands<CR>
-noremap <leader>b :Buffers<CR>
-noremap <leader>l :Lines<CR>
-
-" multiple-cursors
-let g:multi_cursor_use_default_mapping=0
-
-let g:multi_cursor_next_key='<C-d>'
-let g:multi_cursor_skip_key='<C-k>'
-let g:multi_cursor_quit_key='<Esc>'
+nnoremap <leader>p :Files<CR>
+nnoremap <leader>c :Commands<CR>
+nnoremap <leader>b :Buffers<CR>
+nnoremap <leader>l :Lines<CR>
+nnoremap <leader>a :Ag 
+nnoremap <leader>g :GFiles?<CR>
 
 " prettier
 let g:prettier#autoformat = 0
@@ -222,13 +232,10 @@ let g:prettier#config#parser = 'flow'
 command! Remove execute "call delete(expand('%')) | bdelete!"
 
 " functions
-" noremap <leader>f :call NormalNextToken()<CR>
+noremap <leader>t :call NormalNextToken()<CR>
 
-" functio! NormalNextToken()
-  " :let tokens=system('~/dev/vim-tokens/index.js')
-  " :echom tokens
-  " :echom tokens
-  " :echom tokens
-  " :echom tokens
-" endfunction
+function! NormalNextToken()
+	:let tokens=system('~/dev/vim-tokens/index.js')
+	:echom tokens
+endfunction
 
