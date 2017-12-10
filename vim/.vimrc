@@ -34,6 +34,8 @@ Plug 'vim-syntastic/syntastic'
 Plug 'moll/vim-node'
 Plug 'ynkdir/vim-vimlparser'
 Plug 'syngan/vim-vimlint'
+Plug 'rhysd/clever-f.vim'
+
  
 call plug#end()
 
@@ -179,11 +181,6 @@ nnoremap ˙  viw
 nnoremap <leader>d "dyiwoconsole.log('<ESC>"dpa: ', <ESC>"dpa)<ESC>
 nnoremap <leader><S-d> "dyiwOconsole.log('<ESC>"dpa: ', <ESC>"dpa)<ESC>
 
-nnoremap <C-J> <C-W><C-J>
-nnoremap <C-K> <C-W><C-K>
-nnoremap <C-L> <C-W><C-L>
-nnoremap <C-H> <C-W><C-H>
-
 xnoremap ¬  <ESC>wviw
 xnoremap ˙  <ESC>bbviw
 
@@ -194,6 +191,9 @@ inoremap jj <ESC>
 
 " vim-over
 nnoremap <leader>f :OverCommandLine<CR>%s/
+
+" clever-f
+let g:clever_f_show_prompt=1
 
 " NerdTree
 noremap <leader>n :NERDTreeToggle<CR>
@@ -234,8 +234,29 @@ command! Remove execute "call delete(expand('%')) | bdelete!"
 " functions
 noremap <leader>t :call NormalNextToken()<CR>
 
+let g:ignoredTokens = ['(', ')']
+
+function! GetSelection()
+	let [line_start, column_start] = getpos("'<")[1:2]
+	let [line_end, column_end] = getpos("'>")[1:2]
+	let lines = getline(line_start, line_end)
+	if len(lines) == 0
+		return ''
+	endif
+	let lines[-1] = lines[-1][: column_end - (&selection == 'inclusive' ? 1 : 2)]
+	let lines[0] = lines[0][column_start - 1:]
+	return join(lines, "\n")
+endfunction
+
 function! NormalNextToken()
-	:let tokens=system('~/dev/vim-tokens/index.js')
-	:echom tokens
+	normal! viw
+	let selection = GetSelection()
+	:echom selection
+	:echom selection
+	:echom selection
+endfunction
+
+function! VisualNextToken()
+	
 endfunction
 
