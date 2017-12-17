@@ -223,14 +223,9 @@ command! -bang -nargs=? -complete=dir Files
 command! -bang -nargs=* Ag
 	\ call fzf#vim#ag(<q-args>, fzf#vim#with_preview(), <bang>0)
 
-" Mapping selecting mappings
-nmap <leader><tab> <plug>(fzf-maps-n)
-xmap <leader><tab> <plug>(fzf-maps-x)
-omap <leader><tab> <plug>(fzf-maps-o)
-
 " Insert mode completion
 inoremap <expr> <c-l> fzf#complete('ag "^.*$" --nofilename --ignore ".git/" --ignore "node_modules/"')
-inoremap <expr> <c-i> fzf#complete('ag "import.*from" --nofilename --ignore ".git/" --ignore "node_modules/"')
+nmap <c-l> i<c-l>
 
 " prettier
 let g:prettier#autoformat = 0
@@ -272,22 +267,7 @@ endfunction
 
 function! NormalNextToken()
 	normal! viw
-	let [line_start, column_start] = getpos("'<")[1:2]
-	let [line_end, column_end] = getpos("'>")[1:2]
-	let lines = getline(line_start, line_end)
-	if len(lines) == 0
-		return ''
-	endif
-	let lines[-1] = lines[-1][: column_end - (&selection == 'inclusive' ? 1 : 2)]
-	let lines[0] = lines[0][column_start - 1:]
-	let selection = join(lines, "\n")
-	" let selection = GetSelection()
+	let selection = GetSelection()
 	:echom selection
-	:echom selection
-	:echom selection
-endfunction
-
-function! VisualNextToken()
-	
 endfunction
 
