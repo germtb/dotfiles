@@ -1,12 +1,15 @@
 # Set path
 export PATH='/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
+export PATH='/Users/gmoreno/.npm-global/bin':$PATH
+# export PATH='/Users/gmoreno/.seon/bin':$PATH
+export API_CLIENT_KEY=1022507da36a145a7421f28af3ee32eb
 
-if which ruby >/dev/null && which gem >/dev/null; then
-  export PATH="$(ruby -rubygems -e 'puts Gem.user_dir')/bin:$PATH"
-fi
+export TERM=xterm-256color
+export WORKON_HOME=$HOME/.virtualenvs
+source /usr/local/bin/virtualenvwrapper.sh
 
 # Add rouge manually to path
-export PATH=${PATH}:'/.gem/ruby/2.4.0/gems/rouge-2.2.1/bin'
+export PATH=${PATH}:'/Users/gmoreno/.gem/ruby/2.4.0/gems/rouge-2.2.1/bin'
 
 # Set ZSH
 export ZSH=~/.oh-my-zsh
@@ -99,7 +102,7 @@ bindkey '^P' fzf-file
 
 fzf-dir() {
   local dir
-  dir=$(find ${1:-~} -path '*/\.*' -prune \
+	dir=$(find ${1:-~} -path '*/\.*' -prune \
                   -o -type d -print 2> /dev/null | fzf +m --height 40% --preview "ls -la {}") &&
   cd "$dir"
   zle reset-prompt
@@ -122,4 +125,7 @@ zle -N zle-keymap-select
 
 bindkey -a u undo
 bindkey -a U redo
+
+# OPAM configuration
+. /Users/gmoreno/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
 

@@ -93,7 +93,8 @@ module.exports = {
 		'hyperlinks',
 		'hyperterm-cursor',
 		'hyperterm-summon',
-		'hyperterm-material'
+		'hyperterm-material',
+		'hyperterm-tabs'
 	],
 
 	summon: {

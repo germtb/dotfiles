@@ -46,7 +46,6 @@ inoremap <expr> <C-k> pumvisible() ? "\<C-p>" : "\<C-k>"
 inoremap <expr> <cr> pumvisible() ? "\<C-n>" : "\<cr>"
 
 " set leader
-"
 let g:mapleader = ' '
 let g:maplocalleader = ' '
 
@@ -74,7 +73,8 @@ set cursorline
 set list
 set encoding=utf-8
 scriptencoding utf-8
-set listchars=tab:‣\ ,eol:♫,trail:·,space:·
+set listchars=tab:→\ ,eol:♫,trail:·,space:·
+set autoread
 
 " syntastic
 set statusline+=%#warningmsg#
@@ -214,6 +214,24 @@ nnoremap <leader>l :Lines<CR>
 nnoremap <leader>a :Ag 
 nnoremap <leader>g :GFiles?<CR>
 
+command! -bang Colors
+	\ call fzf#vim#colors({'left': '15%', 'options': '--reverse --margin 30%,0'}, <bang>0)
+
+command! -bang -nargs=? -complete=dir Files
+	\ call fzf#vim#files(<q-args>, fzf#vim#with_preview({ 'preview': 'rougify {}' }), <bang>0)
+
+command! -bang -nargs=* Ag
+	\ call fzf#vim#ag(<q-args>, fzf#vim#with_preview(), <bang>0)
+
+" Mapping selecting mappings
+nmap <leader><tab> <plug>(fzf-maps-n)
+xmap <leader><tab> <plug>(fzf-maps-x)
+omap <leader><tab> <plug>(fzf-maps-o)
+
+" Insert mode completion
+inoremap <expr> <c-l> fzf#complete('ag "^.*$" --nofilename --ignore ".git/" --ignore "node_modules/"')
+inoremap <expr> <c-i> fzf#complete('ag "import.*from" --nofilename --ignore ".git/" --ignore "node_modules/"')
+
 " prettier
 let g:prettier#autoformat = 0
 autocmd BufWritePre *.js,*.json,*.html,*.css,*.scss,*.less,*.graphql PrettierAsync
@@ -230,6 +248,10 @@ let g:prettier#config#parser = 'flow'
 
 " commands
 command! Remove execute "call delete(expand('%')) | bdelete!"
+
+" folding
+set foldmethod=indent
+set foldlevel=99
 
 " functions
 noremap <leader>t :call NormalNextToken()<CR>
@@ -250,7 +272,16 @@ endfunction
 
 function! NormalNextToken()
 	normal! viw
-	let selection = GetSelection()
+	let [line_start, column_start] = getpos("'<")[1:2]
+	let [line_end, column_end] = getpos("'>")[1:2]
+	let lines = getline(line_start, line_end)
+	if len(lines) == 0
+		return ''
+	endif
+	let lines[-1] = lines[-1][: column_end - (&selection == 'inclusive' ? 1 : 2)]
+	let lines[0] = lines[0][column_start - 1:]
+	let selection = join(lines, "\n")
+	" let selection = GetSelection()
 	:echom selection
 	:echom selection
 	:echom selection
