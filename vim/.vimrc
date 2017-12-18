@@ -10,6 +10,7 @@ Plug 'airblade/vim-gitgutter'
 Plug 'mxw/vim-jsx'
 Plug 'pangloss/vim-javascript'
 Plug 'scrooloose/nerdtree'
+Plug 'tpope/vim-commentary'
 Plug 'prettier/vim-prettier', {
 	\ 'do': 'yarn install',
 	\ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql'] }
@@ -18,8 +19,7 @@ Plug 'wojtekmach/vim-rename'
 Plug 'kristijanhusak/vim-hybrid-material'
 Plug 'ryanoasis/vim-devicons'
 Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
-Plug 'scrooloose/nerdcommenter'
-Plug 'maralla/completor.vim'
+Plug 'maralla/completor.vim', { 'do': 'make js' }
 Plug 'osyo-manga/vim-over'
 Plug 'romgrk/replace.vim'
 Plug 'b4winckler/vim-angry'
@@ -30,17 +30,17 @@ Plug 'tpope/vim-fugitive'
 Plug 'haya14busa/is.vim'
 Plug 'kana/vim-operator-user'
 Plug 'haya14busa/vim-operator-flashy'
-Plug 'vim-syntastic/syntastic'
-Plug 'moll/vim-node'
+Plug 'w0rp/ale'
+" Plug 'moll/vim-node'
 Plug 'ynkdir/vim-vimlparser'
 Plug 'syngan/vim-vimlint'
 Plug 'rhysd/clever-f.vim'
+Plug 'tpope/vim-vinegar'
 
- 
 call plug#end()
 
 " CompleteJS
-let g:completor_node_binary = '/usr/local/bin/node'
+let g:completor_node_binary = '/usr/local/bin/babel-node'
 inoremap <expr> <C-j> pumvisible() ? "\<C-n>" : "\<C-j>"
 inoremap <expr> <C-k> pumvisible() ? "\<C-p>" : "\<C-k>"
 inoremap <expr> <cr> pumvisible() ? "\<C-n>" : "\<cr>"
@@ -62,6 +62,7 @@ set lazyredraw
 set laststatus=2
 set visualbell
 syntax on
+filetype plugin on
 filetype plugin indent on
 set number
 set visualbell
@@ -73,25 +74,24 @@ set cursorline
 set list
 set encoding=utf-8
 scriptencoding utf-8
+set modifiable
 set listchars=tab:→\ ,eol:♫,trail:·,space:·
+
+" autoreload files
 set autoread
+autocmd FocusGained,BufEnter,CursorHold,CursorHoldI * if mode() != 'c' | checktime | endif
+autocmd FileChangedShellPost *
+  \ echohl WarningMsg | echo "File changed on disk. Buffer reloaded." | echohl None
 
-" syntastic
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
-
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
-
-let g:syntastic_javascript_checkers = ['eslint']
+" ale
+let g:ale_sign_column_always = 1
+let g:ale_sign_error = '◉'
+let g:ale_sign_warning = '◉'
 
 " Paste
 map y <Plug>(operator-flashy)
 nmap Y <Plug>(operator-flashy)$
-" set clipboard=unnamedplus
+set clipboard=unnamedplus
 
 " Statusline
 let g:lightline = {
@@ -198,11 +198,8 @@ let g:clever_f_show_prompt=1
 " NerdTree
 noremap <leader>n :NERDTreeToggle<CR>
 noremap <leader>m :NERDTreeFind<CR>
+let g:NERDTreeHijackNetrw=0
 let g:NERDTreeShowHidden=0
-
-let g:NERDTreeFileExtensionHighlightFullName = 1
-let g:NERDTreeExactMatchHighlightFullName = 1
-let g:NERDTreePatternMatchHighlightFullName = 1
 
 " fzf
 let $FZF_DEFAULT_COMMAND = 'ag --hidden --ignore .git --ignore node_modules -l -g ""'
@@ -223,13 +220,17 @@ command! -bang -nargs=? -complete=dir Files
 command! -bang -nargs=* Ag
 	\ call fzf#vim#ag(<q-args>, fzf#vim#with_preview(), <bang>0)
 
-" Insert mode completion
+" fzf completions
+imap <expr> <c-f> <plug>(fzf-complete-file-ag)
+
 inoremap <expr> <c-l> fzf#complete('ag "^.*$" --nofilename --ignore ".git/" --ignore "node_modules/"')
+inoremap <expr> import fzf#complete('ag "^import.*$" --nofilename --ignore ".git/" --ignore "node_modules/"')
 nmap <c-l> i<c-l>
 
 " prettier
 let g:prettier#autoformat = 0
-autocmd BufWritePre *.js,*.json,*.html,*.css,*.scss,*.less,*.graphql PrettierAsync
+let g:prettier#quickfix_enabled = 0
+autocmd BufWritePre *.js,*.json PrettierAsync
 
 let g:prettier#config#print_width = 80
 let g:prettier#config#tab_width = 2
