@@ -4,6 +4,7 @@ call plug#begin('~/.vim/plugged')
 
 Plug 'tpope/vim-surround'
 Plug 'itchyny/lightline.vim'
+Plug 'maximbaz/lightline-ale'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
 Plug 'junegunn/fzf.vim'
 Plug 'airblade/vim-gitgutter'
@@ -93,18 +94,37 @@ map y <Plug>(operator-flashy)
 nmap Y <Plug>(operator-flashy)$
 set clipboard=unnamedplus
 
-" Statusline
+" lightline
 let g:lightline = {
-	\ 'colorscheme': 'seoul256',
-	\ 'active': {
-	\ 	'left': [ [ 'mode', 'paste' ],
-	\ 		[ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
-	\ },
-	\ 'component_function': {
-	\   'gitbranch': 'fugitive#head'
-	\ },
-	\ 'subseparator': { 'left': '⮁', 'right': '⮃' }
+	\ 	'colorscheme': 'seoul256',
+	\ 	'subseparator': { 'left': '⮁', 'right': '⮃' },
+	\ 	'active': {
+	\ 		'left': [
+	\ 			[ 'mode', 'paste' ],
+	\ 			[ 'gitbranch', 'readonly', 'filename', 'modified' ]
+	\ 		],
+	\ 		'right': [
+	\ 			[ 'linter_errors', 'linter_warnings', 'linter_ok' ]
+	\ 		]
+	\ 	},
+	\ 	'component_function': { 'gitbranch': 'fugitive#head' }
 	\ }
+
+let g:lightline.component_expand = {
+	\ 'linter_warnings': 'lightline#ale#warnings',
+	\ 'linter_errors': 'lightline#ale#errors',
+	\ 'linter_ok': 'lightline#ale#ok',
+	\ }
+
+let g:lightline.component_type = {
+	\ 'linter_warnings': 'warning',
+	\ 'linter_errors': 'error',
+	\ }
+
+
+let g:lightline#ale#indicator_warnings='⚠'
+let g:lightline#ale#indicator_errors='ⓧ'
+let g:lightline#ale#indicator_ok='✓'
 
 " indentation
 set autoindent
