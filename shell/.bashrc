@@ -57,12 +57,12 @@ alias bb='git branch'
 # fzf
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-export FZF_IGNORES='--ignore ".git/" --ignore "node_modules/" --ignore "Blizzard/" --ignore "Applications/" --ignore "Desktop/" --ignore "Dropbox/" --ignore "Downloads/" --ignore "Documents/" --ignore ".npm/" --ignore ".gem/"'
 export FZF_PREVIEW='[[ $(file --mime {}) =~ binary ]] &&
   echo {} is a binary file ||
   (highlight -O ansi -l {} || rougify {} || cat {}) 2> /dev/null | head -500'
 export FZF_COMPLETION_TRIGGER='*'
-export FZF_DEFAULT_COMMAND='ag -g ""'
+export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow --glob "!.git/*"'
+
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_COMPLETION_OPTS=' --extended --preview "[[ $(file --mime {}) =~ binary ]] &&
   echo {} is a binary file ||
@@ -89,7 +89,7 @@ zle -N  fzf-git-remote-branch
 bindkey '^V' fzf-git-remote-branch
 
 fzf-file() {
-  local file=$(ag --hidden --follow $FZF_IGNORE -g "" | fzf --height 40% --extended --preview $FZF_PREVIEW)
+  local file=$(rg --files | fzf --height 40% --extended --preview $FZF_PREVIEW)
   if [[ -z "$file" ]]; then
     zle redisplay
     return 0

@@ -1,5 +1,3 @@
-syntax enable
-
 call plug#begin('~/.vim/plugged')
 
 Plug 'tpope/vim-surround'
@@ -32,11 +30,13 @@ Plug 'haya14busa/is.vim'
 Plug 'kana/vim-operator-user'
 Plug 'haya14busa/vim-operator-flashy'
 Plug 'w0rp/ale'
-" Plug 'moll/vim-node'
 Plug 'ynkdir/vim-vimlparser'
 Plug 'syngan/vim-vimlint'
 Plug 'rhysd/clever-f.vim'
 Plug 'tpope/vim-vinegar'
+Plug 'kana/vim-textobj-user'
+Plug 'kana/vim-textobj-entire'
+Plug 'mhinz/vim-startify'
 
 call plug#end()
 
@@ -61,28 +61,25 @@ set noshowmode
 set hidden
 set lazyredraw
 set laststatus=2
-set visualbell
-syntax on
-filetype plugin on
 filetype plugin indent on
 set number
 set visualbell
 set nowrap
-syntax enable
-set pastetoggle=<F2>
-set swapfile
+set pastetoggle=<S-p>
 set cursorline
-set list
 set encoding=utf-8
 scriptencoding utf-8
 set modifiable
+
+" invisible characters
+set list
 set listchars=tab:→\ ,eol:♫,trail:·,space:·
 
 " autoreload files
 set autoread
 autocmd FocusGained,BufEnter,CursorHold,CursorHoldI * if mode() != 'c' | checktime | endif
 autocmd FileChangedShellPost *
-  \ echohl WarningMsg | echo "File changed on disk. Buffer reloaded." | echohl None
+	\ echohl WarningMsg | echo "File changed on disk. Buffer reloaded." | echohl None
 
 " ale
 let g:ale_sign_column_always = 1
@@ -93,6 +90,10 @@ let g:ale_sign_warning = '◉'
 map y <Plug>(operator-flashy)
 nmap Y <Plug>(operator-flashy)$
 set clipboard=unnamedplus
+xnoremap y "vy
+
+" Startify
+let g:startify_session_persistence = 1
 
 " lightline
 let g:lightline = {
@@ -155,7 +156,8 @@ set smartcase
 set incsearch
 autocmd BufReadPre,FileReadPre * :highlight IncSearch guibg=green ctermbg=green term=underline
 
-" temporary files
+" swp files
+set swapfile
 set dir=~/temp
 set backupdir=~/temp
 set directory=~/temp
@@ -189,20 +191,20 @@ nnoremap cc ciw
 nnoremap <leader>q :q<CR>
 nnoremap <leader>w :update<CR>
 
-nnoremap o  o<ESC>
-noremap O  O<ESC>
+nnoremap o o<ESC>
+noremap O O<ESC>
 
-noremap ∆  }j
-noremap ˚  {k
+noremap ∆ }j
+noremap ˚ {k
 
-nnoremap ¬  viw
-nnoremap ˙  viw
+nnoremap ¬ viw
+nnoremap ˙ viw
 
 nnoremap <leader>d "dyiwoconsole.log('<ESC>"dpa: ', <ESC>"dpa)<ESC>
 nnoremap <leader><S-d> "dyiwOconsole.log('<ESC>"dpa: ', <ESC>"dpa)<ESC>
 
-xnoremap ¬  <ESC>wviw
-xnoremap ˙  <ESC>bbviw
+xnoremap ¬ <ESC>wviw
+xnoremap ˙ <ESC>bbviw
 
 xnoremap <leader>d "dyoconsole.log('<ESC>"dpa: ', <ESC>"dpa)<ESC>
 xnoremap <leader><S-d> "dyOconsole.log('<ESC>"dpa: ', <ESC>"dpa)<ESC>
@@ -224,12 +226,12 @@ let g:NERDTreeShowHidden=0
 " fzf
 let $FZF_DEFAULT_COMMAND = 'ag --hidden --ignore .git --ignore node_modules -l -g ""'
 
-nnoremap <leader>p :Files<CR>
+nnoremap <leader>p :Files!<CR>
 nnoremap <leader>c :Commands<CR>
 nnoremap <leader>b :Buffers<CR>
 nnoremap <leader>l :Lines<CR>
-nnoremap <leader>a :Ag 
-nnoremap <leader>g :GFiles?<CR>
+nnoremap <leader>r :Rg! 
+nnoremap <leader>g :GFiles?!<CR>
 
 command! -bang Colors
 	\ call fzf#vim#colors({'left': '15%', 'options': '--reverse --margin 30%,0'}, <bang>0)
@@ -237,14 +239,17 @@ command! -bang Colors
 command! -bang -nargs=? -complete=dir Files
 	\ call fzf#vim#files(<q-args>, fzf#vim#with_preview({ 'preview': 'rougify {}' }), <bang>0)
 
-command! -bang -nargs=* Ag
-	\ call fzf#vim#ag(<q-args>, fzf#vim#with_preview(), <bang>0)
+command! -bang -nargs=* Rg
+	\ call fzf#vim#grep(
+	\ 	'rg --column --line-number --no-heading --color=always '.shellescape(<q-args>), 1,
+	\ 	<bang>0
+	\ 		? fzf#vim#with_preview('up:60%')
+	\ 		: fzf#vim#with_preview('right:50%:hidden', '?'),
+	\ 	<bang>0
+	\ )
 
 " fzf completions
-imap <expr> <c-f> <plug>(fzf-complete-file-ag)
-
-inoremap <expr> <c-l> fzf#complete('ag "^.*$" --nofilename --ignore ".git/" --ignore "node_modules/"')
-inoremap <expr> import fzf#complete('ag "^import.*$" --nofilename --ignore ".git/" --ignore "node_modules/"')
+inoremap <expr> <c-l> fzf#complete('rg "^.*$" --no-filename --no-line-number')
 nmap <c-l> i<c-l>
 
 " prettier
@@ -268,27 +273,4 @@ command! Remove execute "call delete(expand('%')) | bdelete!"
 " folding
 set foldmethod=indent
 set foldlevel=99
-
-" functions
-noremap <leader>t :call NormalNextToken()<CR>
-
-let g:ignoredTokens = ['(', ')']
-
-function! GetSelection()
-	let [line_start, column_start] = getpos("'<")[1:2]
-	let [line_end, column_end] = getpos("'>")[1:2]
-	let lines = getline(line_start, line_end)
-	if len(lines) == 0
-		return ''
-	endif
-	let lines[-1] = lines[-1][: column_end - (&selection == 'inclusive' ? 1 : 2)]
-	let lines[0] = lines[0][column_start - 1:]
-	return join(lines, "\n")
-endfunction
-
-function! NormalNextToken()
-	normal! viw
-	let selection = GetSelection()
-	:echom selection
-endfunction
 
