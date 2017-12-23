@@ -18,7 +18,6 @@ Plug 'wojtekmach/vim-rename'
 Plug 'kristijanhusak/vim-hybrid-material'
 Plug 'ryanoasis/vim-devicons'
 Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
-Plug 'maralla/completor.vim', { 'do': 'make js' }
 Plug 'osyo-manga/vim-over'
 Plug 'romgrk/replace.vim'
 Plug 'b4winckler/vim-angry'
@@ -38,17 +37,31 @@ Plug 'kana/vim-textobj-user'
 Plug 'kana/vim-textobj-entire'
 Plug 'mhinz/vim-startify'
 
-call plug#end()
+Plug 'Shougo/deoplete.nvim'
 
-" CompleteJS
-let g:completor_node_binary = '/usr/local/bin/babel-node'
-inoremap <expr> <C-j> pumvisible() ? "\<C-n>" : "\<C-j>"
-inoremap <expr> <C-k> pumvisible() ? "\<C-p>" : "\<C-k>"
-inoremap <expr> <cr> pumvisible() ? "\<C-n>" : "\<cr>"
+if has('nvim')
+	Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+else
+	Plug 'Shougo/deoplete.nvim'
+	Plug 'roxma/nvim-yarp'
+	Plug 'roxma/vim-hug-neovim-rpc'
+endif
+
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'wokalski/autocomplete-flow'
+" For func argument completion
+Plug 'Shougo/neosnippet'
+Plug 'Shougo/neosnippet-snippets'
+
+call plug#end()
 
 " set leader
 let g:mapleader = ' '
 let g:maplocalleader = ' '
+
+" deoplete completion
+let g:deoplete#enable_at_startup = 1
+let g:neosnippet#enable_completed_snippet = 1
 
 " Replace Operator
 nmap R <Plug>ReplaceOperator
@@ -65,7 +78,7 @@ filetype plugin indent on
 set number
 set visualbell
 set nowrap
-set pastetoggle=<S-p>
+set pastetoggle=<C-p>
 set cursorline
 set encoding=utf-8
 scriptencoding utf-8
