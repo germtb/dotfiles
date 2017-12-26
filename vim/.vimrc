@@ -53,13 +53,26 @@ let g:LanguageClient_serverCommands = {
 	\ 'javascript.jsx': ['javascript-typescript-stdio'],
 	\ }
 
-autocmd FileType javascript.jsx setlocal omnifunc=LanguageClient#complete
+autocmd FileType *.js :setlocal omnifunc=LanguageClient#complete
 
 let g:LanguageClient_autoStart = 1
-let g:LanguageClient_autoStart = 1
-nnoremap K :call LanguageClient_textDocument_hover()<CR>
+
+autocmd CursorMoved,CursorMovedI *.js :call LanguageClient_textDocument_hover()
+
 nnoremap <CR> :call LanguageClient_textDocument_definition()<CR>
 nnoremap rr :call LanguageClient_textDocument_rename()<CR>
+
+" fugitive
+nnoremap gs :Gstatus<CR>
+nnoremap gd :Gdiff<CR>
+nnoremap gD :Git diff<CR>
+nnoremap gb :Gblame<CR>
+nnoremap ga :Git add --all<CR>
+nnoremap gr :Git reset .<CR>
+nnoremap gp :Git pull<CR>
+nnoremap gc :Gcommit<CR>
+nnoremap gb :Git branch<CR>
+nnoremap gB :Git branch --all<CR>
 
 " set leader
 let g:mapleader = ' '
@@ -88,7 +101,7 @@ filetype plugin indent on
 set number
 set visualbell
 set nowrap
-set pastetoggle=0
+set pastetoggle=£
 set cursorline
 set encoding=utf-8
 scriptencoding utf-8
