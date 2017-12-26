@@ -22,8 +22,8 @@ source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 export PROMPT='${ret_status} %{$fg[cyan]%}%~%{$reset_color%} $(git_prompt_info)'
 
 # Set default editor
-export VISUAL=vim
-export EDITOR=vim
+export VISUAL=nvim
+export EDITOR=nvim
 
 # Aliases
 alias atom='atom .'
@@ -31,7 +31,8 @@ alias cat='rougify'
 alias l='ls -la'
 alias less='less -S -N'
 alias o='cd ..'
-alias vim='/usr/local/bin/vim'
+alias vim='nvim'
+# alias vim='/usr/local/bin/vim'
 
 cd-ls() {
   cd $1

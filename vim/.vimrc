@@ -1,3 +1,6 @@
+let g:python_host_prog="/usr/bin/python"
+let g:python3_host_prog="/usr/local/bin/python3"
+
 call plug#begin('~/.vim/plugged')
 
 Plug 'tpope/vim-surround'
@@ -37,23 +40,26 @@ Plug 'kana/vim-textobj-user'
 Plug 'kana/vim-textobj-entire'
 Plug 'mhinz/vim-startify'
 
-Plug 'Shougo/deoplete.nvim'
-
-if has('nvim')
-	Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-else
-	Plug 'Shougo/deoplete.nvim'
-	Plug 'roxma/nvim-yarp'
-	Plug 'roxma/vim-hug-neovim-rpc'
-endif
-
+Plug 'autozimu/LanguageClient-neovim', {'tag': 'binary-*-x86_64-apple-darwin'}
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-Plug 'wokalski/autocomplete-flow'
-" For func argument completion
-Plug 'Shougo/neosnippet'
-Plug 'Shougo/neosnippet-snippets'
 
 call plug#end()
+
+" Language server protocol
+set hidden
+
+let g:LanguageClient_serverCommands = {
+	\ 'javascript': ['javascript-typescript-stdio'],
+	\ 'javascript.jsx': ['javascript-typescript-stdio'],
+	\ }
+
+autocmd FileType javascript.jsx setlocal omnifunc=LanguageClient#complete
+
+let g:LanguageClient_autoStart = 1
+let g:LanguageClient_autoStart = 1
+nnoremap K :call LanguageClient_textDocument_hover()<CR>
+nnoremap <CR> :call LanguageClient_textDocument_definition()<CR>
+nnoremap rr :call LanguageClient_textDocument_rename()<CR>
 
 " set leader
 let g:mapleader = ' '
@@ -62,6 +68,10 @@ let g:maplocalleader = ' '
 " deoplete completion
 let g:deoplete#enable_at_startup = 1
 let g:neosnippet#enable_completed_snippet = 1
+let g:deoplete#max_menu_width = 60
+
+inoremap <C-j> <C-n>
+inoremap <C-k> <C-p>
 
 " Replace Operator
 nmap R <Plug>ReplaceOperator
@@ -78,7 +88,7 @@ filetype plugin indent on
 set number
 set visualbell
 set nowrap
-set pastetoggle=<C-p>
+set pastetoggle=0
 set cursorline
 set encoding=utf-8
 scriptencoding utf-8
@@ -121,8 +131,18 @@ let g:lightline = {
 	\ 			[ 'linter_errors', 'linter_warnings', 'linter_ok' ]
 	\ 		]
 	\ 	},
-	\ 	'component_function': { 'gitbranch': 'fugitive#head' }
+	\ 	'component_function': {
+	\ 		'filename': 'fugitive#head',
+	\ 		'gitbranch': 'LightlineFilename',
+	\ 	}
 	\ }
+
+function! LightlineFilename()
+	return &filetype ==# 'vimfiler' ? vimfiler#get_status_string() :
+		\ &filetype ==# 'unite' ? unite#get_status_string() :
+		\ &filetype ==# 'vimshell' ? vimshell#get_status_string() :
+		\ expand('%:t') !=# '' ? expand('%:t') : '[No Name]'
+endfunction
 
 let g:lightline.component_expand = {
 	\ 'linter_warnings': 'lightline#ale#warnings',
@@ -243,7 +263,7 @@ nnoremap <leader>p :Files!<CR>
 nnoremap <leader>c :Commands<CR>
 nnoremap <leader>b :Buffers<CR>
 nnoremap <leader>l :Lines<CR>
-nnoremap <leader>r :Rg! 
+nnoremap <leader>a :Rg! 
 nnoremap <leader>g :GFiles?!<CR>
 
 command! -bang Colors
