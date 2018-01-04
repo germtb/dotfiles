@@ -63,6 +63,7 @@ nnoremap <CR> :call LanguageClient_textDocument_definition()<CR>
 nnoremap rr :call LanguageClient_textDocument_rename()<CR>
 
 " fugitive
+nnoremap gl :Git log<CR>
 nnoremap gs :Gstatus<CR>
 nnoremap gd :Gdiff<CR>
 nnoremap gD :Git diff<CR>
@@ -70,9 +71,12 @@ nnoremap gb :Gblame<CR>
 nnoremap ga :Git add --all<CR>
 nnoremap gr :Git reset .<CR>
 nnoremap gp :Git pull<CR>
+nnoremap gP :Git push origin HEAD<CR>
 nnoremap gc :Gcommit<CR>
 nnoremap gb :Git branch<CR>
 nnoremap gB :Git branch --all<CR>
+nnoremap g- :Git checkout -<CR>
+nnoremap gm :Git checkout master<CR>
 
 " set leader
 let g:mapleader = ' '
