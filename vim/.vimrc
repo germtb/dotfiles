@@ -63,20 +63,20 @@ nnoremap <CR> :call LanguageClient_textDocument_definition()<CR>
 nnoremap rr :call LanguageClient_textDocument_rename()<CR>
 
 " fugitive
-nnoremap gl :Git log<CR>
+nnoremap gl :!git log<CR>
 nnoremap gs :Gstatus<CR>
 nnoremap gd :Gdiff<CR>
-nnoremap gD :Git diff<CR>
-nnoremap gb :Gblame<CR>
-nnoremap ga :Git add --all<CR>
-nnoremap gr :Git reset .<CR>
-nnoremap gp :Git pull<CR>
-nnoremap gP :Git push origin HEAD<CR>
+nnoremap gD :!git diff<CR>
+nnoremap gB :Gblame<CR>
+nnoremap gaa :!git add --all<CR>
+nnoremap grr :!git reset .<CR>
+nnoremap gpl :!git pull<CR>
+nnoremap gpp :Git push origin HEAD<CR>
 nnoremap gc :Gcommit<CR>
 nnoremap gb :Git branch<CR>
-nnoremap gB :Git branch --all<CR>
-nnoremap g- :Git checkout -<CR>
-nnoremap gm :Git checkout master<CR>
+nnoremap gbb :Git branch --all<CR>
+nnoremap g- :!git checkout -<CR>
+" nnoremap gm :Git checkout master<CR>
 
 " set leader
 let g:mapleader = ' '
@@ -323,4 +323,19 @@ command! Remove execute "call delete(expand('%')) | bdelete!"
 " folding
 set foldmethod=indent
 set foldlevel=99
+
+" term
+:tnoremap <Esc> <C-\><C-n>
+:tnoremap <leader>wh <C-\><C-N><C-w>h
+:tnoremap <leader>wj <C-\><C-N><C-w>j
+:tnoremap <leader>wk <C-\><C-N><C-w>k
+:tnoremap <leader>wl <C-\><C-N><C-w>l
+:inoremap <leader>wh <C-\><C-N><C-w>h
+:inoremap <leader>wj <C-\><C-N><C-w>j
+:inoremap <leader>wk <C-\><C-N><C-w>k
+:inoremap <leader>wl <C-\><C-N><C-w>l
+:nnoremap <leader>wh <C-w>h
+:nnoremap <leader>wj <C-w>j
+:nnoremap <leader>wk <C-w>k
+:nnoremap <leader>wl <C-w>l
 
