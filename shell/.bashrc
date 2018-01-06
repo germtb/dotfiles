@@ -1,6 +1,7 @@
 # Set path
 export PATH='/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
 export PATH='/Users/gmoreno/.npm-global/bin':$PATH
+export PATH='/Users/gmoreno/bin':$PATH
 # export PATH='/Users/gmoreno/.seon/bin':$PATH
 export API_CLIENT_KEY=1022507da36a145a7421f28af3ee32eb
 

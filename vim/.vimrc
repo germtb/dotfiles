@@ -3,45 +3,46 @@ let g:python3_host_prog="/usr/local/bin/python3"
 
 call plug#begin('~/.vim/plugged')
 
-Plug 'tpope/vim-surround'
+Plug 'airblade/vim-gitgutter'
+Plug 'autozimu/LanguageClient-neovim', {'tag': 'binary-*-x86_64-apple-darwin'}
+Plug 'b4winckler/vim-angry'
+Plug 'haya14busa/is.vim'
+Plug 'haya14busa/vim-operator-flashy'
 Plug 'itchyny/lightline.vim'
-Plug 'maximbaz/lightline-ale'
+Plug 'jiangmiao/auto-pairs'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
 Plug 'junegunn/fzf.vim'
-Plug 'airblade/vim-gitgutter'
+Plug 'kana/vim-operator-user'
+Plug 'kana/vim-textobj-entire'
+Plug 'kana/vim-textobj-line'
+Plug 'kana/vim-textobj-user'
+Plug 'kristijanhusak/vim-hybrid-material'
+Plug 'maximbaz/lightline-ale'
+Plug 'mgee/lightline-bufferline'
+Plug 'mhinz/vim-startify'
+Plug 'MHordecki/vim-subword'
 Plug 'mxw/vim-jsx'
+Plug 'osyo-manga/vim-over'
+Plug 'othree/jspc.vim'
 Plug 'pangloss/vim-javascript'
-Plug 'scrooloose/nerdtree'
-Plug 'tpope/vim-commentary'
 Plug 'prettier/vim-prettier', {
 	\ 'do': 'yarn install',
 	\ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql'] }
-Plug 'othree/jspc.vim'
-Plug 'wojtekmach/vim-rename'
-Plug 'kristijanhusak/vim-hybrid-material'
-Plug 'ryanoasis/vim-devicons'
-Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
-Plug 'osyo-manga/vim-over'
-Plug 'romgrk/replace.vim'
-Plug 'b4winckler/vim-angry'
-Plug 'wellle/targets.vim'
-Plug 'ap/vim-buftabline'
-Plug 'jiangmiao/auto-pairs'
-Plug 'tpope/vim-fugitive'
-Plug 'haya14busa/is.vim'
-Plug 'kana/vim-operator-user'
-Plug 'haya14busa/vim-operator-flashy'
-Plug 'w0rp/ale'
-Plug 'ynkdir/vim-vimlparser'
-Plug 'syngan/vim-vimlint'
 Plug 'rhysd/clever-f.vim'
-Plug 'tpope/vim-vinegar'
-Plug 'kana/vim-textobj-user'
-Plug 'kana/vim-textobj-entire'
-Plug 'mhinz/vim-startify'
-
-Plug 'autozimu/LanguageClient-neovim', {'tag': 'binary-*-x86_64-apple-darwin'}
+Plug 'romgrk/replace.vim'
+Plug 'ryanoasis/vim-devicons'
+Plug 'scrooloose/nerdtree'
+Plug 'syngan/vim-vimlint'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-vinegar'
+Plug 'w0rp/ale'
+Plug 'wellle/targets.vim'
+Plug 'wojtekmach/vim-rename'
+Plug 'ynkdir/vim-vimlparser'
 
 call plug#end()
 
@@ -57,26 +58,16 @@ autocmd FileType *.js :setlocal omnifunc=LanguageClient#complete
 
 let g:LanguageClient_autoStart = 1
 
-autocmd CursorMoved,CursorMovedI *.js :call LanguageClient_textDocument_hover()
+nnoremap K :LanguageClient_textDocument_hover()<CR>
+" autocmd CursorMoved,CursorMovedI *.js :call LanguageClient_textDocument_hover()
 
-nnoremap <CR> :call LanguageClient_textDocument_definition()<CR>
+nnoremap df :call LanguageClient_textDocument_definition()<CR>
 nnoremap rr :call LanguageClient_textDocument_rename()<CR>
 
 " fugitive
-nnoremap gl :!git log<CR>
 nnoremap gs :Gstatus<CR>
 nnoremap gd :Gdiff<CR>
-nnoremap gD :!git diff<CR>
-nnoremap gB :Gblame<CR>
-nnoremap gaa :!git add --all<CR>
-nnoremap grr :!git reset .<CR>
-nnoremap gpl :!git pull<CR>
-nnoremap gpp :Git push origin HEAD<CR>
-nnoremap gc :Gcommit<CR>
-nnoremap gb :Git branch<CR>
-nnoremap gbb :Git branch --all<CR>
-nnoremap g- :!git checkout -<CR>
-" nnoremap gm :Git checkout master<CR>
+nnoremap gb :Gblame<CR>
 
 " set leader
 let g:mapleader = ' '
@@ -125,6 +116,9 @@ autocmd FileChangedShellPost *
 let g:ale_sign_column_always = 1
 let g:ale_sign_error = '◉'
 let g:ale_sign_warning = '◉'
+let g:ale_completion_enabled = 1
+nmap <silent> <C-k> <Plug>(ale_previous_wrap)
+nmap <silent> <C-j> <Plug>(ale_next_wrap)
 
 " Paste
 map y <Plug>(operator-flashy)
@@ -262,7 +256,9 @@ xnoremap <leader><S-d> "dyOconsole.log('<ESC>"dpa: ', <ESC>"dpa)<ESC>
 inoremap jj <ESC>
 
 " vim-over
-nnoremap <leader>f :OverCommandLine<CR>%s/
+nnoremap <leader>f /
+nnoremap <leader>s :%s/
+" nnoremap <leader>f :OverCommandLine<CR>%s/
 
 " clever-f
 let g:clever_f_show_prompt=1
@@ -281,6 +277,8 @@ nnoremap <leader>c :Commands<CR>
 nnoremap <leader>b :Buffers<CR>
 nnoremap <leader>l :Lines<CR>
 nnoremap <leader>a :Rg! 
+nnoremap <leader>A yiw:Rg! <C-R>"<CR>
+vnoremap <leader>a y:Rg! <C-R>"<CR>
 nnoremap <leader>g :GFiles?!<CR>
 
 command! -bang Colors
@@ -303,7 +301,7 @@ inoremap <expr> <c-l> fzf#complete('rg "^.*$" --no-filename --no-line-number')
 nmap <c-l> i<c-l>
 
 " prettier
-let g:prettier#autoformat = 0
+let g:prettier#autoformat = 1
 let g:prettier#quickfix_enabled = 0
 autocmd BufWritePre *.js,*.json PrettierAsync
 
@@ -325,17 +323,47 @@ set foldmethod=indent
 set foldlevel=99
 
 " term
-:tnoremap <Esc> <C-\><C-n>
-:tnoremap <leader>wh <C-\><C-N><C-w>h
-:tnoremap <leader>wj <C-\><C-N><C-w>j
-:tnoremap <leader>wk <C-\><C-N><C-w>k
-:tnoremap <leader>wl <C-\><C-N><C-w>l
-:inoremap <leader>wh <C-\><C-N><C-w>h
-:inoremap <leader>wj <C-\><C-N><C-w>j
-:inoremap <leader>wk <C-\><C-N><C-w>k
-:inoremap <leader>wl <C-\><C-N><C-w>l
-:nnoremap <leader>wh <C-w>h
-:nnoremap <leader>wj <C-w>j
-:nnoremap <leader>wk <C-w>k
-:nnoremap <leader>wl <C-w>l
+nnoremap <leader>t :vsplit term://zsh<CR>i
+tnoremap <leader>q <C-\><C-n>:bd!<CR>
+tnoremap jj <C-\><C-n>
+
+" splits
+set splitright
+tnoremap <leader>wh <C-\><C-N><C-w>h
+tnoremap <leader>wj <C-\><C-N><C-w>j
+tnoremap <leader>wk <C-\><C-N><C-w>k
+tnoremap <leader>wl <C-\><C-N><C-w>l
+inoremap <leader>wh <C-\><C-N><C-w>h
+inoremap <leader>wj <C-\><C-N><C-w>j
+inoremap <leader>wk <C-\><C-N><C-w>k
+inoremap <leader>wl <C-\><C-N><C-w>l
+nnoremap <leader>wh <C-w>h
+nnoremap <leader>wj <C-w>j
+nnoremap <leader>wk <C-w>k
+nnoremap <leader>wl <C-w>l
+
+" tabs
+set showtabline=2
+
+let g:lightline.tabline = {'left': [['buffers']], 'right': [['close']]}
+let g:lightline.component_expand = {'buffers': 'lightline#bufferline#buffers'}
+let g:lightline.component_type   = {'buffers': 'tabsel'}
+
+let g:lightline#bufferline#unnamed = '[No Name]'
+let g:lightline#bufferline#shorten_path = 1
+let g:lightline#bufferline#show_number = 2
+let g:lightline#bufferline#number_map = {
+	\ 0: '⁰', 1: '¹', 2: '²', 3: '³', 4: '⁴',
+	\ 5: '⁵', 6: '⁶', 7: '⁷', 8: '⁸', 9: '⁹'}
+
+nmap <Leader>1 <Plug>lightline#bufferline#go(1)
+nmap <Leader>2 <Plug>lightline#bufferline#go(2)
+nmap <Leader>3 <Plug>lightline#bufferline#go(3)
+nmap <Leader>4 <Plug>lightline#bufferline#go(4)
+nmap <Leader>5 <Plug>lightline#bufferline#go(5)
+nmap <Leader>6 <Plug>lightline#bufferline#go(6)
+nmap <Leader>7 <Plug>lightline#bufferline#go(7)
+nmap <Leader>8 <Plug>lightline#bufferline#go(8)
+nmap <Leader>9 <Plug>lightline#bufferline#go(9)
+nmap <Leader>0 <Plug>lightline#bufferline#go(10)
 
