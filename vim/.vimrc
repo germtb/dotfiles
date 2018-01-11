@@ -51,7 +51,7 @@ Plug 'whatyouhide/vim-textobj-xmlattr'
 
 call plug#end()
 
-" basic settings
+" Basic settings
 set nocompatible
 set encoding=utf-8
 scriptencoding utf-8
@@ -86,16 +86,16 @@ nnoremap K :LanguageClient_textDocument_hover()<CR>
 nnoremap df :call LanguageClient_textDocument_definition()<CR>
 nnoremap rr :call LanguageClient_textDocument_rename()<CR>
 
-" fugitive
+" Fugitive
 nnoremap gs :Gstatus<CR>
 nnoremap gd :Gdiff<CR>
 nnoremap gb :Gblame<CR>
 
-" set leader
+" Set leader
 let g:mapleader = ' '
 let g:maplocalleader = ' '
 
-" deoplete completion
+" Deoplete completion
 let g:deoplete#enable_at_startup = 1
 let g:neosnippet#enable_completed_snippet = 1
 let g:deoplete#max_menu_width = 60
@@ -107,20 +107,20 @@ inoremap <C-k> <C-p>
 nmap R <Plug>ReplaceOperator
 vmap R <Plug>ReplaceOperator
 
-" remove automatic insertion of comments 
+" Remove automatic insertion of comments
 autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 
-" invisible characters
+" Invisible characters
 set list
 set listchars=tab:→\ ,eol:♫,trail:·,space:·
 
-" autoreload files
+" Autoreload files
 set autoread
 autocmd FocusGained,BufEnter,CursorHold,CursorHoldI * if mode() != 'c' | checktime | endif
 autocmd FileChangedShellPost *
 	\ echohl WarningMsg | echo "File changed on disk. Buffer reloaded." | echohl None
 
-" ale
+" Ale
 let g:ale_sign_column_always = 0
 let g:ale_sign_error = '◉'
 let g:ale_sign_warning = '◉'
@@ -137,7 +137,7 @@ xnoremap y "*y
 " Startify
 let g:startify_session_persistence = 1
 
-" lightline
+" Lightline
 let g:lightline = {
 	\ 	'colorscheme': 'seoul256',
 	\ 	'subseparator': { 'left': '⮁', 'right': '⮃' },
@@ -179,13 +179,13 @@ let g:lightline#ale#indicator_warnings='⚠'
 let g:lightline#ale#indicator_errors='ⓧ'
 let g:lightline#ale#indicator_ok='✓'
 
-" indentation
+" Indentation
 set autoindent
 set smartindent
 set shiftwidth=2
 set tabstop=2
 
-" autoload vimrc
+" Autoload vimrc
 augroup vimrc
 	au!
 	autocmd bufwritepost .vimrc source ~/.vimrc
@@ -201,14 +201,14 @@ if !has('gui_running')
 	set t_Co=256
 endif
 
-" search
+" Search
 set hlsearch
 set ignorecase
 set smartcase
 set incsearch
 autocmd BufReadPre,FileReadPre * :highlight IncSearch guibg=green ctermbg=green term=underline
 
-" swp files
+" Backup files
 set swapfile
 set dir=~/temp
 set backupdir=~/temp
@@ -217,16 +217,16 @@ if v:version >= 703
 	set undodir=~/temp
 endif
 
-" mouse
+" Mouse
 silent! set ttymouse=xterm2
 set mouse=a
 
-" theme
+" Theme
 syntax enable
 set background=dark
 colorscheme hybrid_material
 
-" js
+" JS
 let g:jsx_ext_required = 0
 let g:javascript_plugin_flow = 1
 let g:javascript_plugin_jsdoc = 1
@@ -237,9 +237,7 @@ let &t_SI = "\<Esc>]50;CursorShape=1\x7"
 let &t_SR = "\<Esc>]50;CursorShape=2\x7"
 let &t_EI = "\<Esc>]50;CursorShape=0\x7"
 
-" maps
-nnoremap cc ciw
-
+" Maps
 nnoremap <leader>q :q<CR>
 nnoremap <leader>w :update<CR>
 
@@ -266,9 +264,8 @@ inoremap jj <ESC>
 " vim-over
 nnoremap <leader>f /
 nnoremap <leader>F yiw/<C-R>"<CR>
-nnoremap <leader>s :%s/
-nnoremap <leader>S yiw:%s/<C-R>"/
-" nnoremap <leader>f :OverCommandLine<CR>%s/
+nnoremap <leader>s :OverCommandLine<CR>%s/
+nnoremap <leader>S yiw:OverCommandLine%s/<C-R>"/
 
 " clever-f
 let g:clever_f_show_prompt=1
@@ -290,6 +287,10 @@ endfunction
 command! -nargs=+ Replace call Replace(<f-args>)
 nnoremap <leader>r :Replace 
 nnoremap <leader>R yiw:Replace <C-R>" 
+
+" Path to clipboard
+command! Path :let @*=expand("%")
+command! FullPath :let @*=expand("%:p")
 
 " fzf
 let $FZF_DEFAULT_COMMAND = 'ag --hidden --ignore .git --ignore node_modules -l -g ""'
@@ -341,7 +342,7 @@ let g:prettier#config#parser = 'flow'
 command! Remove execute "call delete(expand('%')) | bdelete!"
 command! ReloadConfig execute "source ~/.vimrc"
 
-" folding
+" Folding
 set foldmethod=indent
 set foldlevel=99
 
@@ -353,7 +354,7 @@ tnoremap <C-j> <Down>
 tnoremap <C-k> <Up>
 autocmd BufEnter term://* startinsert
 
-" splits
+" Splits
 set splitright
 tnoremap <leader>wh <C-\><C-N><C-w>h
 tnoremap <leader>wj <C-\><C-N><C-w>j
@@ -364,7 +365,7 @@ nnoremap <leader>wj <C-w>j
 nnoremap <leader>wk <C-w>k
 nnoremap <leader>wl <C-w>l
 
-" tabs
+" Tabs
 set showtabline=2
 
 let g:lightline.tabline = {'left': [['buffers']], 'right': [['close']]}
@@ -388,4 +389,17 @@ nmap <Leader>7 <Plug>lightline#bufferline#go(7)
 nmap <Leader>8 <Plug>lightline#bufferline#go(8)
 nmap <Leader>9 <Plug>lightline#bufferline#go(9)
 nmap <Leader>0 <Plug>lightline#bufferline#go(10)
+
+" textobj
+
+let s:IMPORT_REGEX = "^import.*from\s*'.*'$"
+
+call textobj#user#plugin('js', {
+\   'import': {
+\     'pattern': s:IMPORT_REGEX,
+\     'select': ['aI', 'iI'],
+\   }
+\ })
+
+let g:loaded_textobj_js = 1
 
