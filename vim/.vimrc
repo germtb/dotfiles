@@ -4,7 +4,10 @@ let g:python3_host_prog="/usr/local/bin/python3"
 call plug#begin('~/.vim/plugged')
 
 Plug 'airblade/vim-gitgutter'
-Plug 'autozimu/LanguageClient-neovim', {'tag': 'binary-*-x86_64-apple-darwin'}
+Plug 'autozimu/LanguageClient-neovim', {
+	\ 'branch': 'next',
+	\ 'do': 'install.sh'
+	\ }
 Plug 'b4winckler/vim-angry'
 Plug 'haya14busa/is.vim'
 Plug 'haya14busa/vim-operator-flashy'
@@ -12,6 +15,8 @@ Plug 'itchyny/lightline.vim'
 Plug 'jiangmiao/auto-pairs'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
 Plug 'junegunn/fzf.vim'
+Plug 'junegunn/limelight.vim'
+Plug 'junegunn/goyo.vim'
 Plug 'kana/vim-operator-user'
 Plug 'kana/vim-textobj-entire'
 Plug 'kana/vim-textobj-line'
@@ -20,7 +25,6 @@ Plug 'kristijanhusak/vim-hybrid-material'
 Plug 'maximbaz/lightline-ale'
 Plug 'mgee/lightline-bufferline'
 Plug 'mhinz/vim-startify'
-Plug 'MHordecki/vim-subword'
 Plug 'mxw/vim-jsx'
 Plug 'osyo-manga/vim-over'
 Plug 'othree/jspc.vim'
@@ -43,12 +47,30 @@ Plug 'w0rp/ale'
 Plug 'wellle/targets.vim'
 Plug 'wojtekmach/vim-rename'
 Plug 'ynkdir/vim-vimlparser'
+Plug 'whatyouhide/vim-textobj-xmlattr'
 
 call plug#end()
 
-" Language server protocol
+" basic settings
+set nocompatible
+set encoding=utf-8
+scriptencoding utf-8
+set modifiable
+set showcmd
+set noshowmode
 set hidden
+set lazyredraw
+set laststatus=2
+filetype plugin indent on
+set number
+set visualbell
+set nowrap
+set pastetoggle=€
+set cursorcolumn
+set cursorline
+set colorcolumn=80
 
+" Language server protocol
 let g:LanguageClient_serverCommands = {
 	\ 'javascript': ['javascript-typescript-stdio'],
 	\ 'javascript.jsx': ['javascript-typescript-stdio'],
@@ -85,22 +107,8 @@ inoremap <C-k> <C-p>
 nmap R <Plug>ReplaceOperator
 vmap R <Plug>ReplaceOperator
 
-" basic settings
-set nocompatible
-set showcmd
-set noshowmode
-set hidden
-set lazyredraw
-set laststatus=2
-filetype plugin indent on
-set number
-set visualbell
-set nowrap
-set pastetoggle=£
-set cursorline
-set encoding=utf-8
-scriptencoding utf-8
-set modifiable
+" remove automatic insertion of comments 
+autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 
 " invisible characters
 set list
@@ -113,7 +121,7 @@ autocmd FileChangedShellPost *
 	\ echohl WarningMsg | echo "File changed on disk. Buffer reloaded." | echohl None
 
 " ale
-let g:ale_sign_column_always = 1
+let g:ale_sign_column_always = 0
 let g:ale_sign_error = '◉'
 let g:ale_sign_warning = '◉'
 let g:ale_completion_enabled = 1
@@ -124,7 +132,7 @@ nmap <silent> <C-j> <Plug>(ale_next_wrap)
 map y <Plug>(operator-flashy)
 nmap Y <Plug>(operator-flashy)$
 set clipboard=unnamedplus
-xnoremap y "vy
+xnoremap y "*y
 
 " Startify
 let g:startify_session_persistence = 1
@@ -206,7 +214,7 @@ set dir=~/temp
 set backupdir=~/temp
 set directory=~/temp
 if v:version >= 703
-  set undodir=~/temp
+	set undodir=~/temp
 endif
 
 " mouse
@@ -257,7 +265,9 @@ inoremap jj <ESC>
 
 " vim-over
 nnoremap <leader>f /
+nnoremap <leader>F yiw/<C-R>"<CR>
 nnoremap <leader>s :%s/
+nnoremap <leader>S yiw:%s/<C-R>"/
 " nnoremap <leader>f :OverCommandLine<CR>%s/
 
 " clever-f
@@ -268,6 +278,18 @@ noremap <leader>n :NERDTreeToggle<CR>
 noremap <leader>m :NERDTreeFind<CR>
 let g:NERDTreeHijackNetrw=0
 let g:NERDTreeShowHidden=0
+
+" Replace
+function! Replace(pattern, replacement)
+	let command = "rg ". a:pattern. " -l | xargs sed -i '' -e 's/". a:pattern. "/". a:replacement. "/g'"
+	execute system(l:command)
+	execute "normal! :edit<CR>"
+	echom l:command
+endfunction
+
+command! -nargs=+ Replace call Replace(<f-args>)
+nnoremap <leader>r :Replace 
+nnoremap <leader>R yiw:Replace <C-R>" 
 
 " fzf
 let $FZF_DEFAULT_COMMAND = 'ag --hidden --ignore .git --ignore node_modules -l -g ""'
@@ -298,7 +320,7 @@ command! -bang -nargs=* Rg
 
 " fzf completions
 inoremap <expr> <c-l> fzf#complete('rg "^.*$" --no-filename --no-line-number')
-nmap <c-l> i<c-l>
+nnoremap <c-l> i<c-l>
 
 " prettier
 let g:prettier#autoformat = 1
@@ -315,17 +337,21 @@ let g:prettier#config#jsx_bracket_same_line = 'false'
 let g:prettier#config#trailing_comma = 'none'
 let g:prettier#config#parser = 'flow'
 
-" commands
+" Commands
 command! Remove execute "call delete(expand('%')) | bdelete!"
+command! ReloadConfig execute "source ~/.vimrc"
 
 " folding
 set foldmethod=indent
 set foldlevel=99
 
 " term
-nnoremap <leader>t :vsplit term://zsh<CR>i
+nnoremap <leader>t :vsplit term://zsh<CR>
 tnoremap <leader>q <C-\><C-n>:bd!<CR>
 tnoremap jj <C-\><C-n>
+tnoremap <C-j> <Down>
+tnoremap <C-k> <Up>
+autocmd BufEnter term://* startinsert
 
 " splits
 set splitright
@@ -333,10 +359,6 @@ tnoremap <leader>wh <C-\><C-N><C-w>h
 tnoremap <leader>wj <C-\><C-N><C-w>j
 tnoremap <leader>wk <C-\><C-N><C-w>k
 tnoremap <leader>wl <C-\><C-N><C-w>l
-inoremap <leader>wh <C-\><C-N><C-w>h
-inoremap <leader>wj <C-\><C-N><C-w>j
-inoremap <leader>wk <C-\><C-N><C-w>k
-inoremap <leader>wl <C-\><C-N><C-w>l
 nnoremap <leader>wh <C-w>h
 nnoremap <leader>wj <C-w>j
 nnoremap <leader>wk <C-w>k
@@ -347,7 +369,7 @@ set showtabline=2
 
 let g:lightline.tabline = {'left': [['buffers']], 'right': [['close']]}
 let g:lightline.component_expand = {'buffers': 'lightline#bufferline#buffers'}
-let g:lightline.component_type   = {'buffers': 'tabsel'}
+let g:lightline.component_type = {'buffers': 'tabsel'}
 
 let g:lightline#bufferline#unnamed = '[No Name]'
 let g:lightline#bufferline#shorten_path = 1
