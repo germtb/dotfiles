@@ -4,6 +4,7 @@ let g:python3_host_prog="/usr/local/bin/python3"
 call plug#begin('~/.vim/plugged')
 
 Plug 'airblade/vim-gitgutter'
+Plug 'alvan/vim-closetag'
 Plug 'autozimu/LanguageClient-neovim', {
 	\ 'branch': 'next',
 	\ 'do': 'install.sh'
@@ -13,6 +14,7 @@ Plug 'haya14busa/is.vim'
 Plug 'haya14busa/vim-operator-flashy'
 Plug 'itchyny/lightline.vim'
 Plug 'jiangmiao/auto-pairs'
+Plug 'justinj/vim-textobj-reactprop'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/limelight.vim'
@@ -38,6 +40,8 @@ Plug 'ryanoasis/vim-devicons'
 Plug 'scrooloose/nerdtree'
 Plug 'syngan/vim-vimlint'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'Shougo/neosnippet'
+Plug 'Shougo/neosnippet-snippets'
 Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
@@ -47,7 +51,6 @@ Plug 'w0rp/ale'
 Plug 'wellle/targets.vim'
 Plug 'wojtekmach/vim-rename'
 Plug 'ynkdir/vim-vimlparser'
-Plug 'whatyouhide/vim-textobj-xmlattr'
 
 call plug#end()
 
@@ -66,7 +69,6 @@ set number
 set visualbell
 set nowrap
 set pastetoggle=€
-set cursorcolumn
 set cursorline
 set colorcolumn=80
 
@@ -94,6 +96,13 @@ nnoremap gb :Gblame<CR>
 " Set leader
 let g:mapleader = ' '
 let g:maplocalleader = ' '
+
+" newtr
+let g:netrw_banner       = 0
+let g:netrw_liststyle    = 3
+let g:netrw_sort_options = 'i'
+autocmd FileType netrw setl bufhidden=delete
+autocmd FileType netrw setl bufhidden=wipe
 
 " Deoplete completion
 let g:deoplete#enable_at_startup = 1
@@ -238,17 +247,17 @@ let &t_SR = "\<Esc>]50;CursorShape=2\x7"
 let &t_EI = "\<Esc>]50;CursorShape=0\x7"
 
 " Maps
-nnoremap <leader>q :q<CR>
-nnoremap <leader>w :update<CR>
+" nnoremap <leader>q :q<CR>
+" nnoremap <leader>w :update<CR>
 
-nnoremap o o<ESC>
-noremap O O<ESC>
+" nnoremap o o<ESC>
+" noremap O O<ESC>
 
-noremap ∆ }j
-noremap ˚ {k
+" noremap ∆ }j
+" noremap ˚ {k
 
-nnoremap ¬ viw
-nnoremap ˙ viw
+" nnoremap ¬ viw
+" nnoremap ˙ viw
 
 nnoremap <leader>d "dyiwoconsole.log('<ESC>"dpa: ', <ESC>"dpa)<ESC>
 nnoremap <leader><S-d> "dyiwOconsole.log('<ESC>"dpa: ', <ESC>"dpa)<ESC>
@@ -276,7 +285,7 @@ noremap <leader>m :NERDTreeFind<CR>
 let g:NERDTreeHijackNetrw=0
 let g:NERDTreeShowHidden=0
 
-" Replace
+" Replace accross project
 function! Replace(pattern, replacement)
 	let command = "rg ". a:pattern. " -l | xargs sed -i '' -e 's/". a:pattern. "/". a:replacement. "/g'"
 	execute system(l:command)
@@ -392,7 +401,7 @@ nmap <Leader>0 <Plug>lightline#bufferline#go(10)
 
 " textobj
 
-let s:IMPORT_REGEX = "^import.*from\s*'.*'$"
+let s:IMPORT_REGEX = "import .* from '.*'"
 
 call textobj#user#plugin('js', {
 \   'import': {
@@ -402,4 +411,7 @@ call textobj#user#plugin('js', {
 \ })
 
 let g:loaded_textobj_js = 1
+
+" autoclose XML-like tags
+let g:closetag_filenames = "*.html,*.jsx,*.js"
 
