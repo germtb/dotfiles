@@ -55,7 +55,6 @@ Plug 'ynkdir/vim-vimlparser'
 call plug#end()
 
 " Basic settings
-set nocompatible
 set encoding=utf-8
 scriptencoding utf-8
 set modifiable
@@ -64,7 +63,6 @@ set noshowmode
 set hidden
 set lazyredraw
 set laststatus=2
-filetype plugin indent on
 set number
 set visualbell
 set nowrap
@@ -83,8 +81,6 @@ autocmd FileType *.js :setlocal omnifunc=LanguageClient#complete
 let g:LanguageClient_autoStart = 1
 
 nnoremap K :LanguageClient_textDocument_hover()<CR>
-" autocmd CursorMoved,CursorMovedI *.js :call LanguageClient_textDocument_hover()
-
 nnoremap df :call LanguageClient_textDocument_definition()<CR>
 nnoremap rr :call LanguageClient_textDocument_rename()<CR>
 
@@ -183,7 +179,6 @@ let g:lightline.component_type = {
 	\ 'linter_errors': 'error',
 	\ }
 
-
 let g:lightline#ale#indicator_warnings='⚠'
 let g:lightline#ale#indicator_errors='ⓧ'
 let g:lightline#ale#indicator_ok='✓'
@@ -247,30 +242,24 @@ let &t_SR = "\<Esc>]50;CursorShape=2\x7"
 let &t_EI = "\<Esc>]50;CursorShape=0\x7"
 
 " Maps
-" nnoremap <leader>q :q<CR>
-" nnoremap <leader>w :update<CR>
+nnoremap <leader>q :q<CR>
+nnoremap <leader>w :update<CR>
 
-" nnoremap o o<ESC>
-" noremap O O<ESC>
+nnoremap o o<ESC>
+noremap O O<ESC>
 
-" noremap ∆ }j
-" noremap ˚ {k
-
-" nnoremap ¬ viw
-" nnoremap ˙ viw
+noremap ∆ }j
+noremap ˚ {k
 
 nnoremap <leader>d "dyiwoconsole.log('<ESC>"dpa: ', <ESC>"dpa)<ESC>
-nnoremap <leader><S-d> "dyiwOconsole.log('<ESC>"dpa: ', <ESC>"dpa)<ESC>
-
-xnoremap ¬ <ESC>wviw
-xnoremap ˙ <ESC>bbviw
+nnoremap <leader>D "dyiwOconsole.log('<ESC>"dpa: ', <ESC>"dpa)<ESC>
 
 xnoremap <leader>d "dyoconsole.log('<ESC>"dpa: ', <ESC>"dpa)<ESC>
-xnoremap <leader><S-d> "dyOconsole.log('<ESC>"dpa: ', <ESC>"dpa)<ESC>
+xnoremap <leader>D "dyOconsole.log('<ESC>"dpa: ', <ESC>"dpa)<ESC>
 
 inoremap jj <ESC>
 
-" vim-over
+" search
 nnoremap <leader>f /
 nnoremap <leader>F yiw/<C-R>"<CR>
 nnoremap <leader>s :OverCommandLine<CR>%s/
@@ -289,17 +278,13 @@ let g:NERDTreeShowHidden=0
 function! Replace(pattern, replacement)
 	let command = "rg ". a:pattern. " -l | xargs sed -i '' -e 's/". a:pattern. "/". a:replacement. "/g'"
 	execute system(l:command)
-	execute "normal! :edit<CR>"
+	execute "normal! :bufdo edit<CR>"
 	echom l:command
 endfunction
 
 command! -nargs=+ Replace call Replace(<f-args>)
 nnoremap <leader>r :Replace 
 nnoremap <leader>R yiw:Replace <C-R>" 
-
-" Path to clipboard
-command! Path :let @*=expand("%")
-command! FullPath :let @*=expand("%:p")
 
 " fzf
 let $FZF_DEFAULT_COMMAND = 'ag --hidden --ignore .git --ignore node_modules -l -g ""'
@@ -347,9 +332,15 @@ let g:prettier#config#jsx_bracket_same_line = 'false'
 let g:prettier#config#trailing_comma = 'none'
 let g:prettier#config#parser = 'flow'
 
-" Commands
+" Remove file
 command! Remove execute "call delete(expand('%')) | bdelete!"
+
+" Reload vimrc
 command! ReloadConfig execute "source ~/.vimrc"
+
+" Path to clipboard
+command! Path :let @*=expand("%")
+command! FullPath :let @*=expand("%:p")
 
 " Folding
 set foldmethod=indent
@@ -400,7 +391,6 @@ nmap <Leader>9 <Plug>lightline#bufferline#go(9)
 nmap <Leader>0 <Plug>lightline#bufferline#go(10)
 
 " textobj
-
 let s:IMPORT_REGEX = "import .* from '.*'"
 
 call textobj#user#plugin('js', {
