@@ -1,13 +1,10 @@
-let g:python_host_prog="/usr/bin/python"
-let g:python3_host_prog="/usr/local/bin/python3"
-
 call plug#begin('~/.vim/plugged')
 
 Plug 'airblade/vim-gitgutter'
 Plug 'alvan/vim-closetag'
 Plug 'autozimu/LanguageClient-neovim', {
 	\ 'branch': 'next',
-	\ 'do': 'install.sh'
+	\ 'do': 'bash install.sh'
 	\ }
 Plug 'b4winckler/vim-angry'
 Plug 'haya14busa/is.vim'
@@ -15,10 +12,11 @@ Plug 'haya14busa/vim-operator-flashy'
 Plug 'itchyny/lightline.vim'
 Plug 'jiangmiao/auto-pairs'
 Plug 'justinj/vim-textobj-reactprop'
+Plug 'justinmk/vim-dirvish'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/limelight.vim'
-Plug 'junegunn/goyo.vim'
+Plug 'junegunn/goyo.vim', { 'on': 'Goyo' }
 Plug 'kana/vim-operator-user'
 Plug 'kana/vim-textobj-entire'
 Plug 'kana/vim-textobj-line'
@@ -33,16 +31,15 @@ Plug 'othree/jspc.vim'
 Plug 'pangloss/vim-javascript'
 Plug 'prettier/vim-prettier', {
 	\ 'do': 'yarn install',
-	\ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql'] }
-Plug 'rhysd/clever-f.vim'
+	\ 'on': [ 'PrettierAsync' ] }
 Plug 'romgrk/replace.vim'
-Plug 'ryanoasis/vim-devicons'
-Plug 'scrooloose/nerdtree'
+Plug 'ryanoasis/vim-devicons', { 'on': 'NERDTreeToggle' }
+Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
 Plug 'syngan/vim-vimlint'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'Shougo/neosnippet'
 Plug 'Shougo/neosnippet-snippets'
-Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
+Plug 'tiagofumo/vim-nerdtree-syntax-highlight', { 'on': 'NERDTreeToggle' }
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
@@ -50,7 +47,7 @@ Plug 'tpope/vim-vinegar'
 Plug 'w0rp/ale'
 Plug 'wellle/targets.vim'
 Plug 'wojtekmach/vim-rename'
-Plug 'ynkdir/vim-vimlparser'
+Plug 'ynkdir/vim-vimlparser', { 'for': 'vim' }
 
 call plug#end()
 
@@ -95,13 +92,16 @@ let g:maplocalleader = ' '
 
 " newtr
 let g:netrw_banner       = 0
-let g:netrw_liststyle    = 3
+let g:netrw_liststyle    = 0
 let g:netrw_sort_options = 'i'
 autocmd FileType netrw setl bufhidden=delete
 autocmd FileType netrw setl bufhidden=wipe
 
 " Deoplete completion
-let g:deoplete#enable_at_startup = 1
+let g:python_host_prog="/usr/bin/python"
+let g:python3_host_prog="/usr/local/bin/python3"
+let g:deoplete#enable_at_startup = 0
+autocmd InsertEnter * call deoplete#enable()
 let g:neosnippet#enable_completed_snippet = 1
 let g:deoplete#max_menu_width = 60
 
@@ -110,7 +110,7 @@ inoremap <C-k> <C-p>
 
 " Replace Operator
 nmap R <Plug>ReplaceOperator
-vmap R <Plug>ReplaceOperator
+xmap R <Plug>ReplaceOperator
 
 " Remove automatic insertion of comments
 autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
@@ -210,6 +210,8 @@ set hlsearch
 set ignorecase
 set smartcase
 set incsearch
+nnoremap . .:set hlsearch<CR>
+nnoremap u u:set hlsearch<CR>
 autocmd BufReadPre,FileReadPre * :highlight IncSearch guibg=green ctermbg=green term=underline
 
 " Backup files
@@ -243,7 +245,10 @@ let &t_EI = "\<Esc>]50;CursorShape=0\x7"
 
 " Maps
 nnoremap <leader>q :q<CR>
+nnoremap <leader>e :bd<CR>
+nnoremap <leader>E :bufdo bd<CR>
 nnoremap <leader>w :update<CR>
+nnoremap <leader>T :tabnew#<CR>
 
 nnoremap o o<ESC>
 noremap O O<ESC>
@@ -263,10 +268,7 @@ inoremap jj <ESC>
 nnoremap <leader>f /
 nnoremap <leader>F yiw/<C-R>"<CR>
 nnoremap <leader>s :OverCommandLine<CR>%s/
-nnoremap <leader>S yiw:OverCommandLine%s/<C-R>"/
-
-" clever-f
-let g:clever_f_show_prompt=1
+nnoremap <leader>S yiw:OverCommandLine<CR>%s/<C-R>"/
 
 " NerdTree
 noremap <leader>n :NERDTreeToggle<CR>
@@ -295,8 +297,8 @@ nnoremap <leader>b :Buffers<CR>
 nnoremap <leader>l :Lines<CR>
 nnoremap <leader>a :Rg! 
 nnoremap <leader>A yiw:Rg! <C-R>"<CR>
-vnoremap <leader>a y:Rg! <C-R>"<CR>
-nnoremap <leader>g :GFiles?!<CR>
+xnoremap <leader>a y:Rg! <C-R>"<CR>
+nnoremap <leader>g :GFiles!?<CR>
 
 command! -bang Colors
 	\ call fzf#vim#colors({'left': '15%', 'options': '--reverse --margin 30%,0'}, <bang>0)
@@ -356,14 +358,14 @@ autocmd BufEnter term://* startinsert
 
 " Splits
 set splitright
-tnoremap <leader>wh <C-\><C-N><C-w>h
-tnoremap <leader>wj <C-\><C-N><C-w>j
-tnoremap <leader>wk <C-\><C-N><C-w>k
-tnoremap <leader>wl <C-\><C-N><C-w>l
-nnoremap <leader>wh <C-w>h
-nnoremap <leader>wj <C-w>j
-nnoremap <leader>wk <C-w>k
-nnoremap <leader>wl <C-w>l
+tnoremap <leader>H <C-\><C-N><C-w>h
+tnoremap <leader>J <C-\><C-N><C-w>j
+tnoremap <leader>K <C-\><C-N><C-w>k
+tnoremap <leader>L <C-\><C-N><C-w>l
+nnoremap <leader>H <C-w>h
+nnoremap <leader>J <C-w>j
+nnoremap <leader>K <C-w>k
+nnoremap <leader>L <C-w>l
 
 " Tabs
 set showtabline=2
