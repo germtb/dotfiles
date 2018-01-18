@@ -131,3 +131,5 @@ bindkey -a U redo
 # OPAM configuration
 /Users/gmoreno/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
 
+
+export PATH="$HOME/.cargo/bin:$PATH"
