@@ -15,14 +15,14 @@ Plug 'justinj/vim-textobj-reactprop'
 Plug 'justinmk/vim-dirvish'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
 Plug 'junegunn/fzf.vim'
-Plug 'junegunn/limelight.vim'
+Plug 'junegunn/limelight.vim', { 'on': 'Goyo' }
 Plug 'junegunn/goyo.vim', { 'on': 'Goyo' }
 Plug 'kana/vim-operator-user'
 Plug 'kana/vim-textobj-entire'
 Plug 'kana/vim-textobj-line'
 Plug 'kana/vim-textobj-user'
 Plug 'kristijanhusak/vim-hybrid-material'
-Plug 'maximbaz/lightline-ale'
+Plug 'maximbaz/lightline-ale', { 'for': 'javascript' }
 Plug 'mgee/lightline-bufferline'
 Plug 'mhinz/vim-startify'
 Plug 'mxw/vim-jsx'
@@ -44,10 +44,10 @@ Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-vinegar'
-Plug 'w0rp/ale'
+Plug 'w0rp/ale', { 'for': 'javascript' }
 Plug 'wellle/targets.vim'
 Plug 'wojtekmach/vim-rename'
-Plug 'ynkdir/vim-vimlparser', { 'for': 'vim' }
+Plug 'ynkdir/vim-vimlparser'
 
 call plug#end()
 
@@ -90,13 +90,6 @@ nnoremap gb :Gblame<CR>
 let g:mapleader = ' '
 let g:maplocalleader = ' '
 
-" newtr
-let g:netrw_banner       = 0
-let g:netrw_liststyle    = 0
-let g:netrw_sort_options = 'i'
-autocmd FileType netrw setl bufhidden=delete
-autocmd FileType netrw setl bufhidden=wipe
-
 " Deoplete completion
 let g:python_host_prog="/usr/bin/python"
 let g:python3_host_prog="/usr/local/bin/python3"
@@ -107,6 +100,10 @@ let g:deoplete#max_menu_width = 60
 
 inoremap <C-j> <C-n>
 inoremap <C-k> <C-p>
+inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+function! s:my_cr_function() abort
+	return deoplete#close_popup() . "\<CR>"
+endfunction
 
 " Replace Operator
 nmap R <Plug>ReplaceOperator
