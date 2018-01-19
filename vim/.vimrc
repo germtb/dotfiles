@@ -359,7 +359,9 @@ nnoremap <leader>R yiw:Replace <C-R>"
 let $FZF_DEFAULT_COMMAND = 'ag --hidden --ignore .git --ignore node_modules -l -g ""'
 let g:fzf_commands_expect = 'alt-enter'
 
-nnoremap <silent> <leader> :Maps<CR>
+nmap <leader> <Plug>(fzf-maps-n)
+xmap <leader> <Plug>(fzf-maps-x)
+omap <leader> <Plug>(fzf-maps-o)
 
 nnoremap <silent> <leader>p :Files!<CR>
 nnoremap <silent> <leader>c :Commands<CR>
@@ -386,11 +388,6 @@ command! -bang -nargs=* Rg
 	\			: fzf#vim#with_preview('right:50%:hidden', '?'),
 	\		<bang>0
 	\ )
-
-" Mapping selecting mappings
-nmap <leader>m <plug>(fzf-maps-n)
-xmap <leader>m <plug>(fzf-maps-x)
-omap <leader>m <plug>(fzf-maps-o)
 
 " advanced autocompletion
 inoremap <expr> <C-l> fzf#complete('rg "^.*$" --no-filename --no-line-number')
