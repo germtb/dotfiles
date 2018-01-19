@@ -40,16 +40,26 @@ Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'Shougo/neosnippet'
 Plug 'Shougo/neosnippet-snippets'
 Plug 'tiagofumo/vim-nerdtree-syntax-highlight', { 'on': 'NERDTreeToggle' }
-Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-commentary', { 'on': [] }
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
-Plug 'tpope/vim-vinegar'
 Plug 'w0rp/ale', { 'for': 'javascript' }
 Plug 'wellle/targets.vim'
 Plug 'wojtekmach/vim-rename'
 Plug 'ynkdir/vim-vimlparser'
 
 call plug#end()
+
+" Lazy loaded plugins
+augroup lazy_load_on_insert
+	autocmd!
+	autocmd InsertEnter * call deoplete#enable() | autocmd! lazy_load_on_insert
+augroup END
+
+augroup lazy_load_on_vim_enter
+	autocmd!
+	autocmd VimEnter * call plug#load('vim-commentary') | autocmd! lazy_load_on_vim_enter
+augroup END
 
 " Basic settings
 set encoding=utf-8
@@ -66,6 +76,66 @@ set nowrap
 set pastetoggle=€
 set cursorline
 set colorcolumn=80
+set signcolumn=yes
+
+" Git gutter
+nmap gj <Plug>GitGutterNextHunk
+nmap gk <Plug>GitGutterPrevHunk
+
+nmap <Leader>ga <Plug>GitGutterStageHunk
+nmap <Leader>gr <Plug>GitGutterUndoHunk
+
+omap ig <Plug>GitGutterTextObjectInnerPending
+omap ag <Plug>GitGutterTextObjectOuterPending
+xmap ig <Plug>GitGutterTextObjectInnerVisual
+xmap ag <Plug>GitGutterTextObjectOuterVisual
+
+let g:gitgutter_grep_command = 'rg'
+
+function! NextHunkAllBuffers()
+	let line = line('.')
+	GitGutterNextHunk
+	if line('.') != line
+		return
+	endif
+
+	let bufnr = bufnr('')
+	while 1
+		bnext
+		if bufnr('') == bufnr
+			return
+		endif
+		if !empty(GitGutterGetHunks())
+			normal! 1G
+			GitGutterNextHunk
+			return
+		endif
+	endwhile
+endfunction
+
+function! PrevHunkAllBuffers()
+	let line = line('.')
+	GitGutterPrevHunk
+	if line('.') != line
+		return
+	endif
+
+	let bufnr = bufnr('')
+	while 1
+		bprevious
+		if bufnr('') == bufnr
+			return
+		endif
+		if !empty(GitGutterGetHunks())
+			normal! G
+			GitGutterPrevHunk
+			return
+		endif
+	endwhile
+endfunction
+
+nmap <silent> <leader>gj :call NextHunkAllBuffers()<CR>
+nmap <silent> <leader>gk :call PrevHunkAllBuffers()<CR>
 
 " Language server protocol
 let g:LanguageClient_serverCommands = {
@@ -93,16 +163,17 @@ let g:maplocalleader = ' '
 " Deoplete completion
 let g:python_host_prog="/usr/bin/python"
 let g:python3_host_prog="/usr/local/bin/python3"
+
+" deoplete is lazy loaded so enable_at_startup should be disabled
 let g:deoplete#enable_at_startup = 0
-autocmd InsertEnter * call deoplete#enable()
 let g:neosnippet#enable_completed_snippet = 1
 let g:deoplete#max_menu_width = 60
 
 inoremap <C-j> <C-n>
 inoremap <C-k> <C-p>
 inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-function! s:my_cr_function() abort
-	return deoplete#close_popup() . "\<CR>"
+function! s:my_cr_function()
+  return pumvisible() ? deoplete#mappings#close_popup() : "\n"
 endfunction
 
 " Replace Operator
@@ -123,12 +194,11 @@ autocmd FileChangedShellPost *
 	\ echohl WarningMsg | echo "File changed on disk. Buffer reloaded." | echohl None
 
 " Ale
-let g:ale_sign_column_always = 0
 let g:ale_sign_error = '◉'
 let g:ale_sign_warning = '◉'
 let g:ale_completion_enabled = 1
-nmap <silent> <C-k> <Plug>(ale_previous_wrap)
-nmap <silent> <C-j> <Plug>(ale_next_wrap)
+nnoremap <silent> <leader>ej :call ale#loclist_jumping#Jump('after', 0)<CR>
+nnoremap <silent> <leader>ek :call ale#loclist_jumping#Jump('before', 0)<CR>
 
 " Paste
 map y <Plug>(operator-flashy)
@@ -141,21 +211,21 @@ let g:startify_session_persistence = 1
 
 " Lightline
 let g:lightline = {
-	\ 	'colorscheme': 'seoul256',
-	\ 	'subseparator': { 'left': '⮁', 'right': '⮃' },
-	\ 	'active': {
-	\ 		'left': [
-	\ 			[ 'mode', 'paste' ],
-	\ 			[ 'gitbranch', 'readonly', 'filename', 'modified' ]
-	\ 		],
-	\ 		'right': [
-	\ 			[ 'linter_errors', 'linter_warnings', 'linter_ok' ]
-	\ 		]
-	\ 	},
-	\ 	'component_function': {
-	\ 		'filename': 'fugitive#head',
-	\ 		'gitbranch': 'LightlineFilename',
-	\ 	}
+	\		'colorscheme': 'seoul256',
+	\		'subseparator': { 'left': '⮁', 'right': '⮃' },
+	\		'active': {
+	\			'left': [
+	\				[ 'mode', 'paste' ],
+	\				[ 'gitbranch', 'readonly', 'filename', 'modified' ]
+	\			],
+	\			'right': [
+	\				[ 'linter_errors', 'linter_warnings', 'linter_ok' ]
+	\			]
+	\		},
+	\		'component_function': {
+	\			'filename': 'fugitive#head',
+	\			'gitbranch': 'LightlineFilename',
+	\		}
 	\ }
 
 function! LightlineFilename()
@@ -216,9 +286,7 @@ set swapfile
 set dir=~/temp
 set backupdir=~/temp
 set directory=~/temp
-if v:version >= 703
-	set undodir=~/temp
-endif
+set undodir=~/temp
 
 " Mouse
 silent! set ttymouse=xterm2
@@ -241,10 +309,10 @@ let &t_SR = "\<Esc>]50;CursorShape=2\x7"
 let &t_EI = "\<Esc>]50;CursorShape=0\x7"
 
 " Maps
-nnoremap <leader>q :q<CR>
-nnoremap <leader>e :bd<CR>
-nnoremap <leader>E :bufdo bd<CR>
-nnoremap <leader>w :update<CR>
+nnoremap <leader>qq :q<CR>
+nnoremap <leader>ww :w<CR>
+nnoremap <leader>db :bd<CR>
+nnoremap <leader>dB :bufdo bd<CR>
 nnoremap <leader>T :tabnew#<CR>
 
 nnoremap o o<ESC>
@@ -288,14 +356,14 @@ nnoremap <leader>R yiw:Replace <C-R>"
 " fzf
 let $FZF_DEFAULT_COMMAND = 'ag --hidden --ignore .git --ignore node_modules -l -g ""'
 
-nnoremap <leader>p :Files!<CR>
-nnoremap <leader>c :Commands<CR>
-nnoremap <leader>b :Buffers<CR>
-nnoremap <leader>l :Lines<CR>
+nnoremap <silent> <leader>p :Files!<CR>
+nnoremap <silent> <leader>c :Commands<CR>
+nnoremap <silent> <leader>b :Buffers<CR>
+nnoremap <silent> <leader>l :Lines<CR>
 nnoremap <leader>a :Rg! 
-nnoremap <leader>A yiw:Rg! <C-R>"<CR>
-xnoremap <leader>a y:Rg! <C-R>"<CR>
-nnoremap <leader>g :GFiles!?<CR>
+nnoremap <silent> <leader>A yiw:Rg! <C-R>"<CR>
+xnoremap <silent> <leader>a y:Rg! <C-R>"<CR>
+nnoremap <silent> <leader>g :GFiles!?<CR>
 
 command! -bang Colors
 	\ call fzf#vim#colors({'left': '15%', 'options': '--reverse --margin 30%,0'}, <bang>0)
@@ -305,11 +373,11 @@ command! -bang -nargs=? -complete=dir Files
 
 command! -bang -nargs=* Rg
 	\ call fzf#vim#grep(
-	\ 	'rg --column --line-number --no-heading --color=always '.shellescape(<q-args>), 1,
-	\ 	<bang>0
-	\ 		? fzf#vim#with_preview('up:60%')
-	\ 		: fzf#vim#with_preview('right:50%:hidden', '?'),
-	\ 	<bang>0
+	\		'rg --column --line-number --no-heading --color=always '.shellescape(<q-args>), 1,
+	\		<bang>0
+	\			? fzf#vim#with_preview('up:60%')
+	\			: fzf#vim#with_preview('right:50%:hidden', '?'),
+	\		<bang>0
 	\ )
 
 " fzf completions
@@ -347,7 +415,7 @@ set foldlevel=99
 
 " term
 nnoremap <leader>t :vsplit term://zsh<CR>
-tnoremap <leader>q <C-\><C-n>:bd!<CR>
+tnoremap <leader>qq <C-\><C-n>:bd!<CR>
 tnoremap jj <C-\><C-n>
 tnoremap <C-j> <Down>
 tnoremap <C-k> <Up>
@@ -355,14 +423,22 @@ autocmd BufEnter term://* startinsert
 
 " Splits
 set splitright
-tnoremap <leader>H <C-\><C-N><C-w>h
-tnoremap <leader>J <C-\><C-N><C-w>j
-tnoremap <leader>K <C-\><C-N><C-w>k
-tnoremap <leader>L <C-\><C-N><C-w>l
-nnoremap <leader>H <C-w>h
-nnoremap <leader>J <C-w>j
-nnoremap <leader>K <C-w>k
-nnoremap <leader>L <C-w>l
+set splitbelow
+
+nnoremap <leader><tab> :bp<CR>
+
+tnoremap <leader>wh <C-\><C-N><C-w>h
+tnoremap <leader>wj <C-\><C-N><C-w>j
+tnoremap <leader>wk <C-\><C-N><C-w>k
+tnoremap <leader>wl <C-\><C-N><C-w>l
+
+nnoremap <leader>wh <C-w>h
+nnoremap <leader>wj <C-w>j
+nnoremap <leader>wk <C-w>k
+nnoremap <leader>wl <C-w>l
+
+nnoremap <leader>wL :vnew<CR>
+nnoremap <leader>wJ :new<CR>
 
 " Tabs
 set showtabline=2
