@@ -37,6 +37,7 @@ Plug 'ryanoasis/vim-devicons', { 'on': 'NERDTreeToggle' }
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
 Plug 'syngan/vim-vimlint'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'Shougo/denite.nvim'
 Plug 'Shougo/neosnippet'
 Plug 'Shougo/neosnippet-snippets'
 Plug 'tiagofumo/vim-nerdtree-syntax-highlight', { 'on': 'NERDTreeToggle' }
@@ -380,9 +381,9 @@ command! -bang -nargs=* Rg
 	\		<bang>0
 	\ )
 
-" fzf completions
-inoremap <expr> <c-l> fzf#complete('rg "^.*$" --no-filename --no-line-number')
-nnoremap <c-l> i<c-l>
+" line autocompletion
+inoremap <expr> <C-l> fzf#complete('rg "^.*$" --no-filename --no-line-number')
+nmap <c-l> i<C-l>
 
 " prettier
 let g:prettier#autoformat = 1
