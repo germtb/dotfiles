@@ -316,6 +316,8 @@ nnoremap <leader>db :bd<CR>
 nnoremap <leader>dB :bufdo bd<CR>
 nnoremap <leader>T :tabnew#<CR>
 
+nnoremap Q @q
+
 nnoremap o o<ESC>
 noremap O O<ESC>
 
