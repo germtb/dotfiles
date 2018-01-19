@@ -33,8 +33,8 @@ Plug 'prettier/vim-prettier', {
 	\ 'do': 'yarn install',
 	\ 'on': [ 'PrettierAsync' ] }
 Plug 'romgrk/replace.vim'
-Plug 'ryanoasis/vim-devicons', { 'on': 'NERDTreeToggle' }
-Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
+Plug 'ryanoasis/vim-devicons', { 'on': [ 'NERDTreeToggle', 'NERDTreeFind' ] }
+Plug 'scrooloose/nerdtree', { 'on': [ 'NERDTreeToggle', 'NERDTreeFind' ] }
 Plug 'syngan/vim-vimlint'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'Shougo/neosnippet'
@@ -339,7 +339,7 @@ nnoremap <leader>S yiw:OverCommandLine<CR>%s/<C-R>"/
 
 " NerdTree
 noremap <leader>n :NERDTreeToggle<CR>
-noremap <leader>m :NERDTreeFind<CR>
+noremap <leader>N :NERDTreeFind<CR>
 let g:NERDTreeHijackNetrw=0
 let g:NERDTreeShowHidden=0
 
@@ -357,15 +357,20 @@ nnoremap <leader>R yiw:Replace <C-R>"
 
 " fzf
 let $FZF_DEFAULT_COMMAND = 'ag --hidden --ignore .git --ignore node_modules -l -g ""'
+let g:fzf_commands_expect = 'alt-enter'
+
+nnoremap <silent> <leader> :Maps<CR>
 
 nnoremap <silent> <leader>p :Files!<CR>
 nnoremap <silent> <leader>c :Commands<CR>
 nnoremap <silent> <leader>b :Buffers<CR>
-nnoremap <silent> <leader>l :Lines<CR>
+nnoremap <silent> <leader>lb :BLines<CR>
+nnoremap <silent> <leader>ll :Lines<CR>
 nnoremap <leader>a :Rg! 
 nnoremap <silent> <leader>A yiw:Rg! <C-R>"<CR>
 xnoremap <silent> <leader>a y:Rg! <C-R>"<CR>
-nnoremap <silent> <leader>g :GFiles!?<CR>
+nnoremap <silent> <leader>gp :GFiles!?<CR>
+nnoremap <silent> <leader>h :Helptags<CR>
 
 command! -bang Colors
 	\ call fzf#vim#colors({'left': '15%', 'options': '--reverse --margin 30%,0'}, <bang>0)
@@ -382,9 +387,15 @@ command! -bang -nargs=* Rg
 	\		<bang>0
 	\ )
 
-" line autocompletion
+" Mapping selecting mappings
+nmap <leader>m <plug>(fzf-maps-n)
+xmap <leader>m <plug>(fzf-maps-x)
+omap <leader>m <plug>(fzf-maps-o)
+
+" advanced autocompletion
 inoremap <expr> <C-l> fzf#complete('rg "^.*$" --no-filename --no-line-number')
-nmap <c-l> i<C-l>
+imap <C-p> <plug>(fzf-complete-path)
+imap <C-f> <plug>(fzf-complete-file-ag)
 
 " prettier
 let g:prettier#autoformat = 1
