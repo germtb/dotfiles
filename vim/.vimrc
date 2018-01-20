@@ -61,6 +61,17 @@ augroup lazy_load_on_vim_enter
 	autocmd VimEnter * call plug#load('vim-commentary') | autocmd! lazy_load_on_vim_enter
 augroup END
 
+" Autogroups
+"augroup vim_enter
+"	autocmd!
+"	autocmd VimEnter * call startify#session_load('default') | autocmd! vim_enter
+"augroup END
+
+"augroup vim_leave
+"	autocmd!
+"	autocmd VimLeave * call startify#session_save(0, 'default') | autocmd! vim_leave
+"augroup END
+
 " Basic settings
 set encoding=utf-8
 scriptencoding utf-8
@@ -82,8 +93,8 @@ set signcolumn=yes
 nmap gj <Plug>GitGutterNextHunk
 nmap gk <Plug>GitGutterPrevHunk
 
-nmap <Leader>ga <Plug>GitGutterStageHunk
-nmap <Leader>gr <Plug>GitGutterUndoHunk
+nmap <leader>ga <Plug>GitGutterStageHunk
+nmap <leader>gr <Plug>GitGutterUndoHunk
 
 omap ig <Plug>GitGutterTextObjectInnerPending
 omap ag <Plug>GitGutterTextObjectOuterPending
@@ -147,7 +158,7 @@ autocmd FileType *.js :setlocal omnifunc=LanguageClient#complete
 
 let g:LanguageClient_autoStart = 1
 
-nnoremap K :LanguageClient_textDocument_hover()<CR>
+nnoremap K :call LanguageClient_textDocument_hover()<CR>
 nnoremap df :call LanguageClient_textDocument_definition()<CR>
 nnoremap rr :call LanguageClient_textDocument_rename()<CR>
 
@@ -323,19 +334,18 @@ noremap O O<ESC>
 noremap ∆ }j
 noremap ˚ {k
 
-nnoremap <leader>d "dyiwoconsole.log('<ESC>"dpa: ', <ESC>"dpa)<ESC>
-nnoremap <leader>D "dyiwOconsole.log('<ESC>"dpa: ', <ESC>"dpa)<ESC>
-
-xnoremap <leader>d "dyoconsole.log('<ESC>"dpa: ', <ESC>"dpa)<ESC>
-xnoremap <leader>D "dyOconsole.log('<ESC>"dpa: ', <ESC>"dpa)<ESC>
+nnoremap <leader>jd "dyiwoconsole.log('<ESC>"dpa: ', <ESC>"dpa)<ESC>
+nnoremap <leader>jD "dyiwOconsole.log('<ESC>"dpa: ', <ESC>"dpa)<ESC>
+xnoremap <leader>jd "dyoconsole.log('<ESC>"dpa: ', <ESC>"dpa)<ESC>
+xnoremap <leader>jD "dyOconsole.log('<ESC>"dpa: ', <ESC>"dpa)<ESC>
 
 inoremap jj <ESC>
 
 " search
-nnoremap <leader>f /
-nnoremap <leader>F yiw/<C-R>"<CR>
-nnoremap <leader>s :OverCommandLine<CR>%s/
-nnoremap <leader>S yiw:OverCommandLine<CR>%s/<C-R>"/
+nnoremap <leader>ff /
+nnoremap <leader>fF yiw/<C-R>"<CR>
+nnoremap <leader>fs :OverCommandLine<CR>%s/
+nnoremap <leader>fS yiw:OverCommandLine<CR>%s/<C-R>"/
 
 " NerdTree
 noremap <leader>n :NERDTreeToggle<CR>
@@ -343,17 +353,15 @@ noremap <leader>N :NERDTreeFind<CR>
 let g:NERDTreeHijackNetrw=0
 let g:NERDTreeShowHidden=0
 
-" Replace accross project
-function! Replace(pattern, replacement)
+" MassReplace accross project
+function! MassReplace(pattern, replacement)
 	let command = "rg ". a:pattern. " -l | xargs sed -i '' -e 's/". a:pattern. "/". a:replacement. "/g'"
 	execute system(l:command)
 	execute "normal! :bufdo edit<CR>"
 	echom l:command
 endfunction
 
-command! -nargs=+ Replace call Replace(<f-args>)
-nnoremap <leader>r :Replace 
-nnoremap <leader>R yiw:Replace <C-R>" 
+command! -nargs=+ MassReplace call MassReplace(<f-args>)
 
 " fzf
 let $FZF_DEFAULT_COMMAND = 'ag --hidden --ignore .git --ignore node_modules -l -g ""'
@@ -372,7 +380,9 @@ nnoremap <leader>a :Rg!
 nnoremap <silent> <leader>A yiw:Rg! <C-R>"<CR>
 xnoremap <silent> <leader>a y:Rg! <C-R>"<CR>
 nnoremap <silent> <leader>gp :GFiles!?<CR>
+nnoremap <silent> <leader>gc :Commits!<CR>
 nnoremap <silent> <leader>h :Helptags<CR>
+nnoremap <silent> <leader>r :History:<CR>
 
 command! -bang Colors
 	\ call fzf#vim#colors({'left': '15%', 'options': '--reverse --margin 30%,0'}, <bang>0)
