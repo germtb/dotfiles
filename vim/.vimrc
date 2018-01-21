@@ -7,6 +7,7 @@ Plug 'autozimu/LanguageClient-neovim', {
 	\ 'do': 'bash install.sh'
 	\ }
 Plug 'b4winckler/vim-angry'
+Plug 'Galooshi/vim-import-js'
 Plug 'haya14busa/is.vim'
 Plug 'haya14busa/vim-operator-flashy'
 Plug 'itchyny/lightline.vim'
@@ -61,17 +62,6 @@ augroup lazy_load_on_vim_enter
 	autocmd VimEnter * call plug#load('vim-commentary') | autocmd! lazy_load_on_vim_enter
 augroup END
 
-" Autogroups
-"augroup vim_enter
-"	autocmd!
-"	autocmd VimEnter * call startify#session_load('default') | autocmd! vim_enter
-"augroup END
-
-"augroup vim_leave
-"	autocmd!
-"	autocmd VimLeave * call startify#session_save(0, 'default') | autocmd! vim_leave
-"augroup END
-
 " Basic settings
 set encoding=utf-8
 scriptencoding utf-8
@@ -88,6 +78,9 @@ set pastetoggle=€
 set cursorline
 set colorcolumn=80
 set signcolumn=yes
+
+" html
+let g:html_indent_inctags = "html,body,head"
 
 " Git gutter
 nmap gj <Plug>GitGutterNextHunk
@@ -321,10 +314,10 @@ let &t_EI = "\<Esc>]50;CursorShape=0\x7"
 
 " Maps
 nnoremap <leader>qq :q<CR>
+nnoremap <leader>dq :q<CR>
 nnoremap <leader>ww :w<CR>
 nnoremap <leader>db :bd<CR>
 nnoremap <leader>dB :bufdo bd<CR>
-nnoremap <leader>T :tabnew#<CR>
 
 nnoremap Q @q
 
@@ -342,10 +335,17 @@ xnoremap <leader>jD "dyOconsole.log('<ESC>"dpa: ', <ESC>"dpa)<ESC>
 inoremap jj <ESC>
 
 " search
-nnoremap <leader>ff /
-nnoremap <leader>fF yiw/<C-R>"<CR>
-nnoremap <leader>fs :OverCommandLine<CR>%s/
-nnoremap <leader>fS yiw:OverCommandLine<CR>%s/<C-R>"/
+nnoremap <leader>sf /
+
+command! SearchWordUnderCursor normal! yiw/<C-R>"<CR>
+command! RgWordUnderCursor normal! yiw:Rg! <C-R>"<CR>
+
+nnoremap <leader>sF :SearchWordUnderCursor<CR>
+nnoremap <leader>ss :OverCommandLine<CR>%s/
+nnoremap <leader>sS yiw:OverCommandLine<CR>%s/<C-R>"/
+nnoremap <leader>sa :Rg! 
+nnoremap <silent> <leader>sA :RgWordUnderCursor<CR>
+xnoremap <silent> <leader>sa :RgWordUnderCursor<CR>
 
 " NerdTree
 noremap <leader>n :NERDTreeToggle<CR>
@@ -371,18 +371,15 @@ nmap <leader> <Plug>(fzf-maps-n)
 xmap <leader> <Plug>(fzf-maps-x)
 omap <leader> <Plug>(fzf-maps-o)
 
-nnoremap <silent> <leader>p :Files!<CR>
-nnoremap <silent> <leader>c :Commands<CR>
-nnoremap <silent> <leader>b :Buffers<CR>
-nnoremap <silent> <leader>lb :BLines<CR>
-nnoremap <silent> <leader>ll :Lines<CR>
-nnoremap <leader>a :Rg! 
-nnoremap <silent> <leader>A yiw:Rg! <C-R>"<CR>
-xnoremap <silent> <leader>a y:Rg! <C-R>"<CR>
-nnoremap <silent> <leader>gp :GFiles!?<CR>
-nnoremap <silent> <leader>gc :Commits!<CR>
-nnoremap <silent> <leader>h :Helptags<CR>
-nnoremap <silent> <leader>r :History:<CR>
+nnoremap <silent> <leader>fp :Files!<CR>
+nnoremap <silent> <leader>fc :Commands<CR>
+nnoremap <silent> <leader>fb :Buffers<CR>
+nnoremap <silent> <leader>fl :BLines<CR>
+nnoremap <silent> <leader>fL :Lines<CR>
+nnoremap <silent> <leader>fg :GFiles!?<CR>
+nnoremap <silent> <leader>fG :Commits!<CR>
+nnoremap <silent> <leader>fh :Helptags<CR>
+nnoremap <silent> <leader>fr :History:<CR>
 
 command! -bang Colors
 	\ call fzf#vim#colors({'left': '15%', 'options': '--reverse --margin 30%,0'}, <bang>0)
@@ -392,11 +389,11 @@ command! -bang -nargs=? -complete=dir Files
 
 command! -bang -nargs=* Rg
 	\ call fzf#vim#grep(
-	\		'rg --column --line-number --no-heading --color=always '.shellescape(<q-args>), 1,
-	\		<bang>0
-	\			? fzf#vim#with_preview('up:60%')
-	\			: fzf#vim#with_preview('right:50%:hidden', '?'),
-	\		<bang>0
+	\ 	'rg --column --line-number --no-heading --color=always '.shellescape(<q-args>), 1,
+	\ 	<bang>0
+	\ 		? fzf#vim#with_preview('up:60%')
+	\ 		: fzf#vim#with_preview('right:50%:hidden', '?'),
+	\ 	<bang>0
 	\ )
 
 " advanced autocompletion
@@ -407,7 +404,7 @@ imap <C-f> <plug>(fzf-complete-file-ag)
 " prettier
 let g:prettier#autoformat = 1
 let g:prettier#quickfix_enabled = 0
-autocmd BufWritePre *.js,*.json PrettierAsync
+autocmd BufWritePre *.js,*.json,*.html PrettierAsync
 
 let g:prettier#config#print_width = 80
 let g:prettier#config#tab_width = 2
