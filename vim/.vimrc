@@ -7,7 +7,7 @@ Plug 'autozimu/LanguageClient-neovim', {
 	\ 'do': 'bash install.sh'
 	\ }
 Plug 'b4winckler/vim-angry'
-Plug 'Galooshi/vim-import-js'
+" Plug 'Galooshi/vim-import-js'
 Plug 'haya14busa/is.vim'
 Plug 'haya14busa/vim-operator-flashy'
 Plug 'itchyny/lightline.vim'
@@ -78,6 +78,7 @@ set pastetoggle=€
 set cursorline
 set colorcolumn=80
 set signcolumn=yes
+set grepprg=rg\ --vimgrep
 
 " html
 let g:html_indent_inctags = "html,body,head"
@@ -215,21 +216,21 @@ let g:startify_session_persistence = 1
 
 " Lightline
 let g:lightline = {
-	\		'colorscheme': 'seoul256',
-	\		'subseparator': { 'left': '⮁', 'right': '⮃' },
-	\		'active': {
-	\			'left': [
-	\				[ 'mode', 'paste' ],
-	\				[ 'gitbranch', 'readonly', 'filename', 'modified' ]
-	\			],
-	\			'right': [
-	\				[ 'linter_errors', 'linter_warnings', 'linter_ok' ]
-	\			]
-	\		},
-	\		'component_function': {
-	\			'filename': 'fugitive#head',
-	\			'gitbranch': 'LightlineFilename',
-	\		}
+	\ 	'colorscheme': 'seoul256',
+	\ 	'subseparator': { 'left': '⮁', 'right': '⮃' },
+	\ 	'active': {
+	\ 		'left': [
+	\ 			[ 'mode', 'paste' ],
+	\ 			[ 'gitbranch', 'readonly', 'filename', 'modified' ]
+	\ 		],
+	\ 		'right': [
+	\ 			[ 'linter_errors', 'linter_warnings', 'linter_ok' ]
+	\ 		]
+	\ 	},
+	\ 	'component_function': {
+	\ 		'filename': 'fugitive#head',
+	\ 		'gitbranch': 'LightlineFilename',
+	\ 	}
 	\ }
 
 function! LightlineFilename()
@@ -338,14 +339,14 @@ inoremap jj <ESC>
 nnoremap <leader>sf /
 
 command! SearchWordUnderCursor normal! yiw/<C-R>"<CR>
-command! RgWordUnderCursor normal! yiw:Rg! <C-R>"<CR>
+command! FindWordUnderCursor normal! yiw:Find! <C-R>"<CR>
 
 nnoremap <leader>sF :SearchWordUnderCursor<CR>
 nnoremap <leader>ss :OverCommandLine<CR>%s/
 nnoremap <leader>sS yiw:OverCommandLine<CR>%s/<C-R>"/
-nnoremap <leader>sa :Rg! 
-nnoremap <silent> <leader>sA :RgWordUnderCursor<CR>
-xnoremap <silent> <leader>sa :RgWordUnderCursor<CR>
+nnoremap <leader>sa :Find! 
+nnoremap <silent> <leader>sA :FindWordUnderCursor<CR>
+xnoremap <silent> <leader>sa :FindWordUnderCursor<CR>
 
 " NerdTree
 noremap <leader>n :NERDTreeToggle<CR>
@@ -364,7 +365,6 @@ endfunction
 command! -nargs=+ MassReplace call MassReplace(<f-args>)
 
 " fzf
-let $FZF_DEFAULT_COMMAND = 'ag --hidden --ignore .git --ignore node_modules -l -g ""'
 let g:fzf_commands_expect = 'alt-enter'
 
 nmap <leader> <Plug>(fzf-maps-n)
@@ -387,7 +387,7 @@ command! -bang Colors
 command! -bang -nargs=? -complete=dir Files
 	\ call fzf#vim#files(<q-args>, fzf#vim#with_preview({ 'preview': 'rougify {}' }), <bang>0)
 
-command! -bang -nargs=* Rg
+command! -bang -nargs=* Find
 	\ call fzf#vim#grep(
 	\ 	'rg --column --line-number --no-heading --color=always '.shellescape(<q-args>), 1,
 	\ 	<bang>0
