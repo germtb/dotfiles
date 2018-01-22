@@ -25,7 +25,8 @@ export EDITOR=nvim
 # Aliases
 alias atom='atom .'
 alias cat='rougify'
-alias l='ls -la'
+alias l='exa -la'
+alias ls='exa -la --tree'
 alias less='less -S -N'
 alias o='cd ..'
 alias vim='nvim'
@@ -55,10 +56,10 @@ alias bb='git branch'
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 export FZF_PREVIEW='[[ $(file --mime {}) =~ binary ]] &&
-  echo {} is a binary file ||
-  (highlight -O ansi -l {} || rougify {} || cat {}) 2> /dev/null | head -500'
+	echo {} is a binary file ||
+	(highlight -O ansi -l {} || rougify {} || cat {}) 2> /dev/null | head -500'
 export FZF_COMPLETION_TRIGGER='*'
-export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow --glob "!.git/*"'
+export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --glob "!.git/*"'
 
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_COMPLETION_OPTS=' --extended --preview "[[ $(file --mime {}) =~ binary ]] &&
@@ -86,7 +87,7 @@ zle -N  fzf-git-remote-branch
 bindkey '^V' fzf-git-remote-branch
 
 fzf-file() {
-	local file=$(rg --files | fzf --height 40% --extended --preview $FZF_PREVIEW)
+	local file=$(rg --files | fzf --height 60% --extended --preview $FZF_PREVIEW)
 	if [[ -z "$file" ]]; then
 		zle redisplay
 		return 0
@@ -99,8 +100,7 @@ bindkey '^P' fzf-file
 
 fzf-dir() {
 	local dir
-	dir=$(find ${1:-~} -path '*/\.*' -prune \
-		-o -type d -print 2> /dev/null | fzf +m --height 40% --preview "ls -la {}") &&
+	dir=$(fd -t d | fzf +m --height 60% --preview "exa --tree {}") &&
 	cd "$dir"
 	zle reset-prompt
 }
