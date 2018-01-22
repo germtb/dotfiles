@@ -7,7 +7,7 @@ Plug 'autozimu/LanguageClient-neovim', {
 	\ 'do': 'bash install.sh'
 	\ }
 Plug 'b4winckler/vim-angry'
-" Plug 'Galooshi/vim-import-js'
+Plug 'Galooshi/vim-import-js'
 Plug 'haya14busa/is.vim'
 Plug 'haya14busa/vim-operator-flashy'
 Plug 'itchyny/lightline.vim'
@@ -217,7 +217,7 @@ let g:startify_session_persistence = 1
 " Lightline
 let g:lightline = {
 	\ 	'colorscheme': 'seoul256',
-	\ 	'subseparator': { 'left': '⮁', 'right': '⮃' },
+	\ 	'subseparator': { 'left': '|', 'right': '|' },
 	\ 	'active': {
 	\ 		'left': [
 	\ 			[ 'mode', 'paste' ],
