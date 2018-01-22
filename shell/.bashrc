@@ -87,7 +87,7 @@ zle -N  fzf-git-remote-branch
 bindkey '^V' fzf-git-remote-branch
 
 fzf-file() {
-	local file=$(rg --files | fzf --height 60% --extended --preview $FZF_PREVIEW)
+	local file=$(rg --files | fzf --height 100% --extended --preview $FZF_PREVIEW)
 	if [[ -z "$file" ]]; then
 		zle redisplay
 		return 0
@@ -100,7 +100,7 @@ bindkey '^P' fzf-file
 
 fzf-dir() {
 	local dir
-	dir=$(fd -t d | fzf +m --height 60% --preview "exa --tree {}") &&
+	dir=$(fd -t d | fzf +m --height 100% --preview "exa --tree --level=2 {}") &&
 	cd "$dir"
 	zle reset-prompt
 }
