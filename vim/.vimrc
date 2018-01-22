@@ -277,15 +277,6 @@ if !has('gui_running')
 	set t_Co=256
 endif
 
-" Search
-set hlsearch
-set ignorecase
-set smartcase
-set incsearch
-nnoremap . .:set hlsearch<CR>
-nnoremap u u:set hlsearch<CR>
-autocmd BufReadPre,FileReadPre * :highlight IncSearch guibg=green ctermbg=green term=underline
-
 " Backup files
 set swapfile
 set dir=~/temp
@@ -335,22 +326,39 @@ xnoremap <leader>jD "dyOconsole.log('<ESC>"dpa: ', <ESC>"dpa)<ESC>
 
 inoremap jj <ESC>
 
-" search
-nnoremap <leader>sf /
+" Search
+set hlsearch
+set ignorecase
+set smartcase
+set incsearch
+nnoremap . .:set hlsearch<CR>
+nnoremap u u:set hlsearch<CR>
+
+autocmd BufReadPre,FileReadPre * :highlight IncSearch guibg=green ctermbg=green term=underline
 
 command! SearchWordUnderCursor normal! yiw/<C-R>"<CR>
 command! FindWordUnderCursor normal! yiw:Find! <C-R>"<CR>
 
-nnoremap <leader>sF :SearchWordUnderCursor<CR>
-nnoremap <leader>ss :OverCommandLine<CR>%s/
-nnoremap <leader>sS yiw:OverCommandLine<CR>%s/<C-R>"/
-nnoremap <leader>sa :Find! 
-nnoremap <silent> <leader>sA :FindWordUnderCursor<CR>
-xnoremap <silent> <leader>sa :FindWordUnderCursor<CR>
+nnoremap <leader>ff /
+nnoremap <leader>fF :SearchWordUnderCursor<CR>
+nnoremap <leader>fs :OverCommandLine<CR>%s/
+nnoremap <leader>fS yiw:OverCommandLine<CR>%s/<C-R>"/
+nnoremap <leader>fa :Find! 
+nnoremap <silent> <leader>fA :FindWordUnderCursor<CR>
+xnoremap <silent> <leader>fa :FindWordUnderCursor<CR>
+
+command! -bang -nargs=* Find
+	\ call fzf#vim#grep(
+	\ 	'rg --column --line-number --no-heading --color=always '.shellescape(<q-args>), 1,
+	\ 	<bang>0
+	\ 		? fzf#vim#with_preview('up:60%')
+	\ 		: fzf#vim#with_preview('right:50%:hidden', '?'),
+	\ 	<bang>0
+	\ )
 
 " NerdTree
-noremap <leader>n :NERDTreeToggle<CR>
-noremap <leader>N :NERDTreeFind<CR>
+noremap <leader>nt :NERDTreeToggle<CR>
+noremap <leader>nr :NERDTreeFind<CR>
 let g:NERDTreeHijackNetrw=0
 let g:NERDTreeShowHidden=0
 
@@ -371,30 +379,21 @@ nmap <leader> <Plug>(fzf-maps-n)
 xmap <leader> <Plug>(fzf-maps-x)
 omap <leader> <Plug>(fzf-maps-o)
 
-nnoremap <silent> <leader>fp :Files!<CR>
-nnoremap <silent> <leader>fc :Commands<CR>
-nnoremap <silent> <leader>fb :Buffers<CR>
-nnoremap <silent> <leader>fl :BLines<CR>
-nnoremap <silent> <leader>fL :Lines<CR>
-nnoremap <silent> <leader>fg :GFiles!?<CR>
-nnoremap <silent> <leader>fG :Commits!<CR>
-nnoremap <silent> <leader>fh :Helptags<CR>
-nnoremap <silent> <leader>fr :History:<CR>
+nnoremap <silent> <leader><leader>p :Files!<CR>
+nnoremap <silent> <leader><leader>c :Commands<CR>
+nnoremap <silent> <leader><leader>b :Buffers<CR>
+nnoremap <silent> <leader><leader>l :BLines<CR>
+nnoremap <silent> <leader><leader>L :Lines<CR>
+nnoremap <silent> <leader><leader>gf :GFiles!?<CR>
+nnoremap <silent> <leader><leader>gc :Commits!<CR>
+nnoremap <silent> <leader><leader>h :Helptags<CR>
+nnoremap <silent> <leader><leader>r :History:<CR>
 
 command! -bang Colors
 	\ call fzf#vim#colors({'left': '15%', 'options': '--reverse --margin 30%,0'}, <bang>0)
 
 command! -bang -nargs=? -complete=dir Files
 	\ call fzf#vim#files(<q-args>, fzf#vim#with_preview({ 'preview': 'rougify {}' }), <bang>0)
-
-command! -bang -nargs=* Find
-	\ call fzf#vim#grep(
-	\ 	'rg --column --line-number --no-heading --color=always '.shellescape(<q-args>), 1,
-	\ 	<bang>0
-	\ 		? fzf#vim#with_preview('up:60%')
-	\ 		: fzf#vim#with_preview('right:50%:hidden', '?'),
-	\ 	<bang>0
-	\ )
 
 " advanced autocompletion
 inoremap <expr> <C-l> fzf#complete('rg "^.*$" --no-filename --no-line-number')
@@ -420,11 +419,14 @@ let g:prettier#config#parser = 'flow'
 command! Remove execute "call delete(expand('%')) | bdelete!"
 
 " Reload vimrc
-command! ReloadConfig execute "source ~/.vimrc"
+command! ReloadVimrc execute "source ~/.vimrc"
 
 " Path to clipboard
 command! Path :let @*=expand("%")
 command! FullPath :let @*=expand("%:p")
+
+nnoremap <leader>yp :Path<CR>
+nnoremap <leader>yP :FullPath<CR>
 
 " Folding
 set foldmethod=indent
