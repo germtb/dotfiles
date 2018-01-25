@@ -1,2 +1,0 @@
-#!/bin/bash
-export mark$1=`pwd`

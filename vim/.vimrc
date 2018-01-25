@@ -38,8 +38,8 @@ Plug 'ryanoasis/vim-devicons', { 'on': [ 'NERDTreeToggle', 'NERDTreeFind' ] }
 Plug 'scrooloose/nerdtree', { 'on': [ 'NERDTreeToggle', 'NERDTreeFind' ] }
 Plug 'syngan/vim-vimlint'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-Plug 'Shougo/neosnippet'
-Plug 'Shougo/neosnippet-snippets'
+" Plug 'Shougo/neosnippet'
+" Plug 'Shougo/neosnippet-snippets'
 Plug 'tiagofumo/vim-nerdtree-syntax-highlight', { 'on': 'NERDTreeToggle' }
 Plug 'tpope/vim-commentary', { 'on': [] }
 Plug 'tpope/vim-fugitive'
@@ -83,7 +83,15 @@ set grepprg=rg\ --vimgrep
 " html
 let g:html_indent_inctags = "html,body,head"
 
-" Git gutter
+" js imports
+nnoremap <leader>iw :ImportJSWord<CR>
+nnoremap <leader>if :ImportJSFix
+" autocmd BufWritePre *.js ImportJSFix
+
+" Git
+nnoremap <leader>gp :GFiles!?<CR>
+nnoremap <leader>gc :Commits!<CR>
+
 nmap gj <Plug>GitGutterNextHunk
 nmap gk <Plug>GitGutterPrevHunk
 
@@ -97,56 +105,13 @@ xmap ag <Plug>GitGutterTextObjectOuterVisual
 
 let g:gitgutter_grep_command = 'rg'
 
-function! NextHunkAllBuffers()
-	let line = line('.')
-	GitGutterNextHunk
-	if line('.') != line
-		return
-	endif
-
-	let bufnr = bufnr('')
-	while 1
-		bnext
-		if bufnr('') == bufnr
-			return
-		endif
-		if !empty(GitGutterGetHunks())
-			normal! 1G
-			GitGutterNextHunk
-			return
-		endif
-	endwhile
-endfunction
-
-function! PrevHunkAllBuffers()
-	let line = line('.')
-	GitGutterPrevHunk
-	if line('.') != line
-		return
-	endif
-
-	let bufnr = bufnr('')
-	while 1
-		bprevious
-		if bufnr('') == bufnr
-			return
-		endif
-		if !empty(GitGutterGetHunks())
-			normal! G
-			GitGutterPrevHunk
-			return
-		endif
-	endwhile
-endfunction
-
-nmap <silent> <leader>gj :call NextHunkAllBuffers()<CR>
-nmap <silent> <leader>gk :call PrevHunkAllBuffers()<CR>
-
 " Language server protocol
 let g:LanguageClient_serverCommands = {
 	\ 'javascript': ['javascript-typescript-stdio'],
 	\ 'javascript.jsx': ['javascript-typescript-stdio'],
+	\ 'c': ['cquery --language-server'],
 	\ }
+" let g:LanguageClient_loggingLevel = 'DEBUG'
 
 autocmd FileType *.js :setlocal omnifunc=LanguageClient#complete
 
@@ -213,6 +178,21 @@ xnoremap y "*y
 
 " Startify
 let g:startify_session_persistence = 1
+let g:startify_session_delete_buffers = 0
+let g:startify_restore_position = 1
+
+autocmd VimLeavePre * call PathSave()
+" autocmd BufReadPre,FileReadPre * call PathLoad()
+
+function! PathSave()
+	let l:cwd = join(split(getcwd(), '/'), '-')
+	execute 'SSave! '.l:cwd
+endfunction
+
+function! PathLoad()
+	let l:cwd = join(split(getcwd(), '/'), '-')
+	execute 'SLoad '.l:cwd
+endfunction
 
 " Lightline
 let g:lightline = {
@@ -307,6 +287,7 @@ let &t_EI = "\<Esc>]50;CursorShape=0\x7"
 " Maps
 nnoremap <leader>qq :q<CR>
 nnoremap <leader>dq :q<CR>
+nnoremap <leader>wq :wq<CR>
 nnoremap <leader>ww :w<CR>
 nnoremap <leader>db :bd<CR>
 nnoremap <leader>dB :bufdo bd<CR>
@@ -344,8 +325,13 @@ nnoremap <leader>fF :SearchWordUnderCursor<CR>
 nnoremap <leader>fs :OverCommandLine<CR>%s/
 nnoremap <leader>fS yiw:OverCommandLine<CR>%s/<C-R>"/
 nnoremap <leader>fa :Find! 
-nnoremap <silent> <leader>fA :FindWordUnderCursor<CR>
-xnoremap <silent> <leader>fa :FindWordUnderCursor<CR>
+nnoremap <leader>fA :FindWordUnderCursor<CR>
+nnoremap <leader>fp :Files!<CR>
+nnoremap <leader>fc :Commands<CR>
+nnoremap <leader>fb :Buffers<CR>
+nnoremap <leader>fl :BLines<CR>
+nnoremap <leader>fL :Lines<CR>
+nnoremap <leader>fh :Helptags<CR>
 
 command! -bang -nargs=* Find
 	\ call fzf#vim#grep(
@@ -379,18 +365,7 @@ nmap <leader> <Plug>(fzf-maps-n)
 xmap <leader> <Plug>(fzf-maps-x)
 omap <leader> <Plug>(fzf-maps-o)
 
-nnoremap <silent> <leader><leader>p :Files!<CR>
-nnoremap <silent> <leader><leader>c :Commands<CR>
-nnoremap <silent> <leader><leader>b :Buffers<CR>
-nnoremap <silent> <leader><leader>l :BLines<CR>
-nnoremap <silent> <leader><leader>L :Lines<CR>
-nnoremap <silent> <leader><leader>gf :GFiles!?<CR>
-nnoremap <silent> <leader><leader>gc :Commits!<CR>
-nnoremap <silent> <leader><leader>h :Helptags<CR>
-nnoremap <silent> <leader><leader>r :History:<CR>
-
-command! -bang Colors
-	\ call fzf#vim#colors({'left': '15%', 'options': '--reverse --margin 30%,0'}, <bang>0)
+nnoremap <leader>r :History:<CR>
 
 command! -bang -nargs=? -complete=dir Files
 	\ call fzf#vim#files(<q-args>, fzf#vim#with_preview({ 'preview': 'rougify {}' }), <bang>0)

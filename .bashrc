@@ -1,7 +1,11 @@
 # Set path
+
+
+
 export PATH='/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
-export PATH='~/.npm-global/bin':$PATH
-export PATH='~/bin':$PATH
+export PATH=$HOME'/.npm-global/bin':$PATH
+export PATH=$HOME'/bin':$PATH
+export PATH=$HOME'/.gem/ruby/2.4.0/bin':$PATH
 
 source ~/.secretrc
 
@@ -100,7 +104,7 @@ bindkey '^P' fzf-file
 
 fzf-dir() {
 	local dir
-	dir=$(fd -t d | fzf +m --height 100% --preview "exa --tree --level=2 {}") &&
+	dir=$(fd -t d '' $HOME | fzf +m --height 100% --preview "exa --tree --level=2 {}") &&
 	cd "$dir"
 	zle reset-prompt
 }
