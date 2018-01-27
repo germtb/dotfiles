@@ -1,13 +1,8 @@
 # Set path
-
-
-
 export PATH='/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
 export PATH=$HOME'/.npm-global/bin':$PATH
 export PATH=$HOME'/bin':$PATH
 export PATH=$HOME'/.gem/ruby/2.4.0/bin':$PATH
-
-source ~/.secretrc
 
 # Appearence
 export TERM=xterm-256color
