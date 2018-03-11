@@ -34,6 +34,7 @@ Plug 'prettier/vim-prettier', {
 	\ 'do': 'yarn install',
 	\ 'on': [ 'PrettierAsync' ] }
 Plug 'romgrk/replace.vim'
+Plug 'rust-lang/rust.vim'
 Plug 'ryanoasis/vim-devicons', { 'on': [ 'NERDTreeToggle', 'NERDTreeFind' ] }
 Plug 'scrooloose/nerdtree', { 'on': [ 'NERDTreeToggle', 'NERDTreeFind' ] }
 Plug 'syngan/vim-vimlint'
@@ -80,20 +81,76 @@ set colorcolumn=80
 set signcolumn=yes
 set grepprg=rg\ --vimgrep
 
+" Set leader
+let g:mapleader = ' '
+let g:maplocalleader = ' '
+
+" Invisible characters
+set list
+set listchars=tab:→\ ,eol:♫,trail:·,space:·
+
+" Indentation
+set autoindent
+set smartindent
+set shiftwidth=2
+set tabstop=2
+
+" Autoload vimrc
+augroup vimrc
+	au!
+	autocmd bufwritepost .vimrc source ~/.vimrc
+augroup END
+
+if has('termguicolors')
+	let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+	let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+	set termguicolors
+endif
+
+if !has('gui_running')
+	set t_Co=256
+endif
+
+" Backup files
+set swapfile
+set dir=~/temp
+set backupdir=~/temp
+set directory=~/temp
+set undodir=~/temp
+
+" Mouse
+silent! set ttymouse=xterm2
+set mouse=a
+
+" Theme
+syntax enable
+set background=dark
+colorscheme hybrid_material
+
+" js
+let g:jsx_ext_required = 0
+let g:javascript_plugin_flow = 1
+let g:javascript_plugin_jsdoc = 1
+let g:javascript_plugin_ngdoc = 1
+
+" Cursor shape
+let &t_SI = "\<Esc>]50;CursorShape=1\x7"
+let &t_SR = "\<Esc>]50;CursorShape=2\x7"
+let &t_EI = "\<Esc>]50;CursorShape=0\x7"
+
 " html
 let g:html_indent_inctags = "html,body,head"
 
 " js imports
 nnoremap <leader>iw :ImportJSWord<CR>
-nnoremap <leader>if :ImportJSFix
-" autocmd BufWritePre *.js ImportJSFix
+nnoremap <leader>if :ImportJSFix<CR>
 
 " Git
 nnoremap <leader>gp :GFiles!?<CR>
 nnoremap <leader>gc :Commits!<CR>
 
-nmap gj <Plug>GitGutterNextHunk
-nmap gk <Plug>GitGutterPrevHunk
+nmap <leader>gj <Plug>GitGutterNextHunk
+nmap <leader>gk <Plug>GitGutterPrevHunk
 
 nmap <leader>ga <Plug>GitGutterStageHunk
 nmap <leader>gr <Plug>GitGutterUndoHunk
@@ -111,7 +168,6 @@ let g:LanguageClient_serverCommands = {
 	\ 'javascript.jsx': ['javascript-typescript-stdio'],
 	\ 'c': ['cquery --language-server'],
 	\ }
-" let g:LanguageClient_loggingLevel = 'DEBUG'
 
 autocmd FileType *.js :setlocal omnifunc=LanguageClient#complete
 
@@ -122,15 +178,11 @@ nnoremap df :call LanguageClient_textDocument_definition()<CR>
 nnoremap rr :call LanguageClient_textDocument_rename()<CR>
 
 " Fugitive
-nnoremap gs :Gstatus<CR>
-nnoremap gd :Gdiff<CR>
-nnoremap gb :Gblame<CR>
+nnoremap <leader>gs :Gstatus<CR>
+nnoremap <leader>gd :Gdiff<CR>
+nnoremap <leader>gb :Gblame<CR>
 
-" Set leader
-let g:mapleader = ' '
-let g:maplocalleader = ' '
-
-" Deoplete completion
+" Deoplete
 let g:python_host_prog="/usr/bin/python"
 let g:python3_host_prog="/usr/local/bin/python3"
 
@@ -152,10 +204,6 @@ xmap R <Plug>ReplaceOperator
 
 " Remove automatic insertion of comments
 autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
-
-" Invisible characters
-set list
-set listchars=tab:→\ ,eol:♫,trail:·,space:·
 
 " Autoreload files
 set autoread
@@ -235,58 +283,8 @@ let g:lightline#ale#indicator_warnings='⚠'
 let g:lightline#ale#indicator_errors='ⓧ'
 let g:lightline#ale#indicator_ok='✓'
 
-" Indentation
-set autoindent
-set smartindent
-set shiftwidth=2
-set tabstop=2
-
-" Autoload vimrc
-augroup vimrc
-	au!
-	autocmd bufwritepost .vimrc source ~/.vimrc
-augroup END
-
-if has('termguicolors')
-	let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-	let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
-	set termguicolors
-endif
-
-if !has('gui_running')
-	set t_Co=256
-endif
-
-" Backup files
-set swapfile
-set dir=~/temp
-set backupdir=~/temp
-set directory=~/temp
-set undodir=~/temp
-
-" Mouse
-silent! set ttymouse=xterm2
-set mouse=a
-
-" Theme
-syntax enable
-set background=dark
-colorscheme hybrid_material
-
-" JS
-let g:jsx_ext_required = 0
-let g:javascript_plugin_flow = 1
-let g:javascript_plugin_jsdoc = 1
-let g:javascript_plugin_ngdoc = 1
-
-" Cursor shape
-let &t_SI = "\<Esc>]50;CursorShape=1\x7"
-let &t_SR = "\<Esc>]50;CursorShape=2\x7"
-let &t_EI = "\<Esc>]50;CursorShape=0\x7"
-
 " Maps
 nnoremap <leader>qq :q<CR>
-nnoremap <leader>dq :q<CR>
 nnoremap <leader>wq :wq<CR>
 nnoremap <leader>ww :w<CR>
 nnoremap <leader>db :bd<CR>
@@ -361,9 +359,9 @@ command! -nargs=+ MassReplace call MassReplace(<f-args>)
 " fzf
 let g:fzf_commands_expect = 'alt-enter'
 
-nmap <leader> <Plug>(fzf-maps-n)
-xmap <leader> <Plug>(fzf-maps-x)
-omap <leader> <Plug>(fzf-maps-o)
+" nmap <leader> <Plug>(fzf-maps-n)
+" xmap <leader> <Plug>(fzf-maps-x)
+" omap <leader> <Plug>(fzf-maps-o)
 
 nnoremap <leader>r :History:<CR>
 
