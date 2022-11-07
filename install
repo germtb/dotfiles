@@ -6,34 +6,19 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/mas
 echo "zsh installed"
 
 # Install dependencies
-brew install zsh-syntax-highlighting
-brew install neovim
-brew install python
-brew install python3
+brew install vim
 brew install fzf
 brew install ripgrep
 brew install rust
-brew install fd
-brew install wget
-brew install exa
-brew install node
-brew install yarn
+brew install nvm
 
 echo "brew dependencies installed"
 
 # Needs to manually set iterm font to firacode
 brew tap caskroom/fonts && brew cask install font-fira-code
 
-# pip dependencies
-pip install neovim
-pip3 install neovim
-
-echo "pip dependencies installed"
-
 # Install bashrc
-ln -nsf ~/dotfiles/.bashrc ~/.bash_profile
-ln -nsf ~/dotfiles/.bashrc ~/.zshrc
-ln -nsf ~/dotfiles/.bashrc ~/.bashrc
+ln -nsf ~/dotfiles/.zshrc ~/.zshrc
 
 echo "bashrc installed"
 
@@ -44,30 +29,8 @@ ln -nsf ~/dotfiles/vim/.vimrc ~/.vimrc
 curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
 	https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
-# Install vim-plug for neovim
-curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
-	https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-
-echo "vimrc installed"
-
-# Install atom
-ln -nsf ~/dotfiles/atom/init.js ~/.atom/init.js
-ln -nsf ~/dotfiles/atom/styles.less ~/.atom/styles.less
-
-echo "atom installed"
-
-# Install sublime
-ln -nsf /Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl /usr/local/bin/subl
-ln -nsf ~/dotfiles/sublime/* ~/Library/Application\ Support/Sublime\ Text\ 3/Packages/User
-
-echo "sublime installed"
-
+# Install zsh
 chsh -s /bin/zsh
 
 echo "zsh set as default shell"
-
-# Install .hyper.js
-ln -nsf ~/dotfiles/.hyper.js ~/.hyper.js
-
-echo ".hyper.js installed"
 

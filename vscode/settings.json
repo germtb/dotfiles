@@ -1,0 +1,79 @@
+{
+	"vim.useSystemClipboard": true,
+	"editor.fontSize": 16,
+	"vim.insertModeKeyBindings": [
+		{
+			"before": ["j", "j"],
+			"after": ["<Esc>"]
+		}
+	],
+	"vim.visualModeKeyBindingsNonRecursive": [
+		{
+			"before": [">"],
+			"commands": ["editor.action.indentLines"]
+		},
+		{
+			"before": ["<"],
+			"commands": ["editor.action.outdentLines"]
+		},
+		{
+			"before": ["<C-j>"],
+			"after": ["}", "j"]
+		},
+		{
+			"before": ["<C-k>"],
+			"after": ["{", "k"]
+		}
+	],
+	"vim.normalModeKeyBindingsNonRecursive": [
+		{
+			"before": ["o"],
+			"after": ["o", "<Esc>"]
+		},
+		{
+			"before": ["O"],
+			"after": ["O", "<Esc>"]
+		},
+		{
+			"before": ["∆"],
+			"after": ["}", "j"]
+		},
+		{
+			"before": ["˚"],
+			"after": ["{", "k"]
+		}
+	],
+	"workbench.activityBar.visible": true,
+	"breadcrumbs.enabled": true,
+	"workbench.statusBar.visible": false,
+	"editor.minimap.enabled": false,
+	"vim.hlsearch": true,
+	"workbench.editor.enablePreview": false,
+	"workbench.editor.focusRecentEditorAfterClose": false,
+	"vim.cursorStylePerMode.insert": "line",
+	"vim.cursorStylePerMode.normal": "block",
+	"vim.leader": " ",
+	"vim.replaceWithRegister": true,
+	"editor.suggestSelection": "first",
+	"editor.suggest.snippetsPreventQuickSuggestions": false,
+	"explorer.confirmDragAndDrop": false,
+	"typescript.updateImportsOnFileMove.enabled": "always",
+	"[typescriptreact]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"extensions.autoUpdate": false,
+	"workbench.editorAssociations": {
+		"*.bson": "default"
+	},
+	"[html]": {
+		"editor.defaultFormatter": "vscode.html-language-features"
+	},
+	"editor.formatOnSave": true,
+	"workbench.sideBar.location": "right",
+	"[typescript]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"security.workspace.trust.untrustedFiles": "open",
+	"copyWithSyntaxHighlighting": true,
+	"window.zoomLevel": 1
+}
