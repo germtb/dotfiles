@@ -1,0 +1,18 @@
+[
+  {
+    "bindings": {
+      "cmd-b": "workspace::ToggleRightDock",
+      "ctrl-§": "workspace::ToggleBottomDock",
+      "ctrl-`": "workspace::ToggleBottomDock",
+      "ctrl-k": "menu::SelectPrev",
+      "ctrl-j": "menu::SelectNext"
+    }
+  },
+  {
+    "context": "vim_mode == normal && !menu",
+    "bindings": {
+      "alt-j": ["workspace::SendKeystrokes", "} j"],
+      "alt-k": ["workspace::SendKeystrokes", "{ k"]
+    }
+  }
+]

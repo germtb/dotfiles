@@ -1,0 +1,20 @@
+{
+  "telemetry": {
+    "diagnostics": true,
+    "metrics": false
+  },
+  "format_on_save": "on",
+  "vim_mode": true,
+  "base_keymap": "Atom",
+  "ui_font_size": 16,
+  "buffer_font_size": 16,
+  "theme": {
+    "mode": "system",
+    "light": "One Light",
+    "dark": "Andromeda"
+  },
+  "project_panel": {
+    "dock": "right"
+  },
+  "show_whitespaces": "all"
+}
