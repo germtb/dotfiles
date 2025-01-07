@@ -1,6 +1,32 @@
 {
+  "extend_comment_on_newline": false,
+  "assistant": {
+    "default_model": {
+      "provider": "copilot_chat",
+      "model": "gpt-4o"
+    },
+    "version": "2"
+  },
+  "tabs": {
+    "file_icons": true,
+    "git_status": true,
+    "activate_on_close": "neighbour"
+  },
+  "file_scan_exclusions": [
+    "**/llvm-project",
+    "**/.git",
+    "**/.svn",
+    "**/.hg",
+    "**/.jj",
+    "**/CVS",
+    "**/.DS_Store",
+    "**/Thumbs.db",
+    "**/.classpath",
+    "**/.settings"
+  ],
+  "tab_size": 2,
   "telemetry": {
-    "diagnostics": true,
+    "diagnostics": false,
     "metrics": false
   },
   "format_on_save": "on",
