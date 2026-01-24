@@ -1,37 +1,48 @@
 #!/bin/bash
 
-# Install zsh
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+set -e  # Exit on error
 
-echo "zsh installed"
-
-# Install dependencies
-brew install vim
-brew install fzf
-brew install ripgrep
-brew install rust
-brew install nvm
-brew install prettier
-
-echo "brew dependencies installed"
-
-# Needs to manually set iterm font to firacode
-brew tap caskroom/fonts && brew cask install font-fira-code
-
-# Install zsh
-chsh -s /bin/zsh
-
-echo "zsh set as default shell"
-
-# Install oh-my-zsh
-brewsh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-
-echo "oh-my-zsh installed"
+echo "Installing dotfiles..."
 
 # Get the directory where this script is located
 DOTFILES_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
+# Install oh-my-zsh if not already installed
+if [ ! -d "$HOME/.oh-my-zsh" ]; then
+  echo "Installing oh-my-zsh..."
+  sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+  echo "oh-my-zsh installed"
+else
+  echo "oh-my-zsh already installed"
+fi
+
+# Set zsh as default shell if not already set
+if [ "$SHELL" != "$(which zsh)" ]; then
+  echo "Setting zsh as default shell..."
+  chsh -s $(which zsh)
+  echo "zsh set as default shell"
+else
+  echo "zsh is already the default shell"
+fi
+
+# Install brew dependencies
+echo "Installing brew dependencies..."
+brew install vim
+brew install fzf
+brew install ripgrep
+
+echo "brew dependencies installed"
+
+# Install Fira Code font
+if ! brew list --cask font-fira-code &>/dev/null; then
+  echo "Installing Fira Code font..."
+  brew install --cask font-fira-code
+else
+  echo "Fira Code font already installed"
+fi
+
 # Symlink dotfiles
+echo "Symlinking dotfiles..."
 ln -nsf "$DOTFILES_DIR/.zshrc" ~/.zshrc
 ln -nsf "$DOTFILES_DIR/.vimrc" ~/.vimrc
 ln -nsf "$DOTFILES_DIR/.tmux.conf" ~/.tmux.conf
@@ -40,6 +51,16 @@ ln -nsf "$DOTFILES_DIR/.gitconfig" ~/.gitconfig
 echo "dotfiles symlinked"
 
 # Install vim-plug for vim
-curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
-	https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+if [ ! -f ~/.vim/autoload/plug.vim ]; then
+  echo "Installing vim-plug..."
+  curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  echo "vim-plug installed"
+else
+  echo "vim-plug already installed"
+fi
+
+echo ""
+echo "Installation complete!"
+echo "Run 'vim +PlugInstall +qall' to install vim plugins"
 
