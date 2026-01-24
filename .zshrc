@@ -1,3 +1,4 @@
+
 # Set path
 export PATH='/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
 export PATH=$HOME'/.npm-global/bin':$PATH
@@ -8,27 +9,29 @@ export PATH=$HOME'/.gem/ruby/2.4.0/bin':$PATH
 export TERM=xterm-256color
 
 # Set ZSH
-export ZSH=~/.oh-my-zsh
+export ZSH="$HOME/.oh-my-zsh"
 ZSH_THEME="robbyrussell"
-plugins=(git sublime npm osx sudo brew vi-mode)
+plugins=(git)
 source $ZSH/oh-my-zsh.sh
-source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+# source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 # Prompt
 export PROMPT='${ret_status} %{$fg[cyan]%}%~%{$reset_color%} $(git_prompt_info)'
 
+# Ensure brew is in path
+eval $(/opt/homebrew/bin/brew shellenv)
+
 # Set default editor
-export VISUAL=nvim
-export EDITOR=nvim
+export VISUAL=vim
+export EDITOR=vim
 
 # Aliases
-alias atom='atom .'
-alias cat='rougify'
-alias l='exa -la'
-alias ls='exa -la --tree'
+alias l='ls -la'
+alias ls='ls -la'
 alias less='less -S -N'
 alias o='cd ..'
-alias vim='nvim'
+alias vim='vim'
+alias python='python3'
 
 cd-ls() {
   cd $1
@@ -38,12 +41,9 @@ zle -N  cd-ls
 alias cl='cd-ls'
 
 # Git aliases
-alias d='git diff'
-alias s='git status'
-alias ll='git log --name-status'
-alias g-='git checkout -'
-alias r-='git rebase -'
-alias cc='git commit -m'
+alias gd='git diff'
+alias gs='git status'
+alias gl='git log --name-status'
 alias aa='git add --all && git status'
 alias gg='git commit --amend --no-edit'
 alias pp='git push -u origin HEAD'
@@ -52,7 +52,8 @@ alias rr='git reset --hard'
 alias bb='git branch'
 
 # fzf
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+source /opt/homebrew/opt/fzf/shell/completion.zsh
+source /opt/homebrew/opt/fzf/shell/key-bindings.zsh
 
 export FZF_PREVIEW='[[ $(file --mime {}) =~ binary ]] &&
 	echo {} is a binary file ||
@@ -106,17 +107,21 @@ fzf-dir() {
 zle -N  fzf-dir
 bindkey '^O' fzf-dir
 
-# Set edditing mode to vi
-bindkey -v
-KEYTIMEOUT=1
-function zle-line-init zle-keymap-select {
-	export RPS1="${${KEYMAP/vicmd/-- NORMAL --}/(main|viins)/-- INSERT --}"
-	export RPS2=$RPS1
-	zle reset-prompt
-}
-zle -N zle-line-init
-zle -N zle-keymap-select
 
-bindkey -a u undo
-bindkey -a U redo
+# Created by `pipx` on 2025-11-27 09:52:27
+export PATH="$PATH:/Users/gerardmtb/.local/bin"
 
+# pnpm
+export PNPM_HOME="/Users/gerardmtb/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
+
+# bun completions
+[ -s "/Users/gerardmtb/.bun/_bun" ] && source "/Users/gerardmtb/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"

@@ -11,26 +11,35 @@ brew install fzf
 brew install ripgrep
 brew install rust
 brew install nvm
+brew install prettier
 
 echo "brew dependencies installed"
 
 # Needs to manually set iterm font to firacode
 brew tap caskroom/fonts && brew cask install font-fira-code
 
-# Install bashrc
-ln -nsf ~/dotfiles/.zshrc ~/.zshrc
-
-echo "bashrc installed"
-
-# Install vim
-ln -nsf ~/dotfiles/vim/.vimrc ~/.vimrc
-
-# Install vim-plug for vim
-curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
-	https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-
 # Install zsh
 chsh -s /bin/zsh
 
 echo "zsh set as default shell"
+
+# Install oh-my-zsh
+brewsh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
+echo "oh-my-zsh installed"
+
+# Get the directory where this script is located
+DOTFILES_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+# Symlink dotfiles
+ln -nsf "$DOTFILES_DIR/.zshrc" ~/.zshrc
+ln -nsf "$DOTFILES_DIR/.vimrc" ~/.vimrc
+ln -nsf "$DOTFILES_DIR/.tmux.conf" ~/.tmux.conf
+ln -nsf "$DOTFILES_DIR/.gitconfig" ~/.gitconfig
+
+echo "dotfiles symlinked"
+
+# Install vim-plug for vim
+curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+	https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 

@@ -1,0 +1,15 @@
+[user]
+  name = Gerard Moreno-Torres Bertran
+  email = gerardmtb@meta.com
+
+[http "https://git.c2p.facebook.net"]
+  sslCert = /var/facebook/credentials/gerardmtb/x509/gerardmtb.pem
+
+[credential]
+	helper = osxkeychain
+[credential "https://github.com"]
+	helper = 
+	helper = !/opt/homebrew/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !/opt/homebrew/bin/gh auth git-credential

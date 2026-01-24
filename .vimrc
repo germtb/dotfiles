@@ -1,51 +1,38 @@
 set nocompatible
 
+" Set leader early
+let g:mapleader = ' '
+let g:maplocalleader = ' '
+
 filetype plugin on
 filetype indent on
 
 call plug#begin('~/.vim/plugged')
 
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 Plug 'tpope/vim-commentary'
-Plug 'Valloric/YouCompleteMe'
 Plug 'rust-lang/rust.vim'
-Plug 'ryanoasis/vim-devicons'
 Plug 'tmsvg/pear-tree'
 Plug 'dense-analysis/ale'
 Plug 'tomasiser/vim-code-dark'
-Plug 'wokalski/autocomplete-flow'
-Plug 'mattn/emmet-vim'
-Plug 'vim-scripts/AutoClose'
+Plug 'sainnhe/sonokai'
 Plug 'tpope/vim-surround'
 Plug 'itchyny/lightline.vim'
 Plug 'mgee/lightline-bufferline'
-Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeFind' }
+Plug 'lambdalisue/fern.vim'
+Plug 'lambdalisue/fern-git-status.vim'
+Plug 'lambdalisue/fern-hijack.vim'
+Plug 'lambdalisue/fern-renderer-nerdfont.vim'
+Plug 'lambdalisue/nerdfont.vim'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
 Plug 'junegunn/fzf.vim'
-Plug 'prettier/vim-prettier', {
-     \ 'do': 'yarn install',
-     \ 'branch': 'release/1.x',
-     \ 'for': [
-     \ 'javascript',
-     \ 'css',
-     \ 'less',
-     \ 'scss',
-     \ 'json',
-     \ 'graphql',
-     \ 'markdown',
-     \ 'vue',
-     \ 'lua',
-     \ 'php',
-     \ 'python',
-     \ 'ruby',
-     \ 'html',
-     \ 'swift' ] }
 
 call plug#end()
 
 syntax enable
 
 " Basic settings
-colorscheme codedark
+colorscheme sonokai
 set encoding=utf-8
 scriptencoding utf-8
 set modifiable
@@ -67,11 +54,6 @@ set rtp+=/usr/local/opt/fzf
 set ttimeout
 set timeoutlen=1000 ttimeoutlen=0
 
-" Set leader
-let g:mapleader = ' '
-let g:maplocalleader = ' '
-let mapleader = " "
-
 " Invisible characters
 set list
 set listchars=tab:→\ ,eol:♫,trail:·,space:·
@@ -89,24 +71,31 @@ let g:rust_recommended_style = 0
 " Mouse
 silent! set ttymouse=xterm2
 set mouse=a
+" Prevent mouse click from entering select mode
+set selectmode=
+" Fix Ghostty focus event escape codes
+execute "set <FocusGained>=\<Esc>[I"
+execute "set <FocusLost>=\<Esc>[O"
 
 " Cursor shape
-let &t_SI = "\<Esc>]50;CursorShape=1\x7"
-let &t_SR = "\<Esc>]50;CursorShape=2\x7"
-let &t_EI = "\<Esc>]50;CursorShape=0\x7"
+let &t_SI = "\e[6 q"  " Insert mode: vertical line
+let &t_SR = "\e[4 q"  " Replace mode: underline
+let &t_EI = "\e[2 q"  " Normal mode: block
 
 " Remove automatic insertion of comments
 autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 
 " Autoreload files
-set autoread
 autocmd FocusGained,BufEnter,CursorHold,CursorHoldI * if mode() != 'c' | checktime | endif
 autocmd FileChangedShellPost *
      \ echohl WarningMsg | echo "File changed on disk. Buffer reloaded." | echohl None
 
+" Return to normal mode when focusing vim (fixes mouse click issue)
+autocmd FocusGained * if mode() == 'v' || mode() == 'V' || mode() == "\<C-v>" | execute "normal! \<Esc>" | endif
+
 " Lightline
 let g:lightline = {
-     \      'colorscheme': 'codedark',
+     \      'colorscheme': 'sonokai',
      \      'subseparator': { 'left': '|', 'right': '|' },
      \      'active': {
      \          'left': [
@@ -118,8 +107,7 @@ let g:lightline = {
      \          ]
      \      },
      \      'component_function': {
-     \          'filename': 'fugitive#head',
-     \          'gitbranch': 'LightlineFilename',
+     \          'filename': 'LightlineFilename',
      \      }
      \ }
 
@@ -146,35 +134,60 @@ let g:lightline#ale#indicator_errors='ⓧ'
 let g:lightline#ale#indicator_ok='✓'
 
 " Ale
-let g:ale_linters = {'javascript': ['eslint', 'flow-language-server']}
-let g:ale_fixers = {'javascript': ['eslint', 'prettier']}
+let g:ale_linters = {
+\   'python': ['pyright', 'ruff', 'flake8']
+\}
+let g:ale_fixers = {
+\   'python': ['black', 'isort', 'ruff']
+\}
 let g:ale_fix_on_save = 1
 let g:ale_completion_enabled = 1
+let g:ale_python_black_options = '--line-length 88'
+let g:ale_python_isort_options = '--profile black'
+" Enable LSP features
+let g:ale_lsp_suggestions = 1
+let g:ale_hover_cursor = 0
 
-" instead of having ~/.vim/coc-settings.json
-let s:LSP_CONFIG = {
-     \  'flow': {
-     \    'command': exepath('flow'),
-     \    'args': ['lsp'],
-     \    'filetypes': ['javascript', 'javascriptreact'],
-     \    'initializationOptions': {},
-     \    'requireRootPattern': 1,
-     \    'settings': {},
-     \    'rootPatterns': ['.flowconfig']
-     \  }
-     \}
+" ALE LSP Navigation
+" Go to definition with Enter (like cmd-click but better!)
+nnoremap <CR> :ALEGoToDefinition<CR>
+" Go back with Shift-Enter
+nnoremap <S-CR> <C-o>
+" Go to definition (alternative)
+nnoremap gd :ALEGoToDefinition<CR>
+" Go to references
+nnoremap gD :ALEFindReferences<CR>
+" Show documentation
+nnoremap K :ALEHover<CR>
+" Fix it (auto-fix with ALE)
+nnoremap <leader>x :ALEFix<CR>
+" Navigate between errors/warnings
+nnoremap <leader>e :ALENextWrap<CR>
+nnoremap <leader>E :ALEPreviousWrap<CR>
 
+" Python-specific: enhanced gf to handle Python imports
+autocmd FileType python setlocal path+=**
+autocmd FileType python setlocal suffixesadd=.py
+autocmd FileType python setlocal includeexpr=substitute(v:fname,'\\.','/','g')
 
 " Maps
+
+nnoremap <leader>h <C-w>h
+nnoremap <leader>j <C-w>j
+nnoremap <leader>k <C-w>k
+nnoremap <leader>l <C-w>l
+
+" Open terminal in bottom drawer for executing bash commands
+nnoremap <leader>t :terminal<CR>
 
 nnoremap <leader>q :q<CR>
 nnoremap <leader>w :w<CR>
 
 nnoremap o o<ESC>
-noremap O O<ESC>
+nnoremap O O<ESC>
 
-noremap ∆ }j
-noremap ˚ {k
+nnoremap <M-j> }j
+nnoremap <M-k> {k
 
 inoremap jj <ESC>
 
@@ -197,27 +210,11 @@ if has("gui_running")
  set guitablabel=%M\ %t
 endif
 
-" prettier
-let g:prettier#autoformat = 1
-let g:prettier#quickfix_enabled = 0
-autocmd BufWritePre .js,.json,*.html PrettierAsync
-
-let g:prettier#config#print_width = 80
-let g:prettier#config#tab_width = 2
-let g:prettier#config#use_tabs = 'true'
-let g:prettier#config#semi = 'true'
-let g:prettier#config#single_quote = 'true'
-let g:prettier#config#bracket_spacing = 'true'
-let g:prettier#config#jsx_bracket_same_line = 'false'
-let g:prettier#config#trailing_comma = 'none'
-
 " Search
 set hlsearch
 set ignorecase
 set smartcase
 set incsearch
-nnoremap . .:set hlsearch<CR>
-nnoremap u u:set hlsearch<CR>
 
 command! -bang -nargs=* Find
      \ call fzf#vim#grep(
@@ -240,28 +237,30 @@ command! FilesUnderCursor normal! yiw:Files <C-R>"<CR>
 " fzf"
 
 nnoremap <leader>c :Commands<CR>
-nnoremap <leader>r :History:<CR>
 nnoremap <leader>g :Rg<CR>
 nnoremap <leader>b :Buffers<CR>
-nnoremap <leader>l :BLines<CR>
+nnoremap <leader>y :History:<CR>
 nnoremap <leader>L :Lines<CR>
 nnoremap <leader>p :Files<CR>
 nnoremap <leader>P :FilesUnderCursor<CR>
-nnoremap <leader>f :Find 
+nnoremap <leader>f :Find
 nnoremap <leader>F :FindWordUnderCursor<CR>
 
-" NerdTree
-noremap <leader>o :NERDTreeFind<CR>
-let g:NERDTreeHijackNetrw=1
-let g:NERDTreeShowHidden=1
+" Fern
+noremap <leader>r :Fern . -reveal=% -drawer<CR>
+let g:fern#default_hidden=1
+let g:fern#renderer = 'nerdfont'
+
+" Fern actions (use these in the Fern drawer)
+command! FernDelete execute "normal \<Plug>(fern-action-remove)"
+command! FernRename execute "normal \<Plug>(fern-action-rename)"
+command! FernCopy execute "normal \<Plug>(fern-action-copy)"
+command! FernMove execute "normal \<Plug>(fern-action-move)"
+command! FernNewFile execute "normal \<Plug>(fern-action-new-file)"
+command! FernNewDir execute "normal \<Plug>(fern-action-new-dir)"
 
 " fzf
 let g:fzf_commands_expect = 'alt-enter'
-
-nnoremap <leader>h :History:<CR>
-
-" Rust
-command! WasmBuild execute "!wasm-pack build --target web"
 
 " Remove file
 command! Remove execute "call delete(expand('%')) | bdelete!"
@@ -276,29 +275,4 @@ command! FullPath :let @*=expand("%:p")
 " Folding
 set foldmethod=indent
 set foldlevel=99
-
-" Tabs
-set showtabline=2
-
-let g:lightline.tabline = {'left': [['buffers']], 'right': [['close']]}
-let g:lightline.component_expand = {'buffers': 'lightline#bufferline#buffers'}
-let g:lightline.component_type = {'buffers': 'tabsel'}
-
-let g:lightline#bufferline#unnamed = '[No Name]'
-let g:lightline#bufferline#shorten_path = 1
-let g:lightline#bufferline#show_number = 2
-let g:lightline#bufferline#number_map = {
-     \ 0: '⁰', 1: '¹', 2: '²', 3: '³', 4: '⁴',
-     \ 5: '⁵', 6: '⁶', 7: '⁷', 8: '⁸', 9: '⁹'}
-
-nmap <Leader>1 <Plug>lightline#bufferline#go(1)
-nmap <Leader>2 <Plug>lightline#bufferline#go(2)
-nmap <Leader>3 <Plug>lightline#bufferline#go(3)
-nmap <Leader>4 <Plug>lightline#bufferline#go(4)
-nmap <Leader>5 <Plug>lightline#bufferline#go(5)
-nmap <Leader>6 <Plug>lightline#bufferline#go(6)
-nmap <Leader>7 <Plug>lightline#bufferline#go(7)
-nmap <Leader>8 <Plug>lightline#bufferline#go(8)
-nmap <Leader>9 <Plug>lightline#bufferline#go(9)
-nmap <Leader>0 <Plug>lightline#bufferline#go(10)
 
