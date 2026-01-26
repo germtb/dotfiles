@@ -19,8 +19,11 @@ fi
 # Set zsh as default shell if not already set
 if [ "$SHELL" != "$(which zsh)" ]; then
   echo "Setting zsh as default shell..."
-  chsh -s $(which zsh)
-  echo "zsh set as default shell"
+  if chsh -s "$(which zsh)" 2>/dev/null; then
+    echo "zsh set as default shell"
+  else
+    echo "Could not change shell automatically. Run manually: chsh -s $(which zsh)"
+  fi
 else
   echo "zsh is already the default shell"
 fi
