@@ -1,29 +1,23 @@
-set nocompatible
-
-" Set leader early
-let g:mapleader = ' '
-let g:maplocalleader = ' '
-
-filetype plugin on
-filetype indent on
+"filetype plugin indent on
 
 call plug#begin('~/.vim/plugged')
 
-Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 Plug 'tpope/vim-commentary'
-Plug 'rust-lang/rust.vim'
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+Plug 'Vimjas/vim-python-pep8-indent'
 Plug 'tmsvg/pear-tree'
 Plug 'dense-analysis/ale'
-Plug 'tomasiser/vim-code-dark'
 Plug 'sainnhe/sonokai'
 Plug 'tpope/vim-surround'
+Plug 'tpope/vim-fugitive'
+Plug 'airblade/vim-gitgutter'
 Plug 'itchyny/lightline.vim'
-Plug 'mgee/lightline-bufferline'
-Plug 'lambdalisue/fern.vim'
-Plug 'lambdalisue/fern-git-status.vim'
-Plug 'lambdalisue/fern-hijack.vim'
-Plug 'lambdalisue/fern-renderer-nerdfont.vim'
-Plug 'lambdalisue/nerdfont.vim'
+Plug 'mengelbrecht/lightline-bufferline'
+Plug 'thinca/vim-qfreplace'
+Plug 'lambdalisue/vim-nerdfont'
+Plug 'lambdalisue/vim-fern'
+Plug 'lambdalisue/vim-fern-renderer-nerdfont'
+Plug 'lambdalisue/vim-fern-git-status'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
 Plug 'junegunn/fzf.vim'
 
@@ -44,158 +38,155 @@ set laststatus=2
 set number
 set visualbell
 set nowrap
-set pastetoggle=€
 set cursorline
 set colorcolumn=80
 set signcolumn=yes
 set grepprg=rg\ --vimgrep
-set autoread
 set rtp+=/usr/local/opt/fzf
-set ttimeout
-set timeoutlen=1000 ttimeoutlen=0
+
+" Cursor shape
+if exists('$TERM')
+  let &t_SI = "\e[6 q"   " Insert mode – bar cursor
+  let &t_EI = "\e[2 q"   " Normal mode – block cursor
+  let &t_SR = "\e[4 q"   " Replace mode – underline cursor (optional)
+endif
+
+" Better command-line completion
+set wildmenu
+set wildmode=longest:full,full
+
+" Faster key timeout
+set timeoutlen=500
+set ttimeoutlen=0
+
+" Better search path
+set path+=**
+
+" Persistent undo
+set undofile
+set undodir=~/.vim/undodir
+
+" Don't clutter working directory
+set backupdir=~/.vim/backup//
+set directory=~/.vim/swap//
+
+" Set leader
+let mapleader = ' '
 
 " Invisible characters
 set list
-set listchars=tab:→\ ,eol:♫,trail:·,space:·
+set listchars=tab:→\ ,trail:·,nbsp:␣,space:·
 
 " Indentation
 set autoindent
-set smartindent
 set shiftwidth=4
 set tabstop=4
 set expandtab
 
-" Rust
-let g:rust_recommended_style = 0
-
 " Mouse
-silent! set ttymouse=xterm2
+silent! set ttymouse=sgr
 set mouse=a
-" Prevent mouse click from entering select mode
-set selectmode=
-" Fix Ghostty focus event escape codes
-execute "set <FocusGained>=\<Esc>[I"
-execute "set <FocusLost>=\<Esc>[O"
-
-" Cursor shape
-let &t_SI = "\e[6 q"  " Insert mode: vertical line
-let &t_SR = "\e[4 q"  " Replace mode: underline
-let &t_EI = "\e[2 q"  " Normal mode: block
 
 " Remove automatic insertion of comments
 autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 
 " Autoreload files
+set autoread
 autocmd FocusGained,BufEnter,CursorHold,CursorHoldI * if mode() != 'c' | checktime | endif
 autocmd FileChangedShellPost *
-     \ echohl WarningMsg | echo "File changed on disk. Buffer reloaded." | echohl None
+	 \ echohl WarningMsg | echo "File changed on disk. Buffer reloaded." | echohl None
 
-" Return to normal mode when focusing vim (fixes mouse click issue)
-autocmd FocusGained * if mode() == 'v' || mode() == 'V' || mode() == "\<C-v>" | execute "normal! \<Esc>" | endif
-
-" Lightline
-let g:lightline = {
-     \      'colorscheme': 'sonokai',
-     \      'subseparator': { 'left': '|', 'right': '|' },
-     \      'active': {
-     \          'left': [
-     \              [ 'mode', 'paste' ],
-     \              [ 'gitbranch', 'readonly', 'filename', 'modified' ]
-     \          ],
-     \          'right': [
-     \              [ 'linter_errors', 'linter_warnings', 'linter_ok' ]
-     \          ]
-     \      },
-     \      'component_function': {
-     \          'filename': 'LightlineFilename',
-     \      }
-     \ }
-
-function! LightlineFilename()
- return &filetype ==# 'vimfiler' ? vimfiler#get_status_string() :
-        \ &filetype ==# 'unite' ? unite#get_status_string() :
-        \ &filetype ==# 'vimshell' ? vimshell#get_status_string() :
-        \ expand('%:t') !=# '' ? expand('%:t') : '[No Name]'
-endfunction
-
-let g:lightline.component_expand = {
-     \ 'linter_warnings': 'lightline#ale#warnings',
-     \ 'linter_errors': 'lightline#ale#errors',
-     \ 'linter_ok': 'lightline#ale#ok',
-     \ }
-
-let g:lightline.component_type = {
-     \ 'linter_warnings': 'warning',
-     \ 'linter_errors': 'error',
-     \ }
-
-let g:lightline#ale#indicator_warnings='⚠'
-let g:lightline#ale#indicator_errors='ⓧ'
-let g:lightline#ale#indicator_ok='✓'
+" GitGutter - disable default mappings to avoid <leader>h conflict
+let g:gitgutter_map_keys = 0
 
 " Ale
-let g:ale_linters = {
-\   'python': ['pyright', 'ruff', 'flake8']
-\}
-let g:ale_fixers = {
-\   'python': ['black', 'isort', 'ruff']
-\}
 let g:ale_fix_on_save = 1
 let g:ale_completion_enabled = 1
-let g:ale_python_black_options = '--line-length 88'
-let g:ale_python_isort_options = '--profile black'
-" Enable LSP features
-let g:ale_lsp_suggestions = 1
-let g:ale_hover_cursor = 0
 
-" ALE LSP Navigation
-" Go to definition with Enter (like cmd-click but better!)
-nnoremap <CR> :ALEGoToDefinition<CR>
-" Go back with Shift-Enter
-nnoremap <S-CR> <C-o>
-" Go to definition (alternative)
-nnoremap gd :ALEGoToDefinition<CR>
-" Go to references
-nnoremap gD :ALEFindReferences<CR>
-" Show documentation
-nnoremap K :ALEHover<CR>
-" Fix it (auto-fix with ALE)
-nnoremap <leader>x :ALEFix<CR>
-" Navigate between errors/warnings
-nnoremap <leader>e :ALENextWrap<CR>
-nnoremap <leader>E :ALEPreviousWrap<CR>
+let g:ale_fixers = {
+      \    'javascript': ['eslint', 'prettier'],
+      \    'typescript': ['eslint', 'prettier'],
+      \    'css': ['stylelint', 'prettier'],
+      \    'html': ['prettier'],
+      \    'go': ['gofmt', 'goimports'],
+      \    'python': ['ruff']
+      \}
 
-" Python-specific: enhanced gf to handle Python imports
-autocmd FileType python setlocal path+=**
-autocmd FileType python setlocal suffixesadd=.py
-autocmd FileType python setlocal includeexpr=substitute(v:fname,'\\.','/','g')
+" use eslint for ts and js
+let g:ale_linters = {
+      \    'typescript': [ 'eslint' ],
+      \    'javascript': [ 'eslint' ],
+      \    'go': ['gopls', 'govet'],
+      \    'python': ['pyright', 'ruff']
+      \}
+
+" Lightline with bufferline
+let g:lightline = {
+      \ 'colorscheme': 'sonokai',
+      \ 'active': {
+      \   'left': [ [ 'mode', 'paste' ],
+      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
+      \ },
+      \ 'component_function': {
+      \   'gitbranch': 'FugitiveHead'
+      \ },
+      \ 'tabline': {
+      \   'left': [ ['buffers'] ],
+      \   'right': [ ['close'] ]
+      \ },
+      \ 'component_expand': {
+      \   'buffers': 'lightline#bufferline#buffers'
+      \ },
+      \ 'component_type': {
+      \   'buffers': 'tabsel'
+      \ }
+      \ }
+
+" Lightline-bufferline settings
+let g:lightline#bufferline#show_number = 2
+let g:lightline#bufferline#number_map = {
+      \ 0: '⁰', 1: '¹', 2: '²', 3: '³', 4: '⁴',
+      \ 5: '⁵', 6: '⁶', 7: '⁷', 8: '⁸', 9: '⁹'
+      \ }
 
 " Maps
 
-nnoremap <leader>h <C-w>h
-nnoremap <leader>j <C-w>j
-nnoremap <leader>k <C-w>k
-nnoremap <leader>l <C-w>l
-
-" Open terminal in bottom drawer for executing bash commands
-nnoremap <leader>t :terminal<CR>
+function! Diffusion()
+ let l:filename = expand('%:p')
+ let l:line = line('.')
+ execute "! open $(diffusion " . l:filename . " -l " . l:line . ")"
+endfunction
 
 nnoremap <leader>q :q<CR>
 nnoremap <leader>w :w<CR>
 
-nnoremap o o<ESC>
-nnoremap O O<ESC>
+" Buffer switching by number
+nmap <leader>1 <Plug>lightline#bufferline#go(1)
+nmap <leader>2 <Plug>lightline#bufferline#go(2)
+nmap <leader>3 <Plug>lightline#bufferline#go(3)
+nmap <leader>4 <Plug>lightline#bufferline#go(4)
+nmap <leader>5 <Plug>lightline#bufferline#go(5)
+nmap <leader>6 <Plug>lightline#bufferline#go(6)
+nmap <leader>7 <Plug>lightline#bufferline#go(7)
+nmap <leader>8 <Plug>lightline#bufferline#go(8)
+nmap <leader>9 <Plug>lightline#bufferline#go(9)
 
+" Terminal
+nnoremap <leader>t :terminal<CR>
+
+nnoremap Q @q
+
+" Paragraph jumping
 nnoremap <M-j> }j
 nnoremap <M-k> {k
 
 inoremap jj <ESC>
 
-" Autoload vimrc
-augroup vimrc
- au!
- autocmd bufwritepost .vimrc source ~/.vimrc
-augroup END
+" Easy window navigation (leader + hjkl)
+nnoremap <leader>j <C-w>j
+nnoremap <leader>k <C-w>k
+nnoremap <leader>h <C-w>h
+nnoremap <leader>l <C-w>l
 
 if has('termguicolors')
  let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
@@ -204,10 +195,12 @@ if has('termguicolors')
 endif
 
 if has("gui_running")
- set guioptions-=T
- set guioptions-=e
- set t_Co=256
- set guitablabel=%M\ %t
+  set guioptions-=T
+  set guioptions-=e
+  set t_Co=256
+  set guitablabel=%M\ %t
+  " Use guifont only for GUI Vim
+  set guifont=Ubuntu\ Mono\ Nerd\ Font:h12
 endif
 
 " Search
@@ -215,52 +208,125 @@ set hlsearch
 set ignorecase
 set smartcase
 set incsearch
+" Clear search highlight with <leader>/
+nnoremap <leader>/ :nohlsearch<CR>
 
 command! -bang -nargs=* Find
-     \ call fzf#vim#grep(
-     \      'rg --column --line-number --no-heading --color=always '.shellescape(<q-args>), 1,
-     \      <bang>0
-     \          ? fzf#vim#with_preview('up:60%')
-     \          : fzf#vim#with_preview('right:50%:hidden', '?'),
-     \      <bang>0
-     \ )
+	 \ call fzf#vim#grep(
+	 \		'rg --column --line-number --no-heading --color=always '.shellescape(<q-args>), 1,
+	 \		<bang>0
+	 \			? fzf#vim#with_preview('up:60%')
+	 \			: fzf#vim#with_preview('right:50%:hidden', '?'),
+	 \		<bang>0
+	 \ )
 
-autocmd BufReadPre,FileReadPre * :highlight IncSearch guibg=green ctermbg=green term=underline
+autocmd ColorScheme * highlight IncSearch guibg=green
 
-command! FindWordUnderCursor normal! yiw:Find <C-R>"<CR>
+command! FindWordUnderCursor execute 'Find ' . expand('<cword>')
+
+command! FilesUnderCursor execute 'Files ' . expand('<cword>')
 
 command! -bang -nargs=? -complete=dir Files
-     \ call fzf#vim#files(<q-args>, fzf#vim#with_preview({ 'preview': 'rougify {}' }), <bang>0)
+  \ call fzf#vim#files(<q-args>,
+  \   fzf#vim#with_preview({
+  \     'source': 'rg --files --hidden --follow --glob "!.git/*"',
+  \     'options': ['--preview', 'bat --color=always {}']
+  \   }),
+  \   <bang>0)
 
-command! FilesUnderCursor normal! yiw:Files <C-R>"<CR>
+" Fern
+let g:fern#default_hidden=1
+let g:fern#renderer = 'nerdfont'
+
+nnoremap <leader>r :Fern . -drawer -toggle -reveal=%<CR>
+
+" Fern file operation commands
+command! FernDelete call feedkeys("\<Plug>(fern-action-trash)")
+command! FernMove call feedkeys("\<Plug>(fern-action-move)")
+command! FernCopy call feedkeys("\<Plug>(fern-action-copy)")
+command! FernRename call feedkeys("\<Plug>(fern-action-rename)")
+command! FernNewFile call feedkeys("\<Plug>(fern-action-new-file)")
+command! FernNewDir call feedkeys("\<Plug>(fern-action-new-dir)")
+
+function! s:init_fern() abort
+  nmap <buffer> <CR> <Plug>(fern-action-open-or-expand)
+  nmap <buffer> D <Plug>(fern-action-trash)
+  nmap <buffer> R <Plug>(fern-action-rename)
+  nmap <buffer> m <Plug>(fern-action-move)
+  nmap <buffer> c <Plug>(fern-action-copy)
+  nmap <buffer> N <Plug>(fern-action-new-file)
+  nmap <buffer> K <Plug>(fern-action-new-dir)
+endfunction
+
+augroup fern-custom
+  autocmd!
+  autocmd FileType fern call s:init_fern()
+augroup END
+
+" Ripgrep
+set grepprg=rg\ --vimgrep\ --no-heading\ --smart-case
+set grepformat=%f:%l:%c:%m
 
 " fzf"
 
 nnoremap <leader>c :Commands<CR>
+nnoremap <leader>y :History:<CR>
 nnoremap <leader>g :Rg<CR>
 nnoremap <leader>b :Buffers<CR>
-nnoremap <leader>y :History:<CR>
-nnoremap <leader>L :Lines<CR>
 nnoremap <leader>p :Files<CR>
 nnoremap <leader>P :FilesUnderCursor<CR>
-nnoremap <leader>f :Find
+nnoremap <leader>f :Find 
 nnoremap <leader>F :FindWordUnderCursor<CR>
 
-" Fern
-noremap <leader>r :Fern . -reveal=% -drawer<CR>
-let g:fern#default_hidden=1
-let g:fern#renderer = 'nerdfont'
+" MassReplace accross project
+function! MassReplace(pattern, replacement)
+ let l:command = "rg ". a:pattern. " -l | xargs sed -i '' -e 's/". a:pattern. "/". a:replacement. "/g'"
+ call system(l:command)
+ execute "bufdo edit"
+ echom l:command
+endfunction
 
-" Fern actions (use these in the Fern drawer)
-command! FernDelete execute "normal \<Plug>(fern-action-remove)"
-command! FernRename execute "normal \<Plug>(fern-action-rename)"
-command! FernCopy execute "normal \<Plug>(fern-action-copy)"
-command! FernMove execute "normal \<Plug>(fern-action-move)"
-command! FernNewFile execute "normal \<Plug>(fern-action-new-file)"
-command! FernNewDir execute "normal \<Plug>(fern-action-new-dir)"
+command! -nargs=+ MassReplace call MassReplace(<f-args>)
 
 " fzf
 let g:fzf_commands_expect = 'alt-enter'
+
+" vim-qfreplace - search and replace workflow
+" RgQf - Search and populate quickfix list (for use with Qfreplace)
+command! -nargs=+ RgQf call setqflist([]) | execute 'silent grep! <args>' | copen
+" Quick mapping to open qfreplace after a search
+nnoremap <leader>R :Qfreplace<CR>
+
+" Python - using uv
+command! PythonRun execute '!clear; uv run "%"'
+autocmd FileType python nnoremap <leader>x :PythonRun<CR>
+
+" Python settings
+autocmd FileType python setlocal
+    \ tabstop=4
+    \ softtabstop=4
+    \ shiftwidth=4
+    \ expandtab
+    \ autoindent
+    \ fileformat=unix
+
+" Python ALE configuration for uv
+let g:ale_python_auto_virtualenv = 1
+let g:ale_python_ruff_executable = 'uv'
+let g:ale_python_ruff_options = 'run ruff'
+let g:ale_python_pyright_executable = 'uv'
+let g:ale_python_pyright_options = 'run pyright'
+
+" Go
+let g:go_fmt_command = "goimports"
+let g:go_auto_type_info = 1
+let g:go_def_mapping_enabled = 0
+let g:go_doc_keywordprg_enabled = 0
+let g:go_code_completion_enabled = 0  " Let ALE handle completion
+let g:go_highlight_extra_types = 1
+
+" Go tab settings (use tabs instead of spaces)
+autocmd FileType go setlocal noexpandtab tabstop=4 shiftwidth=4
 
 " Remove file
 command! Remove execute "call delete(expand('%')) | bdelete!"
@@ -275,4 +341,11 @@ command! FullPath :let @*=expand("%:p")
 " Folding
 set foldmethod=indent
 set foldlevel=99
+
+" Tabs
+set showtabline=2
+
+" Splits
+set splitright
+set splitbelow
 
