@@ -1,0 +1,175 @@
+// Zellij Configuration
+// Migrated from tmux - mirrors Alt-key workflow
+
+// Theme (options: tokyo-night-storm, catppuccin-mocha, nord, gruvbox-dark, dracula)
+theme "tokyo-night-storm"
+
+// Mouse support (enabled by default, but explicit)
+mouse_mode true
+
+// Copy on select - this is the big improvement over tmux!
+copy_on_select true
+copy_command "pbcopy"  // macOS clipboard
+
+// Scrollback buffer (equivalent to tmux history-limit)
+scroll_buffer_size 10000
+
+// Simplified UI - less intrusive than default
+simplified_ui false
+pane_frames true
+
+// Session management
+session_serialization true
+auto_layout true
+
+// Default layout
+default_layout "compact"
+
+// ==========================
+// Keybindings
+// ==========================
+keybinds clear-defaults=true {
+    // Normal mode - where you spend most time
+    normal {
+        // Alt+h/j/k/l: Navigate panes (same as tmux)
+        bind "Alt h" { MoveFocus "Left"; }
+        bind "Alt j" { MoveFocus "Down"; }
+        bind "Alt k" { MoveFocus "Up"; }
+        bind "Alt l" { MoveFocus "Right"; }
+
+        // Alt+Shift+h/j/k/l: Create pane in that direction (same as tmux)
+        bind "Alt H" { NewPane "Left"; }
+        bind "Alt J" { NewPane "Down"; }
+        bind "Alt K" { NewPane "Up"; }
+        bind "Alt L" { NewPane "Right"; }
+
+        // Alt+w: Close current pane (same as tmux)
+        bind "Alt w" { CloseFocus; }
+
+        // Alt+n/p: Next/previous tab (window in tmux terms)
+        bind "Alt n" { GoToNextTab; }
+        bind "Alt p" { GoToPreviousTab; }
+
+        // Alt+t: New tab (window in tmux terms)
+        bind "Alt t" { NewTab; }
+
+        // Alt+W (shift): Close current tab
+        bind "Alt W" { CloseTab; }
+
+        // Alt+f: Toggle floating pane (zellij bonus feature!)
+        bind "Alt f" { ToggleFloatingPanes; }
+
+        // Alt+c: Clear scrollback (zellij uses EditScrollback then clears)
+        bind "Alt c" { Clear; }
+
+        // Alt+z: Toggle pane fullscreen/zoom
+        bind "Alt z" { ToggleFocusFullscreen; }
+
+        // Alt+1-9: Go to tab by number
+        bind "Alt 1" { GoToTab 1; }
+        bind "Alt 2" { GoToTab 2; }
+        bind "Alt 3" { GoToTab 3; }
+        bind "Alt 4" { GoToTab 4; }
+        bind "Alt 5" { GoToTab 5; }
+        bind "Alt 6" { GoToTab 6; }
+        bind "Alt 7" { GoToTab 7; }
+        bind "Alt 8" { GoToTab 8; }
+        bind "Alt 9" { GoToTab 9; }
+
+        // Ctrl+a (like tmux prefix) enters locked mode for special commands
+        bind "Ctrl a" { SwitchToMode "Locked"; }
+
+        // Enter scroll/search mode
+        bind "Alt s" { SwitchToMode "Scroll"; }
+
+        // Session management
+        bind "Alt d" { Detach; }
+
+        // Quick resize with Alt+arrows
+        bind "Alt Left" { Resize "Increase Left"; }
+        bind "Alt Right" { Resize "Increase Right"; }
+        bind "Alt Up" { Resize "Increase Up"; }
+        bind "Alt Down" { Resize "Increase Down"; }
+    }
+
+    // Locked mode - like tmux prefix mode
+    locked {
+        bind "Ctrl a" { SwitchToMode "Normal"; }
+        bind "Esc" { SwitchToMode "Normal"; }
+
+        // Session picker (like tmux-fzf)
+        bind "s" {
+            LaunchOrFocusPlugin "session-manager" {
+                floating true
+                move_to_focused_tab true
+            };
+            SwitchToMode "Normal";
+        }
+
+        // Rename tab
+        bind "r" { SwitchToMode "RenameTab"; TabNameInput 0; }
+
+        // Rename pane
+        bind "R" { SwitchToMode "RenamePane"; PaneNameInput 0; }
+    }
+
+    // Scroll mode - for searching and scrolling through history
+    scroll {
+        bind "Esc" { SwitchToMode "Normal"; }
+        bind "q" { SwitchToMode "Normal"; }
+
+        bind "j" "Down" { ScrollDown; }
+        bind "k" "Up" { ScrollUp; }
+        bind "Ctrl d" "PageDown" { PageScrollDown; }
+        bind "Ctrl u" "PageUp" { PageScrollUp; }
+        bind "g" { ScrollToTop; }
+        bind "G" { ScrollToBottom; }
+
+        // Search
+        bind "/" { SwitchToMode "EnterSearch"; SearchInput 0; }
+    }
+
+    // Search mode
+    search {
+        bind "Esc" { SwitchToMode "Normal"; }
+        bind "q" { SwitchToMode "Normal"; }
+
+        bind "n" { Search "down"; }
+        bind "N" { Search "up"; }
+        bind "j" "Down" { ScrollDown; }
+        bind "k" "Up" { ScrollUp; }
+        bind "Ctrl d" "PageDown" { PageScrollDown; }
+        bind "Ctrl u" "PageUp" { PageScrollUp; }
+    }
+
+    entersearch {
+        bind "Enter" { SwitchToMode "Search"; }
+        bind "Esc" { SwitchToMode "Scroll"; }
+    }
+
+    renametab {
+        bind "Enter" { SwitchToMode "Normal"; }
+        bind "Esc" { UndoRenameTab; SwitchToMode "Normal"; }
+    }
+
+    renamepane {
+        bind "Enter" { SwitchToMode "Normal"; }
+        bind "Esc" { UndoRenamePane; SwitchToMode "Normal"; }
+    }
+
+    // Shared bindings across all modes
+    shared_except "normal" "locked" {
+        bind "Esc" { SwitchToMode "Normal"; }
+    }
+}
+
+// ==========================
+// Plugin configuration
+// ==========================
+plugins {
+    tab-bar location="zellij:tab-bar"
+    status-bar location="zellij:status-bar"
+    strider location="zellij:strider"
+    compact-bar location="zellij:compact-bar"
+    session-manager location="zellij:session-manager"
+}
