@@ -23,7 +23,11 @@ autoload -Uz colors && colors
 git_branch() {
   local branch
   branch=$(git symbolic-ref --short HEAD 2>/dev/null) || return
-  echo " %{$fg[blue]%}($branch)%{$reset_color%}"
+  local dirty=""
+  if [[ -n $(git status --porcelain 2>/dev/null) ]]; then
+    dirty=" %{$fg[yellow]%}✗%{$reset_color%}"
+  fi
+  echo " %{$fg[blue]%}($branch${dirty}%{$fg[blue]%})%{$reset_color%}"
 }
 setopt PROMPT_SUBST
 local ret_status="%(?:%{$fg_bold[green]%}∴ :%{$fg_bold[red]%}∴ )"
