@@ -60,8 +60,9 @@ keybinds clear-defaults=true {
         // Alt+W (shift): Close current tab
         bind "Alt W" { CloseTab; }
 
-        // Alt+f: Toggle floating pane (zellij bonus feature!)
-        bind "Alt f" { ToggleFloatingPanes; }
+        // Alt+Shift+f: Toggle floating pane (Alt+f reserved for word navigation)
+        unbind "Alt f"
+        bind "Alt F" { ToggleFloatingPanes; }
 
         // Alt+c: Clear scrollback (zellij uses EditScrollback then clears)
         bind "Alt c" { Clear; }
@@ -89,11 +90,15 @@ keybinds clear-defaults=true {
         // Session management
         bind "Alt d" { Detach; }
 
-        // Quick resize with Alt+arrows
-        bind "Alt Left" { Resize "Increase Left"; }
-        bind "Alt Right" { Resize "Increase Right"; }
-        bind "Alt Up" { Resize "Increase Up"; }
-        bind "Alt Down" { Resize "Increase Down"; }
+        // Resize with Alt+Shift+arrows (leaves Alt+arrows free for word navigation)
+        bind "Alt Shift Left" { Resize "Increase Left"; }
+        bind "Alt Shift Right" { Resize "Increase Right"; }
+        bind "Alt Shift Up" { Resize "Increase Up"; }
+        bind "Alt Shift Down" { Resize "Increase Down"; }
+
+        // Rename tab/pane (moved here to avoid accidental triggers)
+        bind "Alt r" { SwitchToMode "RenameTab"; TabNameInput 0; }
+        bind "Alt R" { SwitchToMode "RenamePane"; PaneNameInput 0; }
     }
 
     // Locked mode - like tmux prefix mode
@@ -109,12 +114,6 @@ keybinds clear-defaults=true {
             };
             SwitchToMode "Normal";
         }
-
-        // Rename tab
-        bind "r" { SwitchToMode "RenameTab"; TabNameInput 0; }
-
-        // Rename pane
-        bind "R" { SwitchToMode "RenamePane"; PaneNameInput 0; }
     }
 
     // Scroll mode - for searching and scrolling through history

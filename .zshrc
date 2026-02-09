@@ -9,6 +9,10 @@ export PATH=$HOME'/.cargo/bin':$PATH
 export PATH='/usr/local/go/bin':$PATH
 export PATH="/Applications/Docker.app/Contents/Resources/bin:$PATH"
 export PATH="$HOME/dev/tokki/cli/dist:$PATH"
+export PATH="$PATH:$HOME/go/bin"
+
+# Homebrew libraries (for WeasyPrint/pango, etc.)
+export DYLD_LIBRARY_PATH="/opt/homebrew/lib:$DYLD_LIBRARY_PATH"
 
 # Load secrets (API keys, etc.) - not tracked in git
 [ -f ~/.secrets ] && source ~/.secrets
