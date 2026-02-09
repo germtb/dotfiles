@@ -8,6 +8,8 @@ gui:
       - white
     selectedLineBgColor:
       - default
+os:
+  editPreset: "vim"
 git:
   paging:
     colorArg: always
