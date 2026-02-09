@@ -11,6 +11,10 @@ mouse_mode true
 copy_on_select true
 copy_command "pbcopy"  // macOS clipboard
 
+// Allow terminal to handle Cmd+C/V without passing through to zellij
+// This prevents the "c" character from appearing when using Cmd+C
+support_kitty_keyboard_protocol false
+
 // Scrollback buffer (equivalent to tmux history-limit)
 scroll_buffer_size 10000
 

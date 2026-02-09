@@ -1,0 +1,15 @@
+gui:
+  showIcons: true
+  theme:
+    activeBorderColor:
+      - green
+      - bold
+    inactiveBorderColor:
+      - white
+    selectedLineBgColor:
+      - default
+git:
+  paging:
+    colorArg: always
+    pager: ""
+  autoFetch: true

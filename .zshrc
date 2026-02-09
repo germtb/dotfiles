@@ -16,14 +16,18 @@ export PATH="$HOME/dev/tokki/cli/dist:$PATH"
 # Appearence
 export TERM=xterm-256color
 
-# Set ZSH
-export ZSH=~/.oh-my-zsh
-ZSH_THEME="candy"
-plugins=(git)
-source $ZSH/oh-my-zsh.sh
+# Colors
+autoload -Uz colors && colors
 
-# Prompt
-export PROMPT='${ret_status} %{$fg[cyan]%}%~%{$reset_color%} $(git_prompt_info) '
+# Prompt - git branch inline (replaces oh-my-zsh)
+git_branch() {
+  local branch
+  branch=$(git symbolic-ref --short HEAD 2>/dev/null) || return
+  echo " %{$fg[blue]%}($branch)%{$reset_color%}"
+}
+setopt PROMPT_SUBST
+local ret_status="%(?:%{$fg_bold[green]%}➜ :%{$fg_bold[red]%}➜ )"
+PROMPT='${ret_status}%{$fg[cyan]%}%~%{$reset_color%}$(git_branch) '
 
 
 # Set default editor
@@ -31,15 +35,17 @@ export VISUAL=vim
 export EDITOR=vim
 
 # Aliases
-alias l='ls -la'
-alias ls='ls -la'
+alias l='ls -lah'
+alias ls='ls -lah'
 alias less='less -S -N'
 alias o='cd ..'
-alias ctags="`brew --prefix`/bin/ctags"
 
 # Python
 alias python='python3'
 alias pip='pip3'
+
+# Lazygit
+alias lg='lazygit'
 
 # Git aliases
 alias gd='git diff'
@@ -70,10 +76,21 @@ fzf-open-file() {
 zle -N fzf-open-file
 bindkey '^P' fzf-open-file
 
-# nvm
-export NVM_DIR="$HOME/.nvm"
-[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
-[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+# Completions (cached, regenerates daily)
+autoload -Uz compinit
+if [[ -n ~/.zcompdump(#qN.mh+24) ]]; then
+  compinit
+else
+  compinit -C
+fi
+
+# zsh-autosuggestions
+source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+ZSH_AUTOSUGGEST_STRATEGY=(history completion)
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=8"
+
+# zoxide
+eval "$(zoxide init zsh)"
 
 # bun completions
 [ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"

@@ -177,8 +177,8 @@ nnoremap <leader>t :terminal<CR>
 nnoremap Q @q
 
 " Paragraph jumping
-nnoremap <M-j> }j
-nnoremap <M-k> {k
+nnoremap J }j
+nnoremap K {k
 
 inoremap jj <ESC>
 
