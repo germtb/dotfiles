@@ -116,7 +116,7 @@ elif [ -f /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
 fi
 ZSH_AUTOSUGGEST_STRATEGY=(history completion)
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=8"
-bindkey '^[;' autosuggest-accept
+bindkey '^[^M' autosuggest-accept
 
 # bun completions
 [ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
