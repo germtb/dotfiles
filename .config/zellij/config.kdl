@@ -9,7 +9,6 @@ mouse_mode true
 
 // Copy on select - this is the big improvement over tmux!
 copy_on_select true
-copy_command "pbcopy"  // macOS clipboard
 
 // Allow terminal to handle Cmd+C/V without passing through to zellij
 // This prevents the "c" character from appearing when using Cmd+C
@@ -69,6 +68,9 @@ keybinds clear-defaults=true {
 
         // Alt+z: Toggle pane fullscreen/zoom
         bind "Alt z" { ToggleFocusFullscreen; }
+
+        // Alt+e: Open scrollback in editor
+        bind "Alt e" { EditScrollback; SwitchToMode "Normal"; }
 
         // Alt+1-9: Go to tab by number
         bind "Alt 1" { GoToTab 1; }

@@ -87,6 +87,9 @@ set expandtab
 silent! set ttymouse=sgr
 set mouse=a
 
+" Use system clipboard for all yank/paste
+set clipboard=unnamed
+
 " Remove automatic insertion of comments
 autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 
@@ -128,7 +131,7 @@ let g:lightline = {
       \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
       \ },
       \ 'component_function': {
-      \   'gitbranch': 'FugitiveHead'
+      \   'gitbranch': 'LightlineGitBranch'
       \ },
       \ 'tabline': {
       \   'left': [ ['buffers'] ],
@@ -148,6 +151,12 @@ let g:lightline#bufferline#number_map = {
       \ 0: '⁰', 1: '¹', 2: '²', 3: '³', 4: '⁴',
       \ 5: '⁵', 6: '⁶', 7: '⁷', 8: '⁸', 9: '⁹'
       \ }
+
+" Lightline git branch with icon
+function! LightlineGitBranch()
+  let branch = FugitiveHead()
+  return branch !=# '' ? '⑂ ' . branch : ''
+endfunction
 
 " Maps
 

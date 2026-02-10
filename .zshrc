@@ -1,13 +1,16 @@
 # Set path
 
 export PATH='/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin':$PATH
-export PATH='/opt/homebrew/bin':$PATH
+if [ "$(uname)" = "Darwin" ]; then
+  export PATH='/opt/homebrew/bin':$PATH
+fi
 export PATH=$HOME'/.npm-global/bin':$PATH
 export PATH=$HOME'/bin':$PATH
-export PATH=$HOME'/.cargo/env':$PATH
-export PATH=$HOME'/.cargo/bin':$PATH
+[ -f "$HOME/.cargo/env" ] && source "$HOME/.cargo/env"
 export PATH='/usr/local/go/bin':$PATH
-export PATH="/Applications/Docker.app/Contents/Resources/bin:$PATH"
+if [ "$(uname)" = "Darwin" ]; then
+  export PATH="/Applications/Docker.app/Contents/Resources/bin:$PATH"
+fi
 export PATH="$HOME/dev/tokki/cli/dist:$PATH"
 export PATH="$PATH:$HOME/go/bin"
 
@@ -16,6 +19,13 @@ export DYLD_LIBRARY_PATH="/opt/homebrew/lib:$DYLD_LIBRARY_PATH"
 
 # Load secrets (API keys, etc.) - not tracked in git
 [ -f ~/.secrets ] && source ~/.secrets
+
+# History
+HISTSIZE=10000
+SAVEHIST=10000
+HISTFILE=~/.zsh_history
+setopt SHARE_HISTORY
+setopt HIST_IGNORE_DUPS
 
 # Appearence
 export TERM=xterm-256color
@@ -34,6 +44,7 @@ git_branch() {
   echo " %{$fg[blue]%}($branch${dirty}%{$fg[blue]%})%{$reset_color%}"
 }
 setopt PROMPT_SUBST
+setopt AUTO_CD
 local ret_status="%(?:%{$fg_bold[green]%}∴ :%{$fg_bold[red]%}∴ )"
 PROMPT='${ret_status}%{$fg[cyan]%}%~%{$reset_color%}$(git_branch) '
 
@@ -43,10 +54,14 @@ export VISUAL=vim
 export EDITOR=vim
 
 # Aliases
-alias l='ls -lah'
-alias ls='ls -lah'
+alias l='eza --icons --git --group-directories-first'
+alias ll='eza -la --icons --git --group-directories-first'
+alias ls='eza --icons --git --group-directories-first'
 alias less='less -S -N'
 alias o='cd ..'
+
+# bat alias for Linux (installed as batcat)
+command -v batcat &>/dev/null && alias bat='batcat'
 
 # Python
 alias python='python3'
@@ -71,11 +86,12 @@ alias gb='git branch'
 
 # fzf
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+export FZF_DEFAULT_COMMAND='rg --files'
 
 # Cmd-P file finder: rg + fzf -> vim
 fzf-open-file() {
   local file
-  file=$(rg --files 2>/dev/null | fzf --preview 'head -100 {}')
+  file=$(rg --files 2>/dev/null | fzf --preview 'bat --style=plain --color=always --line-range=:100 {} 2>/dev/null || head -100 {}')
   if [[ -n "$file" ]]; then
     vim "$file"
   fi
@@ -93,12 +109,14 @@ else
 fi
 
 # zsh-autosuggestions
-source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+if [ "$(uname)" = "Darwin" ]; then
+  source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+elif [ -f /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
+  source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+fi
 ZSH_AUTOSUGGEST_STRATEGY=(history completion)
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=8"
-
-# zoxide
-eval "$(zoxide init zsh)"
+bindkey '^[;' autosuggest-accept
 
 # bun completions
 [ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
