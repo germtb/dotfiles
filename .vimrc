@@ -105,6 +105,12 @@ let g:gitgutter_map_keys = 0
 " Ale
 let g:ale_fix_on_save = 1
 let g:ale_completion_enabled = 1
+let g:ale_hover_cursor = 0
+let g:ale_set_balloons = 0
+
+" Prevent ALE from mapping K
+let g:ale_hover_to_preview = 0
+let g:ale_hover_to_floating_preview = 0
 
 let g:ale_fixers = {
       \    'javascript': ['eslint', 'prettier'],
@@ -186,8 +192,12 @@ nnoremap <leader>t :terminal<CR>
 nnoremap Q @q
 
 " Paragraph jumping
-nnoremap J }j
 nnoremap K {k
+nnoremap J }j
+
+" Remove ALE's K mapping (overrides our paragraph jumping)
+autocmd VimEnter * silent! unmap K
+autocmd VimEnter * nnoremap K {k
 
 inoremap jj <ESC>
 
